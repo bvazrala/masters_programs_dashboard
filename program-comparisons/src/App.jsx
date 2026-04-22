@@ -94,13 +94,87 @@ const TIER_COLORS = {
   'Safety': '#5e8a85',
 };
 
+// Per-point label offsets to prevent overlapping in the scatter chart
+const SCATTER_LABEL_OFFSETS = {
+  uw:       { dx: -16, dy: -16, anchor: 'end' },
+  calpoly:  { dx: 16, dy: 8, anchor: 'start' },
+  utaustin: { dx: -16, dy: -16, anchor: 'end' },
+  gatech:   { dx: 16, dy: -16, anchor: 'start' },
+  unc:      { dx: -16, dy: -16, anchor: 'end' },
+  gwu:      { dx: 16, dy: 14, anchor: 'start' },
+  rutgers:  { dx: 16, dy: -8, anchor: 'start' },
+  ncstate:  { dx: 16, dy: 6, anchor: 'start' },
+  uiuc:     { dx: -16, dy: -16, anchor: 'end' },
+  cmu:      { dx: 16, dy: 14, anchor: 'start' },
+};
+
+// Module-level derived data (no state dependency)
+const scatterData = programs.map(p => ({
+  x: p.totalCost, y: p.expectedSalary, z: p.admitOddsScore,
+  name: p.shortName, fullName: p.name, location: p.location,
+  admitOdds: p.admitOdds, color: p.color, id: p.id,
+}));
+
+const admitOddsData = [...programs]
+  .sort((a, b) => b.admitOddsScore - a.admitOddsScore)
+  .map(p => ({ name: p.shortName, odds: p.admitOddsScore, tier: p.admitOdds, color: p.color, id: p.id }));
+
+function CustomScatterTooltip({ active, payload }) {
+  if (!active || !payload || !payload.length) return null;
+  const d = payload[0].payload;
+  return (
+    <div style={{ background: '#0f1216', border: '1px solid #e4a853', padding: '10px 14px', fontFamily: 'IBM Plex Mono', fontSize: 12 }}>
+      <div style={{ color: '#e4a853', fontWeight: 600, marginBottom: 4 }}>{d.fullName}</div>
+      <div style={{ color: '#ebe3d0' }}>{d.location}</div>
+      <div style={{ color: '#8f8876', marginTop: 4 }}>
+        Cost: ${d.x}k · Salary: ${d.y}k · <span style={{ color: TIER_COLORS[d.admitOdds] }}>{d.admitOdds}</span>
+      </div>
+    </div>
+  );
+}
+
+function ScatterLabel({ x, y, index }) {
+  const entry = scatterData[index];
+  if (!entry) return null;
+  const { dx, dy, anchor } = SCATTER_LABEL_OFFSETS[entry.id] || { dx: 0, dy: -16, anchor: 'middle' };
+  return (
+    <text x={x + dx} y={y + dy} fill="#ebe3d0" fontSize={11} fontFamily="IBM Plex Mono" textAnchor={anchor}>
+      {entry.name}
+    </text>
+  );
+}
+
+const SectionHeader = ({ num, title, extra, onToggle, open }) => (
+  <div className="pc-section-header" onClick={onToggle} style={{ cursor: 'pointer' }}>
+    <span className="pc-section-number">{num}</span>
+    <h2 className="pc-section-title">{title}</h2>
+    {extra}
+    <span className="pc-collapse-chevron">{open ? '▾' : '▸'}</span>
+  </div>
+);
+
 export default function ProgramComparison() {
   const [selected, setSelected] = useState(['cmu', 'uw', 'utaustin']);
   const [weights, setWeights] = useState({
-    roi: 7, affordability: 5, jobMarket: 8, weatherFit: 4,
-    lifestyle: 5, shortDuration: 5, capstone: 6, prestige: 6, versatility: 7,
+    roi: 9, affordability: 7, jobMarket: 10, weatherFit: 4,
+    lifestyle: 6, shortDuration: 5, capstone: 9, prestige: 9, versatility: 8,
   });
   const [trackFilter, setTrackFilter] = useState('All');
+  const [collapsed, setCollapsed] = useState({});
+  const [rankingTab, setRankingTab] = useState('weighted');
+  const [personalRanking, setPersonalRanking] = useState(() => {
+    try {
+      const saved = localStorage.getItem('pc-personal-ranking');
+      return saved ? JSON.parse(saved) : programs.map(p => p.id);
+    } catch {
+      return programs.map(p => p.id);
+    }
+  });
+  const [dragState, setDragState] = useState({ dragging: null, over: null });
+
+  const toggleCollapse = (key) =>
+    setCollapsed(prev => ({ ...prev, [key]: !prev[key] }));
+  const isOpen = (key) => !collapsed[key];
 
   const toggleSelect = (id) => {
     if (selected.includes(id)) {
@@ -108,6 +182,36 @@ export default function ProgramComparison() {
     } else {
       setSelected([...selected, id]);
     }
+  };
+
+  // Drag handlers for personal ranking
+  const handleDragStart = (e, id) => {
+    e.dataTransfer.effectAllowed = 'move';
+    setDragState({ dragging: id, over: null });
+  };
+  const handleDragOver = (e, id) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setDragState(s => ({ ...s, over: id }));
+  };
+  const handleDrop = (e, targetId) => {
+    e.preventDefault();
+    const fromId = dragState.dragging;
+    if (!fromId || fromId === targetId) { setDragState({ dragging: null, over: null }); return; }
+    const next = [...personalRanking];
+    const fromIdx = next.indexOf(fromId);
+    const toIdx = next.indexOf(targetId);
+    next.splice(fromIdx, 1);
+    next.splice(toIdx, 0, fromId);
+    setPersonalRanking(next);
+    localStorage.setItem('pc-personal-ranking', JSON.stringify(next));
+    setDragState({ dragging: null, over: null });
+  };
+  const handleDragEnd = () => setDragState({ dragging: null, over: null });
+  const resetPersonalRanking = () => {
+    const reset = programs.map(p => p.id);
+    setPersonalRanking(reset);
+    localStorage.removeItem('pc-personal-ranking');
   };
 
   const radarData = useMemo(() => {
@@ -133,55 +237,12 @@ export default function ProgramComparison() {
       .sort((a, b) => b.weightedScore - a.weightedScore);
   }, [weights]);
 
-  const scatterData = useMemo(() => {
-    return programs.map(p => ({
-      x: p.totalCost,
-      y: p.expectedSalary,
-      z: p.admitOddsScore,
-      name: p.shortName,
-      fullName: p.name,
-      location: p.location,
-      admitOdds: p.admitOdds,
-      color: p.color,
-      id: p.id,
-    }));
-  }, []);
-
-  const admitOddsData = useMemo(() => {
-    return [...programs]
-      .sort((a, b) => b.admitOddsScore - a.admitOddsScore)
-      .map(p => ({
-        name: p.shortName,
-        odds: p.admitOddsScore,
-        tier: p.admitOdds,
-        color: p.color,
-        id: p.id,
-      }));
-  }, []);
-
   const tracks = ['All', ...new Set(programs.map(p => p.track))];
   const filteredPrograms = trackFilter === 'All'
     ? programs
     : programs.filter(p => p.track === trackFilter);
 
   const maxWeightedScore = rankedPrograms[0]?.weightedScore || 10;
-
-  const CustomScatterTooltip = ({ active, payload }) => {
-    if (!active || !payload || !payload.length) return null;
-    const d = payload[0].payload;
-    return (
-      <div style={{
-        background: '#0f1216', border: '1px solid #e4a853', padding: '10px 14px',
-        fontFamily: 'IBM Plex Mono', fontSize: 12,
-      }}>
-        <div style={{ color: '#e4a853', fontWeight: 600, marginBottom: 4 }}>{d.fullName}</div>
-        <div style={{ color: '#ebe3d0' }}>{d.location}</div>
-        <div style={{ color: '#8f8876', marginTop: 4 }}>
-          Cost: ${d.x}k · Salary: ${d.y}k · <span style={{ color: TIER_COLORS[d.admitOdds] }}>{d.admitOdds}</span>
-        </div>
-      </div>
-    );
-  };
 
   return (
     <div className="pc-root">
@@ -209,8 +270,8 @@ export default function ProgramComparison() {
           color: var(--text);
           font-family: var(--sans);
           min-height: 100vh;
-          padding: 32px 24px 64px;
-          max-width: 1200px;
+          padding: 32px clamp(16px, 3vw, 48px) 64px;
+          max-width: 1600px;
           margin: 0 auto;
           font-size: 14px;
           line-height: 1.5;
@@ -288,7 +349,9 @@ export default function ProgramComparison() {
           margin-bottom: 16px;
           padding-bottom: 8px;
           border-bottom: 1px solid var(--border);
+          user-select: none;
         }
+        .pc-section-header:hover .pc-section-title { color: var(--accent); }
         .pc-section-number {
           font-family: var(--mono);
           font-size: 11px;
@@ -302,6 +365,12 @@ export default function ProgramComparison() {
           letter-spacing: -0.01em;
           margin: 0;
           flex: 1;
+          transition: color 0.15s;
+        }
+        .pc-collapse-chevron {
+          font-size: 14px;
+          color: var(--text-faint);
+          flex-shrink: 0;
         }
         .pc-section-desc {
           font-size: 13px;
@@ -497,6 +566,34 @@ export default function ProgramComparison() {
           border-radius: 0;
         }
 
+        /* Ranking section tabs */
+        .pc-tab-row {
+          display: flex;
+          gap: 0;
+          margin-bottom: 20px;
+          border-bottom: 1px solid var(--border);
+        }
+        .pc-tab {
+          font-family: var(--mono);
+          font-size: 11px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          padding: 8px 20px;
+          border: none;
+          background: transparent;
+          color: var(--text-dim);
+          cursor: pointer;
+          border-bottom: 2px solid transparent;
+          margin-bottom: -1px;
+          transition: all 0.15s;
+        }
+        .pc-tab:hover { color: var(--text); }
+        .pc-tab.active {
+          color: var(--accent);
+          border-bottom-color: var(--accent);
+        }
+
+        /* Weighted ranking rows */
         .pc-ranking {
           display: flex;
           flex-direction: column;
@@ -568,6 +665,44 @@ export default function ProgramComparison() {
           font-variant-numeric: tabular-nums;
         }
 
+        /* Personal ranking rows */
+        .pc-personal-ranking {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        .pc-personal-row {
+          display: grid;
+          grid-template-columns: 28px 40px 1fr;
+          gap: 12px;
+          align-items: center;
+          padding: 12px 16px;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-left: 3px solid transparent;
+          transition: background 0.1s, border-top 0.1s;
+          cursor: grab;
+          user-select: none;
+        }
+        .pc-personal-row:active { cursor: grabbing; }
+        .pc-personal-row.dragging { opacity: 0.35; }
+        .pc-personal-row.dragover { border-top: 2px solid var(--accent); }
+        .pc-drag-handle {
+          color: var(--text-faint);
+          font-size: 15px;
+          line-height: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .pc-personal-actions {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-top: 16px;
+        }
+
+        /* Program cards */
         .pc-cards {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -679,6 +814,8 @@ export default function ProgramComparison() {
 
         @media (max-width: 900px) {
           .pc-sliders { grid-template-columns: 1fr; }
+          .pc-rank-row { grid-template-columns: 40px 1fr 60px; }
+          .pc-rank-bar-container { display: none; }
         }
       `}</style>
 
@@ -709,359 +846,433 @@ export default function ProgramComparison() {
         </div>
       </header>
 
+      {/* 01 — Program Overview */}
       <section className="pc-section">
-        <div className="pc-section-header">
-          <span className="pc-section-number">01</span>
-          <h2 className="pc-section-title">Program Overview</h2>
-        </div>
-        <p className="pc-section-desc">
-          Each program at a glance. Click any card to toggle it on the radar chart below.
-        </p>
-        <div className="pc-tier-legend">
-          <span className="pc-tier-badge" style={{ color: 'var(--reach)' }}>
-            <span className="pc-tier-dot" style={{ background: 'var(--reach)' }} /> Reach
-          </span>
-          <span className="pc-tier-badge" style={{ color: 'var(--target)' }}>
-            <span className="pc-tier-dot" style={{ background: 'var(--target)' }} /> Target
-          </span>
-          <span className="pc-tier-badge" style={{ color: 'var(--safety)' }}>
-            <span className="pc-tier-dot" style={{ background: 'var(--safety)' }} /> Safety
-          </span>
-        </div>
-        <div className="pc-cards">
-          {programs.map(p => (
-            <div
-              key={p.id}
-              className="pc-card"
-              onClick={() => toggleSelect(p.id)}
-              style={{
-                borderTopColor: p.color,
-                background: selected.includes(p.id) ? 'var(--surface-2)' : 'var(--surface)',
-              }}
-            >
-              <div className="pc-card-header">
-                <div>
-                  <h3 className="pc-card-title">{p.name}</h3>
-                  <div className="pc-card-loc">{p.location} · {p.track}</div>
-                </div>
-                <span className={`pc-card-tier ${p.admitOdds}`}>{p.admitOdds}</span>
-              </div>
-              <div className="pc-card-grid">
-                <div className="pc-card-stat">
-                  <div className="pc-card-stat-label">Duration</div>
-                  <div className="pc-card-stat-value">{p.duration}</div>
-                </div>
-                <div className="pc-card-stat">
-                  <div className="pc-card-stat-label">Total Cost</div>
-                  <div className="pc-card-stat-value">${p.totalCost}k</div>
-                </div>
-                <div className="pc-card-stat">
-                  <div className="pc-card-stat-label">Est. Salary</div>
-                  <div className="pc-card-stat-value">${p.expectedSalary}k</div>
-                </div>
-                <div className="pc-card-stat">
-                  <div className="pc-card-stat-label">Admit Odds</div>
-                  <div className="pc-card-stat-value">~{p.admitOddsScore}%</div>
-                </div>
-              </div>
-              <div className="pc-card-section">
-                <div className="pc-card-section-label">Top Roles</div>
-                <div className="pc-card-section-text">{p.topRoles}</div>
-              </div>
-              <div className="pc-card-section">
-                <div className="pc-card-section-label">Top Employers</div>
-                <div className="pc-card-section-text">{p.topEmployers}</div>
-              </div>
+        <SectionHeader num="01" title="Program Overview" onToggle={() => toggleCollapse('01')} open={isOpen('01')} />
+        {isOpen('01') && (
+          <>
+            <p className="pc-section-desc">
+              Each program at a glance. Click any card to toggle it on the radar chart below.
+            </p>
+            <div className="pc-tier-legend">
+              <span className="pc-tier-badge" style={{ color: 'var(--reach)' }}>
+                <span className="pc-tier-dot" style={{ background: 'var(--reach)' }} /> Reach
+              </span>
+              <span className="pc-tier-badge" style={{ color: 'var(--target)' }}>
+                <span className="pc-tier-dot" style={{ background: 'var(--target)' }} /> Target
+              </span>
+              <span className="pc-tier-badge" style={{ color: 'var(--safety)' }}>
+                <span className="pc-tier-dot" style={{ background: 'var(--safety)' }} /> Safety
+              </span>
             </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="pc-section">
-        <div className="pc-section-header">
-          <span className="pc-section-number">02</span>
-          <h2 className="pc-section-title">Cost vs. Expected Salary</h2>
-        </div>
-        <p className="pc-section-desc">
-          Upper-left quadrant is best ROI (low cost, high salary). Bubble size reflects admit odds — bigger dots are easier to get into.
-        </p>
-        <div className="pc-chart-panel">
-          <div className="pc-chart-title">ROI Quadrant · All 10 Programs</div>
-          <ResponsiveContainer width="100%" height={440}>
-            <ScatterChart margin={{ top: 30, right: 40, bottom: 50, left: 70 }}>
-              <CartesianGrid stroke="#2a313c" strokeDasharray="2 4" />
-              <XAxis
-                type="number"
-                dataKey="x"
-                name="Cost"
-                unit="k"
-                domain={[40, 100]}
-                tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }}
-                stroke="#2a313c"
-                label={{ value: 'Total Cost ($k) — tuition + living', position: 'insideBottom', offset: -10, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }}
-              />
-              <YAxis
-                type="number"
-                dataKey="y"
-                name="Salary"
-                unit="k"
-                domain={[80, 150]}
-                tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }}
-                stroke="#2a313c"
-                label={{ value: 'Expected Starting Salary ($k)', angle: -90, position: 'insideLeft', offset: 10, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }}
-              />
-              <ZAxis type="number" dataKey="z" range={[80, 400]} />
-              <Tooltip content={<CustomScatterTooltip />} cursor={{ strokeDasharray: '3 3' }} />
-              <Scatter data={scatterData}>
-                {scatterData.map((entry, idx) => (
-                  <Cell key={idx} fill={entry.color} stroke={entry.color} strokeWidth={1} fillOpacity={0.7} />
-                ))}
-                <LabelList
-                  dataKey="name"
-                  position="top"
-                  style={{ fill: '#ebe3d0', fontSize: 11, fontFamily: 'IBM Plex Mono' }}
-                  offset={14}
-                />
-              </Scatter>
-            </ScatterChart>
-          </ResponsiveContainer>
-          <p className="pc-chart-subtitle">
-            Salary estimates are median starting compensation (base + bonus) from recent cohort placement data. Bubble size encodes admit likelihood.
-          </p>
-        </div>
-      </section>
-
-      <section className="pc-section">
-        <div className="pc-section-header">
-          <span className="pc-section-number">03</span>
-          <h2 className="pc-section-title">Admit Odds</h2>
-        </div>
-        <p className="pc-section-desc">
-          Rough admit probability estimates given your profile (3.0→3.6 GPA trend, CS major + Management minor, honors thesis in progress, research + strong project).
-          Use as relative guidance, not prediction.
-        </p>
-        <div className="pc-chart-panel">
-          <div className="pc-chart-title">Estimated Admit Probability by Program</div>
-          <ResponsiveContainer width="100%" height={360}>
-            <BarChart data={admitOddsData} layout="vertical" margin={{ top: 10, right: 50, bottom: 10, left: 100 }}>
-              <CartesianGrid stroke="#2a313c" strokeDasharray="2 4" horizontal={false} />
-              <XAxis
-                type="number"
-                domain={[0, 100]}
-                tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }}
-                stroke="#2a313c"
-                unit="%"
-              />
-              <YAxis
-                type="category"
-                dataKey="name"
-                tick={{ fill: '#ebe3d0', fontSize: 12, fontFamily: 'IBM Plex Sans' }}
-                stroke="#2a313c"
-                width={90}
-              />
-              <Tooltip
-                contentStyle={{
-                  background: '#0f1216',
-                  border: '1px solid #e4a853',
-                  fontFamily: 'IBM Plex Mono',
-                  fontSize: 12,
-                }}
-                formatter={(v, n, props) => [`${v}% · ${props.payload.tier}`, 'Admit Odds']}
-                cursor={{ fill: 'rgba(228, 168, 83, 0.05)' }}
-              />
-              <Bar dataKey="odds">
-                {admitOddsData.map((entry, idx) => (
-                  <Cell key={idx} fill={entry.color} />
-                ))}
-                <LabelList
-                  dataKey="odds"
-                  position="right"
-                  formatter={(v) => `${v}%`}
-                  style={{ fill: '#ebe3d0', fontSize: 11, fontFamily: 'IBM Plex Mono', fontWeight: 500 }}
-                />
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </section>
-
-      <section className="pc-section">
-        <div className="pc-section-header">
-          <span className="pc-section-number">04</span>
-          <h2 className="pc-section-title">Radar Comparison</h2>
-          <span className="pc-selected-count">{selected.length} / {programs.length} SELECTED</span>
-        </div>
-        <p className="pc-section-desc">
-          Each axis is scored 0–10. Select 2–5 programs for best readability. Use the program cards above or the chips below to toggle.
-        </p>
-        <div className="pc-filter-row">
-          {tracks.map(t => (
-            <button
-              key={t}
-              className={`pc-filter-chip ${trackFilter === t ? 'active' : ''}`}
-              onClick={() => setTrackFilter(t)}
-            >
-              {t}
-            </button>
-          ))}
-          <button
-            className="pc-filter-chip"
-            onClick={() => setSelected(programs.map(p => p.id))}
-          >
-            Select All
-          </button>
-          <button
-            className="pc-filter-chip"
-            onClick={() => setSelected([])}
-          >
-            Clear
-          </button>
-        </div>
-        <div className="pc-chips" style={{ marginBottom: 20 }}>
-          {filteredPrograms.map(p => {
-            const isSelected = selected.includes(p.id);
-            return (
-              <button
-                key={p.id}
-                className={`pc-chip ${isSelected ? 'selected' : ''}`}
-                onClick={() => toggleSelect(p.id)}
-                style={isSelected ? { color: p.color } : {}}
-              >
-                <span className="pc-chip-dot" style={{ background: p.color }} />
-                <span>{p.shortName}</span>
-                <span className="pc-chip-meta">{p.duration} · {p.cost}</span>
-              </button>
-            );
-          })}
-        </div>
-        <div className="pc-chart-panel">
-          <div className="pc-chart-title">Nine-Dimension Profile</div>
-          <ResponsiveContainer width="100%" height={460}>
-            <RadarChart data={radarData} margin={{ top: 20, right: 40, bottom: 20, left: 40 }}>
-              <PolarGrid stroke="#2a313c" strokeDasharray="2 4" />
-              <PolarAngleAxis
-                dataKey="criterion"
-                tick={{ fill: '#ebe3d0', fontSize: 12, fontFamily: 'IBM Plex Sans' }}
-              />
-              <PolarRadiusAxis
-                angle={90}
-                domain={[0, 10]}
-                tick={{ fill: '#595647', fontSize: 10, fontFamily: 'IBM Plex Mono' }}
-                tickCount={6}
-                stroke="#2a313c"
-              />
-              {selected.map(id => {
-                const p = programs.find(x => x.id === id);
-                return (
-                  <Radar
-                    key={id}
-                    name={p.shortName}
-                    dataKey={p.shortName}
-                    stroke={p.color}
-                    fill={p.color}
-                    fillOpacity={0.18}
-                    strokeWidth={2}
-                  />
-                );
-              })}
-              <Tooltip
-                contentStyle={{
-                  background: '#0f1216',
-                  border: '1px solid #e4a853',
-                  fontFamily: 'IBM Plex Mono',
-                  fontSize: 12,
-                }}
-                labelStyle={{ color: '#e4a853', marginBottom: 4 }}
-                itemStyle={{ color: '#ebe3d0' }}
-              />
-            </RadarChart>
-          </ResponsiveContainer>
-          <div className="pc-legend">
-            {selected.map(id => {
-              const p = programs.find(x => x.id === id);
-              return (
-                <div key={id} className="pc-legend-item" style={{ color: p.color }}>
-                  <span className="pc-legend-swatch" style={{ background: p.color }} />
-                  <span>{p.shortName}</span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="pc-section">
-        <div className="pc-section-header">
-          <span className="pc-section-number">05</span>
-          <h2 className="pc-section-title">Your Priorities</h2>
-        </div>
-        <p className="pc-section-desc">
-          Set importance weights from 0 (ignore) to 10 (critical). The ranking below updates in real time.
-        </p>
-        <div className="pc-sliders">
-          {criteria.map(c => (
-            <div key={c.key} className="pc-slider-item">
-              <div className="pc-slider-label">
-                <span className="label-text">{c.label}</span>
-                <span className="label-value">{weights[c.key]}</span>
-              </div>
-              <div className="pc-slider-desc">{c.description}</div>
-              <input
-                type="range"
-                min="0"
-                max="10"
-                value={weights[c.key]}
-                onChange={e => setWeights({ ...weights, [c.key]: parseInt(e.target.value) })}
-                className="pc-slider"
-              />
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="pc-section">
-        <div className="pc-section-header">
-          <span className="pc-section-number">06</span>
-          <h2 className="pc-section-title">Weighted Ranking</h2>
-        </div>
-        <p className="pc-section-desc">
-          Scores reflect your weighting. Click any row to toggle it on the radar chart above.
-        </p>
-        <div className="pc-ranking">
-          {rankedPrograms.map((p, i) => {
-            const widthPct = (p.weightedScore / maxWeightedScore) * 100;
-            return (
-              <div
-                key={p.id}
-                className={`pc-rank-row ${i < 3 ? 'top3' : ''}`}
-                onClick={() => toggleSelect(p.id)}
-                style={selected.includes(p.id) ? { borderLeftColor: p.color, background: 'var(--surface-2)' } : {}}
-              >
-                <div className="pc-rank-num">{String(i + 1).padStart(2, '0')}</div>
-                <div className="pc-rank-name-group">
-                  <div className="pc-rank-name">{p.name}</div>
-                  <div className="pc-rank-meta">
-                    {p.location} · {p.duration} · {p.cost} · {p.track} · {p.admitOdds}
+            <div className="pc-cards">
+              {programs.map(p => (
+                <div
+                  key={p.id}
+                  className="pc-card"
+                  onClick={() => toggleSelect(p.id)}
+                  style={{
+                    borderTopColor: p.color,
+                    background: selected.includes(p.id) ? 'var(--surface-2)' : 'var(--surface)',
+                  }}
+                >
+                  <div className="pc-card-header">
+                    <div>
+                      <h3 className="pc-card-title">{p.name}</h3>
+                      <div className="pc-card-loc">{p.location} · {p.track}</div>
+                    </div>
+                    <span className={`pc-card-tier ${p.admitOdds}`}>{p.admitOdds}</span>
+                  </div>
+                  <div className="pc-card-grid">
+                    <div className="pc-card-stat">
+                      <div className="pc-card-stat-label">Duration</div>
+                      <div className="pc-card-stat-value">{p.duration}</div>
+                    </div>
+                    <div className="pc-card-stat">
+                      <div className="pc-card-stat-label">Total Cost</div>
+                      <div className="pc-card-stat-value">${p.totalCost}k</div>
+                    </div>
+                    <div className="pc-card-stat">
+                      <div className="pc-card-stat-label">Est. Salary</div>
+                      <div className="pc-card-stat-value">${p.expectedSalary}k</div>
+                    </div>
+                    <div className="pc-card-stat">
+                      <div className="pc-card-stat-label">Admit Odds</div>
+                      <div className="pc-card-stat-value">~{p.admitOddsScore}%</div>
+                    </div>
+                  </div>
+                  <div className="pc-card-section">
+                    <div className="pc-card-section-label">Top Roles</div>
+                    <div className="pc-card-section-text">{p.topRoles}</div>
+                  </div>
+                  <div className="pc-card-section">
+                    <div className="pc-card-section-label">Top Employers</div>
+                    <div className="pc-card-section-text">{p.topEmployers}</div>
                   </div>
                 </div>
-                <div className="pc-rank-bar-container">
-                  <div
-                    className="pc-rank-bar"
-                    style={{ width: `${widthPct}%`, background: p.color }}
+              ))}
+            </div>
+          </>
+        )}
+      </section>
+
+      {/* 02 — Cost vs. Expected Salary */}
+      <section className="pc-section">
+        <SectionHeader num="02" title="Cost vs. Expected Salary" onToggle={() => toggleCollapse('02')} open={isOpen('02')} />
+        {isOpen('02') && (
+          <>
+            <p className="pc-section-desc">
+              Upper-left quadrant is best ROI (low cost, high salary). Bubble size reflects admit odds — bigger dots are easier to get into.
+            </p>
+            <div className="pc-chart-panel">
+              <div className="pc-chart-title">ROI Quadrant · All 10 Programs</div>
+              <ResponsiveContainer width="100%" height={440}>
+                <ScatterChart margin={{ top: 30, right: 60, bottom: 50, left: 70 }}>
+                  <CartesianGrid stroke="#2a313c" strokeDasharray="2 4" />
+                  <XAxis
+                    type="number"
+                    dataKey="x"
+                    name="Cost"
+                    unit="k"
+                    domain={[40, 100]}
+                    tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }}
+                    stroke="#2a313c"
+                    label={{ value: 'Total Cost ($k) — tuition + living', position: 'insideBottom', offset: -10, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }}
+                  />
+                  <YAxis
+                    type="number"
+                    dataKey="y"
+                    name="Salary"
+                    unit="k"
+                    domain={[80, 150]}
+                    tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }}
+                    stroke="#2a313c"
+                    label={{ value: 'Expected Starting Salary ($k)', angle: -90, position: 'insideLeft', offset: 10, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }}
+                  />
+                  <ZAxis type="number" dataKey="z" range={[80, 400]} />
+                  <Tooltip content={CustomScatterTooltip} cursor={{ strokeDasharray: '3 3' }} />
+                  <Scatter data={scatterData}>
+                    {scatterData.map((entry, idx) => (
+                      <Cell key={idx} fill={entry.color} stroke={entry.color} strokeWidth={1} fillOpacity={0.7} />
+                    ))}
+                    <LabelList content={ScatterLabel} />
+                  </Scatter>
+                </ScatterChart>
+              </ResponsiveContainer>
+              <p className="pc-chart-subtitle">
+                Salary estimates are median starting compensation (base + bonus) from recent cohort placement data. Bubble size encodes admit likelihood.
+              </p>
+            </div>
+          </>
+        )}
+      </section>
+
+      {/* 03 — Admit Odds */}
+      <section className="pc-section">
+        <SectionHeader num="03" title="Admit Odds" onToggle={() => toggleCollapse('03')} open={isOpen('03')} />
+        {isOpen('03') && (
+          <>
+            <p className="pc-section-desc">
+              Rough admit probability estimates given your profile (3.0→3.6 GPA trend, CS major + Management minor, honors thesis in progress, research + strong project).
+              Use as relative guidance, not prediction.
+            </p>
+            <div className="pc-chart-panel">
+              <div className="pc-chart-title">Estimated Admit Probability by Program</div>
+              <ResponsiveContainer width="100%" height={380}>
+                <BarChart data={admitOddsData} layout="vertical" margin={{ top: 10, right: 60, bottom: 10, left: 100 }}>
+                  <CartesianGrid stroke="#2a313c" strokeDasharray="2 4" horizontal={false} />
+                  <XAxis
+                    type="number"
+                    domain={[0, 100]}
+                    tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }}
+                    stroke="#2a313c"
+                    unit="%"
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="name"
+                    interval={0}
+                    tick={{ fill: '#ebe3d0', fontSize: 12, fontFamily: 'IBM Plex Sans' }}
+                    stroke="#2a313c"
+                    width={90}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: '#0f1216',
+                      border: '1px solid #e4a853',
+                      fontFamily: 'IBM Plex Mono',
+                      fontSize: 12,
+                    }}
+                    formatter={(v, _n, props) => [`${v}% · ${props.payload.tier}`, 'Admit Odds']}
+                    cursor={{ fill: 'rgba(228, 168, 83, 0.05)' }}
+                  />
+                  <Bar dataKey="odds">
+                    {admitOddsData.map((entry, idx) => (
+                      <Cell key={idx} fill={entry.color} />
+                    ))}
+                    <LabelList
+                      dataKey="odds"
+                      position="right"
+                      formatter={(v) => `${v}%`}
+                      style={{ fill: '#ebe3d0', fontSize: 11, fontFamily: 'IBM Plex Mono', fontWeight: 500 }}
+                    />
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </>
+        )}
+      </section>
+
+      {/* 04 — Radar Comparison */}
+      <section className="pc-section">
+        <SectionHeader
+          num="04"
+          title="Radar Comparison"
+          extra={<span className="pc-selected-count">{selected.length} / {programs.length} SELECTED</span>}
+          onToggle={() => toggleCollapse('04')}
+          open={isOpen('04')}
+        />
+        {isOpen('04') && (
+          <>
+            <p className="pc-section-desc">
+              Each axis is scored 0–10. Select 2–5 programs for best readability. Use the program cards above or the chips below to toggle.
+            </p>
+            <div className="pc-filter-row">
+              {tracks.map(t => (
+                <button
+                  key={t}
+                  className={`pc-filter-chip ${trackFilter === t ? 'active' : ''}`}
+                  onClick={() => setTrackFilter(t)}
+                >
+                  {t}
+                </button>
+              ))}
+              <button className="pc-filter-chip" onClick={() => setSelected(programs.map(p => p.id))}>
+                Select All
+              </button>
+              <button className="pc-filter-chip" onClick={() => setSelected([])}>
+                Clear
+              </button>
+            </div>
+            <div className="pc-chips" style={{ marginBottom: 20 }}>
+              {filteredPrograms.map(p => {
+                const isSelected = selected.includes(p.id);
+                return (
+                  <button
+                    key={p.id}
+                    className={`pc-chip ${isSelected ? 'selected' : ''}`}
+                    onClick={() => toggleSelect(p.id)}
+                    style={isSelected ? { color: p.color } : {}}
+                  >
+                    <span className="pc-chip-dot" style={{ background: p.color }} />
+                    <span>{p.shortName}</span>
+                    <span className="pc-chip-meta">{p.duration} · {p.cost}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <div className="pc-chart-panel">
+              <div className="pc-chart-title">Nine-Dimension Profile</div>
+              <ResponsiveContainer width="100%" height={460}>
+                <RadarChart data={radarData} margin={{ top: 20, right: 40, bottom: 20, left: 40 }}>
+                  <PolarGrid stroke="#2a313c" strokeDasharray="2 4" />
+                  <PolarAngleAxis
+                    dataKey="criterion"
+                    tick={{ fill: '#ebe3d0', fontSize: 12, fontFamily: 'IBM Plex Sans' }}
+                  />
+                  <PolarRadiusAxis
+                    angle={90}
+                    domain={[0, 10]}
+                    tick={{ fill: '#595647', fontSize: 10, fontFamily: 'IBM Plex Mono' }}
+                    tickCount={6}
+                    stroke="#2a313c"
+                  />
+                  {selected.map(id => {
+                    const p = programs.find(x => x.id === id);
+                    return (
+                      <Radar
+                        key={id}
+                        name={p.shortName}
+                        dataKey={p.shortName}
+                        stroke={p.color}
+                        fill={p.color}
+                        fillOpacity={0.18}
+                        strokeWidth={2}
+                      />
+                    );
+                  })}
+                  <Tooltip
+                    contentStyle={{
+                      background: '#0f1216',
+                      border: '1px solid #e4a853',
+                      fontFamily: 'IBM Plex Mono',
+                      fontSize: 12,
+                    }}
+                    labelStyle={{ color: '#e4a853', marginBottom: 4 }}
+                    itemStyle={{ color: '#ebe3d0' }}
+                  />
+                </RadarChart>
+              </ResponsiveContainer>
+              <div className="pc-legend">
+                {selected.map(id => {
+                  const p = programs.find(x => x.id === id);
+                  return (
+                    <div key={id} className="pc-legend-item" style={{ color: p.color }}>
+                      <span className="pc-legend-swatch" style={{ background: p.color }} />
+                      <span>{p.shortName}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </>
+        )}
+      </section>
+
+      {/* 05 — Priorities */}
+      <section className="pc-section">
+        <SectionHeader num="05" title="Priorities" onToggle={() => toggleCollapse('05')} open={isOpen('05')} />
+        {isOpen('05') && (
+          <>
+            <p className="pc-section-desc">
+              Set importance weights from 0 (ignore) to 10 (critical). The ranking below updates in real time.
+            </p>
+            <div className="pc-sliders">
+              {criteria.map(c => (
+                <div key={c.key} className="pc-slider-item">
+                  <div className="pc-slider-label">
+                    <span className="label-text">{c.label}</span>
+                    <span className="label-value">{weights[c.key]}</span>
+                  </div>
+                  <div className="pc-slider-desc">{c.description}</div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="10"
+                    value={weights[c.key]}
+                    onChange={e => setWeights({ ...weights, [c.key]: parseInt(e.target.value) })}
+                    className="pc-slider"
                   />
                 </div>
-                <div className="pc-rank-score">{p.weightedScore.toFixed(2)}</div>
-              </div>
-            );
-          })}
-        </div>
-        <p className="pc-note">
-          Total cost = approximate tuition (2025–26) plus estimated living expenses for program duration.
-          Salary estimates are median starting compensation for recent graduating cohorts, inclusive of bonus.
-          Admit odds reflect your profile (3.0→3.6 GPA trend, CS major with Management minor, honors thesis in progress) — they are directional, not predictive.
-          Rutgers MQF shows both scholarship-adjusted and list-price totals.
-          Verify all figures directly with each school before making decisions.
-        </p>
+              ))}
+            </div>
+          </>
+        )}
+      </section>
+
+      {/* 06 — Ranking */}
+      <section className="pc-section">
+        <SectionHeader num="06" title="Ranking" onToggle={() => toggleCollapse('06')} open={isOpen('06')} />
+        {isOpen('06') && (
+          <>
+            <div className="pc-tab-row">
+              <button
+                className={`pc-tab ${rankingTab === 'weighted' ? 'active' : ''}`}
+                onClick={() => setRankingTab('weighted')}
+              >
+                Weighted Ranking
+              </button>
+              <button
+                className={`pc-tab ${rankingTab === 'personal' ? 'active' : ''}`}
+                onClick={() => setRankingTab('personal')}
+              >
+                Personal Ranking
+              </button>
+            </div>
+
+            {rankingTab === 'weighted' && (
+              <>
+                <p className="pc-section-desc">
+                  Scores reflect your weighting from section 05. Click any row to toggle it on the radar chart.
+                </p>
+                <div className="pc-ranking">
+                  {rankedPrograms.map((p, i) => {
+                    const widthPct = (p.weightedScore / maxWeightedScore) * 100;
+                    return (
+                      <div
+                        key={p.id}
+                        className={`pc-rank-row ${i < 3 ? 'top3' : ''}`}
+                        onClick={() => toggleSelect(p.id)}
+                        style={selected.includes(p.id) ? { borderLeftColor: p.color, background: 'var(--surface-2)' } : {}}
+                      >
+                        <div className="pc-rank-num">{String(i + 1).padStart(2, '0')}</div>
+                        <div className="pc-rank-name-group">
+                          <div className="pc-rank-name">{p.name}</div>
+                          <div className="pc-rank-meta">
+                            {p.location} · {p.duration} · {p.cost} · {p.track} · {p.admitOdds}
+                          </div>
+                        </div>
+                        <div className="pc-rank-bar-container">
+                          <div
+                            className="pc-rank-bar"
+                            style={{ width: `${widthPct}%`, background: p.color }}
+                          />
+                        </div>
+                        <div className="pc-rank-score">{p.weightedScore.toFixed(2)}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
+            {rankingTab === 'personal' && (
+              <>
+                <p className="pc-section-desc">
+                  Drag rows to rank programs in your own order. Saved automatically in your browser.
+                </p>
+                <div className="pc-personal-ranking">
+                  {personalRanking.map((id, i) => {
+                    const p = programs.find(x => x.id === id);
+                    if (!p) return null;
+                    const isDragging = dragState.dragging === id;
+                    const isDragOver = dragState.over === id;
+                    return (
+                      <div
+                        key={id}
+                        className={`pc-personal-row${isDragging ? ' dragging' : ''}${isDragOver ? ' dragover' : ''}`}
+                        style={{ borderLeftColor: p.color }}
+                        draggable
+                        onDragStart={e => handleDragStart(e, id)}
+                        onDragOver={e => handleDragOver(e, id)}
+                        onDrop={e => handleDrop(e, id)}
+                        onDragEnd={handleDragEnd}
+                      >
+                        <div className="pc-drag-handle">⠿</div>
+                        <div className="pc-rank-num" style={{ color: i < 3 ? 'var(--accent)' : 'var(--text-dim)' }}>
+                          {String(i + 1).padStart(2, '0')}
+                        </div>
+                        <div className="pc-rank-name-group">
+                          <div className="pc-rank-name">{p.name}</div>
+                          <div className="pc-rank-meta">
+                            {p.location} · {p.duration} · {p.cost} · {p.track} · {p.admitOdds}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="pc-personal-actions">
+                  <button
+                    className="pc-filter-chip"
+                    onClick={resetPersonalRanking}
+                  >
+                    Reset to Default
+                  </button>
+                </div>
+              </>
+            )}
+
+            <p className="pc-note">
+              Total cost = approximate tuition (2025–26) plus estimated living expenses for program duration.
+              Salary estimates are median starting compensation for recent graduating cohorts, inclusive of bonus.
+              Admit odds reflect your profile (3.0→3.6 GPA trend, CS major with Management minor, honors thesis in progress) — they are directional, not predictive.
+              Rutgers MQF shows both scholarship-adjusted and list-price totals.
+              Verify all figures directly with each school before making decisions.
+            </p>
+          </>
+        )}
       </section>
     </div>
   );
