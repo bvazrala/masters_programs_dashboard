@@ -6,17 +6,17 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Responsi
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json';
 
-// Major hiring hub cities (destinations, not school locations)
+// Major hiring hub cities — textDx/textAnchor control label positioning to avoid edge clipping
 const HUB_CITIES = {
-  siliconValley: { coordinates: [-122.05, 37.40], label: 'Silicon Valley' },
-  nyc:           { coordinates: [-74.00,  40.71], label: 'NYC' },
-  chicago:       { coordinates: [-87.63,  41.88], label: 'Chicago' },
-  boston:        { coordinates: [-71.06,  42.36], label: 'Boston' },
-  la:            { coordinates: [-118.25, 34.05], label: 'LA' },
-  dc:            { coordinates: [-77.04,  38.91], label: 'DC' },
-  dallas:        { coordinates: [-96.80,  32.78], label: 'Dallas' },
-  houston:       { coordinates: [-95.37,  29.76], label: 'Houston' },
-  austin:        { coordinates: [-97.74,  30.27], label: 'Austin' },
+  siliconValley: { coordinates: [-122.05, 37.40], label: 'Bay Area', textDx: 12,   textAnchor: 'start' },
+  nyc:           { coordinates: [-74.00,  40.71], label: 'NYC',      textDx: 0,    textAnchor: 'middle' },
+  chicago:       { coordinates: [-87.63,  41.88], label: 'Chicago',  textDx: 0,    textAnchor: 'middle' },
+  boston:        { coordinates: [-71.06,  42.36], label: 'Boston',   textDx: -12,  textAnchor: 'end' },
+  la:            { coordinates: [-118.25, 34.05], label: 'LA',       textDx: 0,    textAnchor: 'middle' },
+  dc:            { coordinates: [-77.04,  38.91], label: 'DC',       textDx: 12,   textAnchor: 'start' },
+  dallas:        { coordinates: [-96.80,  32.78], label: 'Dallas',   textDx: 12,   textAnchor: 'start' },
+  houston:       { coordinates: [-95.37,  29.76], label: 'Houston',  textDx: 12,   textAnchor: 'start' },
+  austin:        { coordinates: [-97.74,  30.27], label: 'Austin',   textDx: -12,  textAnchor: 'end' },
 };
 
 const programs = [
@@ -437,9 +437,9 @@ export default function ProgramComparison() {
   const [trackFilter, setTrackFilter]     = useState('All');
   const [collapsed, setCollapsed]         = useState({});
   const [rankingTab, setRankingTab]       = useState('weighted');
-  const [detailsModal, setDetailsModal]   = useState(null);
-  const [mapLayers, setMapLayers]         = useState({ jobMarket: true, pipeline: true });
-  const [hoveredSchool, setHoveredSchool] = useState(null);
+  const [detailsModal, setDetailsModal]       = useState(null);
+  const [mapLayers, setMapLayers]             = useState({ jobMarket: true });
+  const [selectedMapSchool, setSelectedMapSchool] = useState(null);
   const [personalRanking, setPersonalRanking] = useState(() => {
     try {
       const saved = localStorage.getItem('pc-personal-ranking');
@@ -510,19 +510,7 @@ export default function ProgramComparison() {
     return Array.from(used).filter(k => HUB_CITIES[k]);
   }, []);
 
-  const getArcOpacity = (programId, strength) => {
-    const base = strength === 3 ? 0.6 : strength === 2 ? 0.35 : 0.18;
-    if (!hoveredSchool) return base;
-    return hoveredSchool.id === programId ? Math.min(base * 1.6, 0.9) : base * 0.12;
-  };
-
-  const getArcWidth = (strength) => strength === 3 ? 1.6 : strength === 2 ? 1.0 : 0.6;
-
-  const getHubDotStyle = (hubKey) => {
-    if (!hoveredSchool) return { r: 3, opacity: 0.55 };
-    const connected = hoveredSchool.hubs.some(h => h.hub === hubKey);
-    return connected ? { r: 4.5, opacity: 1 } : { r: 2.5, opacity: 0.15 };
-  };
+  const selectedProgram = selectedMapSchool ? programs.find(p => p.id === selectedMapSchool) : null;
 
   return (
     <div className="pc-root">
@@ -537,7 +525,7 @@ export default function ProgramComparison() {
           --mono: 'IBM Plex Mono', Menlo, monospace;
           background: var(--bg); color: var(--text); font-family: var(--sans);
           min-height: 100vh; padding: 32px clamp(12px, 3vw, 48px) 64px;
-          width: 100%; border-inline: 1px solid var(--border); font-size: 14px; line-height: 1.5;
+          width: 100%; box-sizing: border-box; font-size: 14px; line-height: 1.5;
         }
         .pc-root * { box-sizing: border-box; }
 
@@ -572,8 +560,8 @@ export default function ProgramComparison() {
         .pc-filter-chip.active { color: var(--bg); background: var(--accent); border-color: var(--accent); }
 
         /* Cards */
-        .pc-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 12px; align-items: start; }
-        .pc-card { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--border); transition: border-top-color .15s; display: flex; flex-direction: column; }
+        .pc-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+        .pc-card { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--border); transition: border-top-color .15s; display: flex; flex-direction: column; min-height: 350px; }
         .pc-card-body { padding: 20px; cursor: pointer; flex: 1; }
         .pc-card-body:hover { background: var(--surface-2); }
         .pc-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; gap: 12px; }
@@ -689,7 +677,13 @@ export default function ProgramComparison() {
         /* Misc */
         .pc-note { font-size: 12px; color: var(--text-faint); font-style: italic; margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px; line-height: 1.6; }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1300px) {
+          .pc-cards { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 800px) {
+          .pc-cards { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 540px) {
           .pc-root { padding: 20px 12px 48px; }
           .pc-sliders { grid-template-columns: 1fr; }
           .pc-cards { grid-template-columns: 1fr; }
@@ -969,14 +963,13 @@ export default function ProgramComparison() {
             <div className="pc-map-controls">
               <button className={`pc-layer-btn ${mapLayers.jobMarket ? 'active' : ''}`} onClick={() => toggleMapLayer('jobMarket')}>
                 <span className="pc-layer-indicator" style={{ background: 'rgba(228,168,83,0.6)', border: '1px solid #e4a853' }} />
-                Job Market Reach
+                Placement Reach
               </button>
-              <button className={`pc-layer-btn ${mapLayers.pipeline ? 'active' : ''}`} onClick={() => toggleMapLayer('pipeline')}>
-                <span className="pc-layer-indicator" style={{ background: 'transparent', border: '2px solid #ebe3d0', borderRadius: 0 }} />
-                Employer Pipeline
-              </button>
+              <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text-faint)', letterSpacing: '.08em', textTransform: 'uppercase', alignSelf: 'center' }}>
+                Click a school dot to see hiring hub arcs
+              </span>
             </div>
-            <div className="pc-map-wrapper">
+            <div className="pc-map-wrapper" onClick={() => setSelectedMapSchool(null)}>
               <ComposableMap projection="geoAlbersUsa" width={960} height={520}
                 style={{ width: '100%', height: 'auto', display: 'block' }}>
                 <Geographies geography={GEO_URL}>
@@ -990,37 +983,55 @@ export default function ProgramComparison() {
                 {/* Job market reach bubbles */}
                 {mapLayers.jobMarket && programs.map(p => (
                   <Marker key={`jm-${p.id}`} coordinates={p.coordinates}>
-                    <circle r={(p.placementRate / maxPlacementR) * 28 + 6} fill={p.color} fillOpacity={0.13} stroke={p.color} strokeWidth={1} strokeOpacity={0.35} />
+                    <circle r={(p.placementRate / maxPlacementR) * 28 + 6} fill={p.color} fillOpacity={0.13} stroke={p.color} strokeWidth={1} strokeOpacity={0.35} style={{ pointerEvents: 'none' }} />
                   </Marker>
                 ))}
 
-                {/* Employer pipeline arcs: Line from school to hub cities */}
-                {mapLayers.pipeline && programs.map(p =>
-                  p.hubs.map(h => {
-                    const hub = HUB_CITIES[h.hub];
-                    if (!hub) return null;
-                    return (
-                      <Line key={`arc-${p.id}-${h.hub}`}
-                        from={p.coordinates}
-                        to={hub.coordinates}
-                        stroke={p.color}
-                        strokeWidth={getArcWidth(h.strength)}
-                        strokeOpacity={getArcOpacity(p.id, h.strength)}
-                        strokeLinecap="round"
-                        fill="transparent"
-                      />
-                    );
-                  })
-                )}
-
-                {/* Hub city dots */}
-                {mapLayers.pipeline && activeHubs.map(hubKey => {
-                  const hub = HUB_CITIES[hubKey];
-                  const style = getHubDotStyle(hubKey);
+                {/* Arcs: only for the selected school */}
+                {selectedProgram && selectedProgram.hubs.map(h => {
+                  const hub = HUB_CITIES[h.hub];
+                  if (!hub) return null;
+                  const sw = h.strength === 3 ? 2.4 : h.strength === 2 ? 1.6 : 1.0;
+                  const so = h.strength === 3 ? 0.85 : h.strength === 2 ? 0.6 : 0.38;
                   return (
-                    <Marker key={`hub-${hubKey}`} coordinates={hub.coordinates}>
-                      <circle r={style.r} fill="#1a1f28" stroke="#ebe3d0" strokeWidth={1.2} opacity={style.opacity} />
-                      <text textAnchor="middle" y={-8} fill="#ebe3d0" fontSize={8} fontFamily="IBM Plex Mono" opacity={style.opacity} style={{ pointerEvents: 'none' }}>
+                    <Line key={`arc-${h.hub}`}
+                      from={selectedProgram.coordinates} to={hub.coordinates}
+                      stroke={selectedProgram.color} strokeWidth={sw} strokeOpacity={so}
+                      strokeLinecap="round" fill="transparent" style={{ pointerEvents: 'none' }} />
+                  );
+                })}
+
+                {/* Hub city labels — only for selected school's connected hubs */}
+                {selectedProgram && selectedProgram.hubs.map(h => {
+                  const hub = HUB_CITIES[h.hub];
+                  if (!hub) return null;
+                  const lw = hub.label.length * 6.8 + 14;
+                  const rectX = hub.textAnchor === 'start' ? hub.textDx - 4
+                              : hub.textAnchor === 'end'   ? hub.textDx - lw + 4
+                              : hub.textDx - lw / 2;
+                  return (
+                    <Marker key={`hub-label-${h.hub}`} coordinates={hub.coordinates}>
+                      <circle r={4.5} fill="#0f1216" stroke={selectedProgram.color} strokeWidth={1.8} style={{ pointerEvents: 'none' }} />
+                      <rect x={rectX} y={-26} width={lw} height={16} fill="#0f1216" fillOpacity={0.92} rx={2} style={{ pointerEvents: 'none' }} />
+                      <text x={hub.textDx} textAnchor={hub.textAnchor} y={-13}
+                        fill={selectedProgram.color} fontSize={10.5} fontFamily="IBM Plex Mono" fontWeight="500"
+                        style={{ pointerEvents: 'none' }}>
+                        {hub.label}
+                      </text>
+                    </Marker>
+                  );
+                })}
+
+                {/* Faint hub dots when nothing selected */}
+                {!selectedProgram && activeHubs.map(hubKey => {
+                  const hub = HUB_CITIES[hubKey];
+                  if (!hub) return null;
+                  return (
+                    <Marker key={`hub-faint-${hubKey}`} coordinates={hub.coordinates}>
+                      <circle r={2.5} fill="#1a1f28" stroke="#404550" strokeWidth={1} style={{ pointerEvents: 'none' }} />
+                      <text x={hub.textDx} textAnchor={hub.textAnchor} y={-8}
+                        fill="#404550" fontSize={8} fontFamily="IBM Plex Mono"
+                        style={{ pointerEvents: 'none' }}>
                         {hub.label}
                       </text>
                     </Marker>
@@ -1028,60 +1039,65 @@ export default function ProgramComparison() {
                 })}
 
                 {/* School dots + labels */}
-                {programs.map(p => (
-                  <Marker key={p.id} coordinates={p.coordinates}
-                    onMouseEnter={() => setHoveredSchool(p)}
-                    onMouseLeave={() => setHoveredSchool(null)}>
-                    <circle r={5} fill={p.color} stroke="#0f1216" strokeWidth={1.5}
-                      style={{ cursor: 'pointer', filter: hoveredSchool?.id === p.id ? `drop-shadow(0 0 6px ${p.color})` : 'none', transition: 'filter .15s' }} />
-                    <text textAnchor="middle" y={-10} fill="#ebe3d0" fontSize={9} fontFamily="IBM Plex Mono" style={{ pointerEvents: 'none' }}>
-                      {p.shortName}
-                    </text>
-                  </Marker>
-                ))}
+                {programs.map(p => {
+                  const isSelected = selectedMapSchool === p.id;
+                  return (
+                    <Marker key={p.id} coordinates={p.coordinates}
+                      onClick={e => { e.stopPropagation(); setSelectedMapSchool(prev => prev === p.id ? null : p.id); }}>
+                      {isSelected && <circle r={10} fill="none" stroke={p.color} strokeWidth={1.5} strokeOpacity={0.5} style={{ pointerEvents: 'none' }} />}
+                      <circle r={5} fill={p.color} stroke="#0f1216" strokeWidth={1.5}
+                        style={{ cursor: 'pointer', filter: isSelected ? `drop-shadow(0 0 5px ${p.color})` : 'none' }} />
+                      <text textAnchor="middle" y={-11} fill={isSelected ? p.color : '#ebe3d0'} fontSize={isSelected ? 10 : 9}
+                        fontFamily="IBM Plex Mono" fontWeight={isSelected ? '500' : '400'}
+                        style={{ pointerEvents: 'none' }}>
+                        {p.shortName}
+                      </text>
+                    </Marker>
+                  );
+                })}
               </ComposableMap>
 
               <div className="pc-map-hover-panel">
-                {hoveredSchool ? (
+                {selectedProgram ? (
                   <>
                     <div>
-                      <div className="pc-map-hover-name" style={{ color: hoveredSchool.color }}>{hoveredSchool.name}</div>
-                      <div className="pc-map-hover-loc">{hoveredSchool.location} · {hoveredSchool.track} · {hoveredSchool.duration}</div>
+                      <div className="pc-map-hover-name" style={{ color: selectedProgram.color }}>{selectedProgram.name}</div>
+                      <div className="pc-map-hover-loc">{selectedProgram.location} · {selectedProgram.track} · {selectedProgram.duration} · ${selectedProgram.totalCost}k</div>
                     </div>
                     <div style={{ flex: 1, minWidth: 200 }}>
-                      <div style={{ fontFamily: 'IBM Plex Mono', fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--text-faint)', marginBottom: 6 }}>Hiring Hubs</div>
-                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                        {hoveredSchool.hubs.map(h => {
+                      <div style={{ fontFamily: 'IBM Plex Mono', fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--text-faint)', marginBottom: 8 }}>Top Hiring Hubs</div>
+                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 8 }}>
+                        {selectedProgram.hubs.map(h => {
                           const hub = HUB_CITIES[h.hub];
                           const label = hub?.label || h.hub;
-                          const opacity = h.strength === 3 ? 1 : h.strength === 2 ? 0.7 : 0.45;
                           return (
-                            <span key={h.hub} style={{ fontFamily: 'IBM Plex Mono', fontSize: 10, color: hoveredSchool.color, opacity, border: `1px solid ${hoveredSchool.color}`, padding: '2px 7px', whiteSpace: 'nowrap' }}>
+                            <span key={h.hub} style={{ fontFamily: 'IBM Plex Mono', fontSize: 11, color: selectedProgram.color, border: `1px solid ${selectedProgram.color}`, padding: '3px 9px', opacity: h.strength === 3 ? 1 : h.strength === 2 ? 0.7 : 0.45, whiteSpace: 'nowrap' }}>
                               {label}
                             </span>
                           );
                         })}
                       </div>
-                      <div className="pc-map-hover-employers" style={{ marginTop: 8 }}>{hoveredSchool.topEmployers}</div>
+                      <div className="pc-map-hover-employers">{selectedProgram.topEmployers}</div>
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontFamily: 'IBM Plex Mono', fontSize: 10, color: 'var(--text-faint)' }}>
-                      <span>Placement: <span style={{ color: 'var(--text-dim)' }}>{hoveredSchool.placementRate}%</span></span>
-                      <span>Est. Salary: <span style={{ color: 'var(--accent)' }}>${hoveredSchool.expectedSalary}k</span></span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 5, fontFamily: 'IBM Plex Mono', fontSize: 10, color: 'var(--text-faint)' }}>
+                      <span>Placement: <span style={{ color: 'var(--text-dim)' }}>{selectedProgram.placementRate}%</span></span>
+                      <span>Salary: <span style={{ color: 'var(--accent)' }}>${selectedProgram.expectedSalary}k</span></span>
+                      <button style={{ marginTop: 4, fontFamily: 'IBM Plex Mono', fontSize: 10, letterSpacing: '.08em', textTransform: 'uppercase', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-faint)', padding: '4px 8px', cursor: 'pointer' }} onClick={e => { e.stopPropagation(); setSelectedMapSchool(null); }}>✕ Clear</button>
                     </div>
                   </>
                 ) : (
-                  <div className="pc-map-hover-hint">Hover a school to see its hiring hub connections</div>
+                  <div className="pc-map-hover-hint">Click a school dot to see where its graduates work</div>
                 )}
               </div>
 
               <div style={{ display: 'flex', gap: 24, padding: '12px 20px', borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'IBM Plex Mono', fontSize: 10, color: 'var(--text-faint)' }}>
                   <svg width={24} height={14}><circle cx={12} cy={7} r={6} fill="rgba(228,168,83,0.15)" stroke="#e4a853" strokeWidth={1} /></svg>
-                  Larger bubble = higher placement rate
+                  Bubble size = grad placement rate
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'IBM Plex Mono', fontSize: 10, color: 'var(--text-faint)' }}>
-                  <svg width={32} height={14}><line x1={2} y1={7} x2={30} y2={7} stroke="#ebe3d0" strokeWidth={1.5} /></svg>
-                  Thicker arc = stronger hiring pipeline to that city
+                  <svg width={32} height={14}><line x1={2} y1={7} x2={30} y2={7} stroke="#ebe3d0" strokeWidth={2} /></svg>
+                  Arc thickness = pipeline strength
                 </div>
               </div>
             </div>
