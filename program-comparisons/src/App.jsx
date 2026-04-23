@@ -131,14 +131,17 @@ function CustomScatterTooltip({ active, payload }) {
   );
 }
 
-function ScatterLabel({ x, y, index }) {
-  const entry = scatterData[index];
-  if (!entry) return null;
-  const { dx, dy, anchor } = SCATTER_LABEL_OFFSETS[entry.id] || { dx: 0, dy: -16, anchor: 'middle' };
+function ScatterDot({ cx, cy, r, payload }) {
+  if (!cx || !cy || !payload) return null;
+  const radius = r || 10;
+  const { dx, dy, anchor } = SCATTER_LABEL_OFFSETS[payload.id] || { dx: 0, dy: -16, anchor: 'middle' };
   return (
-    <text x={x + dx} y={y + dy} fill="#ebe3d0" fontSize={11} fontFamily="IBM Plex Mono" textAnchor={anchor}>
-      {entry.name}
-    </text>
+    <g>
+      <circle cx={cx} cy={cy} r={radius} fill={payload.color} fillOpacity={0.75} stroke={payload.color} strokeWidth={1} />
+      <text x={cx + dx} y={cy + dy} fill="#ebe3d0" fontSize={11} fontFamily="IBM Plex Mono" textAnchor={anchor}>
+        {payload.name}
+      </text>
+    </g>
   );
 }
 
@@ -271,8 +274,6 @@ export default function ProgramComparison() {
           min-height: 100vh;
           padding: 32px clamp(12px, 3vw, 48px) 64px;
           width: 100%;
-          max-width: 1600px;
-          margin: 0 auto;
           font-size: 14px;
           line-height: 1.5;
         }
@@ -1012,12 +1013,7 @@ export default function ProgramComparison() {
                   />
                   <ZAxis type="number" dataKey="z" range={[80, 420]} />
                   <Tooltip content={CustomScatterTooltip} cursor={{ strokeDasharray: '3 3' }} />
-                  <Scatter data={scatterData}>
-                    {scatterData.map((entry, idx) => (
-                      <Cell key={idx} fill={entry.color} stroke={entry.color} strokeWidth={1} fillOpacity={0.75} />
-                    ))}
-                    <LabelList content={ScatterLabel} />
-                  </Scatter>
+                  <Scatter data={scatterData} shape={ScatterDot} />
                 </ScatterChart>
               </ResponsiveContainer>
               <p className="pc-chart-subtitle">
