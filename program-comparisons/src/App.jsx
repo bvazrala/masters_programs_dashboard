@@ -5,75 +5,75 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Responsi
 
 const programs = [
   { id: 'uw', name: 'UW CFRM', shortName: 'UW', location: 'Seattle, WA', duration: '15 mo', durationMonths: 15,
-    cost: '~$63k total', totalCost: 63, tuitionOnly: '$49k tuition + $14k living', overBudget: false,
+    cost: '~$70k total', totalCost: 70, overBudget: false,
     track: 'Quant Finance', color: '#5e8a85',
-    admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 115,
+    admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 105,
     topRoles: 'Quant risk, fintech, tech-finance, risk modeling',
     topEmployers: "Russell, Parametric, Amazon Finance, MSFT Treasury, Moody's",
     scores: { roi: 7, affordability: 7, jobMarket: 7, weatherFit: 3, lifestyle: 7, duration: 6, capstone: 7, prestige: 6, versatility: 7 } },
   { id: 'calpoly', name: 'Cal Poly SLO MSBA', shortName: 'Cal Poly', location: 'San Luis Obispo, CA', duration: '10 mo', durationMonths: 10,
-    cost: '~$46k total', totalCost: 46, tuitionOnly: '$31k tuition + $15k living', overBudget: false,
+    cost: '~$46k total', totalCost: 46, overBudget: false,
     track: 'Business Analytics', color: '#d4a952',
-    admitOdds: 'Safety', admitOddsScore: 85, expectedSalary: 79,
+    admitOdds: 'Safety', admitOddsScore: 85, expectedSalary: 95,
     topRoles: 'Data analyst, BI, product analytics, marketing analytics',
     topEmployers: 'Oracle, Google, Deloitte, Capital One, PwC, T-Mobile',
-    scores: { roi: 6, affordability: 10, jobMarket: 5, weatherFit: 10, lifestyle: 10, duration: 9, capstone: 5, prestige: 3, versatility: 6 } },
-  { id: 'utaustin', name: 'UT Austin MSBA', shortName: 'UT Austin', location: 'Austin, TX', duration: '12 mo', durationMonths: 12,
-    cost: '~$80k total', totalCost: 80, tuitionOnly: '$53k tuition + $27k living', overBudget: false,
+    scores: { roi: 9, affordability: 10, jobMarket: 5, weatherFit: 10, lifestyle: 10, duration: 10, capstone: 6, prestige: 4, versatility: 6 } },
+  { id: 'utaustin', name: 'UT Austin MSBA', shortName: 'UT Austin', location: 'Austin, TX', duration: '10 mo', durationMonths: 10,
+    cost: '~$80k total', totalCost: 80, overBudget: false,
     track: 'Business Analytics', color: '#b8923b',
-    admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 103,
+    admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 106,
     topRoles: 'Data scientist, BI, product analytics, consulting',
     topEmployers: 'Apple, Tesla, Google, Oracle, Dell, Indeed, Meta, Deloitte',
-    scores: { roi: 8, affordability: 5, jobMarket: 7, weatherFit: 7, lifestyle: 8, duration: 9, capstone: 7, prestige: 7, versatility: 8 } },
-  { id: 'gatech', name: 'Georgia Tech MSBA', shortName: 'GA Tech', location: 'Atlanta, GA', duration: '12 mo', durationMonths: 12,
-    cost: '~$70k total', totalCost: 70, tuitionOnly: '$50k tuition + $20k living', overBudget: false,
+    scores: { roi: 8, affordability: 5, jobMarket: 8, weatherFit: 7, lifestyle: 8, duration: 10, capstone: 7, prestige: 7, versatility: 8 } },
+  { id: 'gatech', name: 'Georgia Tech MSA', shortName: 'GA Tech', location: 'Atlanta, GA', duration: '12 mo', durationMonths: 12,
+    cost: '~$70k total', totalCost: 70, overBudget: false,
     track: 'Business Analytics', color: '#a0614a',
     admitOdds: 'Target', admitOddsScore: 55, expectedSalary: 109,
     topRoles: 'Data scientist, ML engineer, business analyst, consultant',
     topEmployers: 'Delta, Home Depot, UPS, Coca-Cola, Microsoft, ICE/NYSE, Truist',
     scores: { roi: 9, affordability: 6, jobMarket: 8, weatherFit: 6, lifestyle: 6, duration: 9, capstone: 9, prestige: 8, versatility: 9 } },
-  { id: 'unc', name: 'UNC Kenan MSBA', shortName: 'UNC', location: 'Chapel Hill, NC', duration: '21 mo', durationMonths: 21,
-    cost: '~$103k total', totalCost: 103, tuitionOnly: '$75k tuition + $28k living', overBudget: false,
-    track: 'Business Analytics', color: '#6b8cae',
-    admitOdds: 'Target', admitOddsScore: 55, expectedSalary: 100,
-    topRoles: 'Data analyst, BI, consulting, financial analyst',
-    topEmployers: 'IBM, Cisco, SAS, Red Hat, Fidelity, Deloitte, BoA (Charlotte)',
-    scores: { roi: 4, affordability: 2, jobMarket: 6, weatherFit: 8, lifestyle: 7, duration: 3, capstone: 6, prestige: 7, versatility: 8 } },
+  { id: 'usc', name: 'USC Marshall MSBA', shortName: 'USC', location: 'Los Angeles, CA', duration: '12 mo', durationMonths: 12,
+    cost: '~$88k total', totalCost: 88, overBudget: false,
+    track: 'Business Analytics', color: '#a32035',
+    admitOdds: 'Target', admitOddsScore: 55, expectedSalary: 105,
+    topRoles: 'Data scientist, product analytics, fintech, consulting, entertainment analytics',
+    topEmployers: 'Amazon, Netflix, Disney, Deloitte, JPMorgan, Google, Goldman Sachs, SpaceX',
+    scores: { roi: 7, affordability: 5, jobMarket: 9, weatherFit: 10, lifestyle: 10, duration: 9, capstone: 7, prestige: 8, versatility: 8 } },
   { id: 'gwu', name: 'GWU MSBA', shortName: 'GWU', location: 'Washington, DC', duration: '12 mo', durationMonths: 12,
-    cost: '~$90k total', totalCost: 90, tuitionOnly: '$60k tuition + $30k living', overBudget: false,
+    cost: '~$90k total', totalCost: 90, overBudget: false,
     track: 'Business Analytics', color: '#8b5a8a',
-    admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 95,
+    admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 90,
     topRoles: 'Consulting, federal analytics, business analyst, BI',
     topEmployers: 'Deloitte, Accenture, Booz Allen, Guidehouse, IBM, MITRE, federal',
     scores: { roi: 5, affordability: 4, jobMarket: 7, weatherFit: 6, lifestyle: 7, duration: 8, capstone: 8, prestige: 5, versatility: 7 } },
   { id: 'rutgers', name: 'Rutgers MQF', shortName: 'Rutgers', location: 'Newark, NJ', duration: '18 mo', durationMonths: 18,
-    cost: '~$90k total', totalCost: 90, tuitionOnly: '$58k tuition + $32k living', overBudget: false,
+    cost: '~$115k total', totalCost: 115, overBudget: true,
     track: 'Quant Finance', color: '#4a6b4a',
-    admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 87,
+    admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 106,
     topRoles: 'Quant analyst, risk, quant research, trading, asset mgmt',
     topEmployers: 'Goldman, JPM, MS, Bloomberg, Prudential, BNY, Citi',
-    scores: { roi: 7, affordability: 4, jobMarket: 9, weatherFit: 5, lifestyle: 5, duration: 5, capstone: 6, prestige: 7, versatility: 6 } },
-  { id: 'ncstate', name: 'NC State MS Financial Math', shortName: 'NC State', location: 'Raleigh, NC', duration: '18 mo', durationMonths: 18,
-    cost: '~$55k total', totalCost: 55, tuitionOnly: '$35k tuition + $20k living', overBudget: false,
+    scores: { roi: 7, affordability: 3, jobMarket: 9, weatherFit: 5, lifestyle: 5, duration: 5, capstone: 6, prestige: 7, versatility: 6 } },
+  { id: 'ncstate', name: 'NC State MFM', shortName: 'NC State', location: 'Raleigh, NC', duration: '18 mo', durationMonths: 18,
+    cost: '~$68k total', totalCost: 68, overBudget: false,
     track: 'Quant Finance', color: '#6e5a9e',
-    admitOdds: 'Target', admitOddsScore: 70, expectedSalary: 112,
-    topRoles: 'Quant risk, financial analyst, risk modeling',
-    topEmployers: 'BoA (Charlotte pipeline), Wells Fargo, Truist, Fidelity, SAS',
-    scores: { roi: 8, affordability: 8, jobMarket: 7, weatherFit: 8, lifestyle: 7, duration: 5, capstone: 8, prestige: 6, versatility: 6 } },
+    admitOdds: 'Target', admitOddsScore: 70, expectedSalary: 118,
+    topRoles: 'Quant risk, financial analyst, risk modeling, derivatives',
+    topEmployers: 'BoA, Goldman, JPM, Morgan Stanley, UBS, BlackRock, Fidelity, T. Rowe Price',
+    scores: { roi: 10, affordability: 7, jobMarket: 7, weatherFit: 8, lifestyle: 7, duration: 5, capstone: 8, prestige: 6, versatility: 6 } },
   { id: 'uiuc', name: 'UIUC MSFE', shortName: 'UIUC', location: 'Champaign, IL', duration: '18 mo', durationMonths: 18,
-    cost: '~$95k total', totalCost: 95, tuitionOnly: '$65k tuition + $30k living', overBudget: false,
+    cost: '~$98k total', totalCost: 98, overBudget: true,
     track: 'Quant Finance', color: '#8c8a4a',
-    admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 130,
+    admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 115,
     topRoles: 'Quant analyst, risk, quant research, trading',
-    topEmployers: 'Citadel, Jump, DRW, IMC, Morningstar, CME, Allstate',
-    scores: { roi: 6, affordability: 3, jobMarket: 8, weatherFit: 4, lifestyle: 4, duration: 5, capstone: 9, prestige: 8, versatility: 6 } },
+    topEmployers: 'Citadel, Jump, DRW, IMC, Jane Street, CME, Morgan Stanley, JPMorgan',
+    scores: { roi: 7, affordability: 3, jobMarket: 8, weatherFit: 4, lifestyle: 4, duration: 5, capstone: 9, prestige: 8, versatility: 6 } },
   { id: 'cmu', name: 'CMU EPP', shortName: 'CMU', location: 'Pittsburgh, PA', duration: '9 mo', durationMonths: 9,
-    cost: '~$95k total', totalCost: 95, tuitionOnly: '$72k tuition + $23k living', overBudget: false,
+    cost: '~$92k total', totalCost: 92, overBudget: true,
     track: 'Policy/Consulting', color: '#9e7b5a',
-    admitOdds: 'Reach', admitOddsScore: 35, expectedSalary: 110,
+    admitOdds: 'Reach', admitOddsScore: 35, expectedSalary: 97,
     topRoles: 'Tech-policy consultant, strategy analyst, govt, industry strategy',
     topEmployers: 'Deloitte Gov, Booz Allen, MBB consulting, RAND, think tanks',
-    scores: { roi: 6, affordability: 3, jobMarket: 7, weatherFit: 2, lifestyle: 4, duration: 8, capstone: 7, prestige: 8, versatility: 8 } },
+    scores: { roi: 5, affordability: 3, jobMarket: 7, weatherFit: 2, lifestyle: 4, duration: 8, capstone: 7, prestige: 8, versatility: 7 } },
 ];
 
 const criteria = [
@@ -95,16 +95,16 @@ const TIER_COLORS = {
 };
 
 const SCATTER_LABEL_OFFSETS = {
-  uw:       { dx: 12,  dy: -18, anchor: 'start' },
-  calpoly:  { dx: 12,  dy: -16, anchor: 'start' },
-  utaustin: { dx: 12,  dy: -15, anchor: 'start' },
-  gatech:   { dx: 0,   dy: -18, anchor: 'middle' },
-  unc:      { dx: -12, dy: -18, anchor: 'end' },
-  gwu:      { dx: -12, dy: -18, anchor: 'end' },
-  rutgers:  { dx: 12,  dy: 14,  anchor: 'start' },
-  ncstate:  { dx: -12, dy: -18, anchor: 'end' },
-  uiuc:     { dx: 12,  dy: -18, anchor: 'start' },
-  cmu:      { dx: -12, dy: 0,   anchor: 'end' },
+  uw:       { dx: -14, dy:  16, anchor: 'end' },    // below-left (GA Tech just above, same x=70)
+  calpoly:  { dx:  12, dy: -16, anchor: 'start' },  // above-right (isolated bottom-left)
+  utaustin: { dx: -12, dy: -18, anchor: 'end' },    // above-left
+  gatech:   { dx:  14, dy: -16, anchor: 'start' },  // above-right (UW below, same x=70)
+  usc:      { dx:  12, dy: -18, anchor: 'start' },  // above-right
+  gwu:      { dx: -12, dy:  14, anchor: 'end' },    // below-left
+  rutgers:  { dx:   0, dy: -18, anchor: 'middle' }, // above-center (rightmost of main cluster)
+  ncstate:  { dx: -14, dy: -16, anchor: 'end' },    // above-left
+  uiuc:     { dx:  12, dy: -16, anchor: 'start' },  // above-right
+  cmu:      { dx:  12, dy:  14, anchor: 'start' },  // below-right
 };
 
 const scatterData = programs.map(p => ({
@@ -274,6 +274,7 @@ export default function ProgramComparison() {
           min-height: 100vh;
           padding: 32px clamp(12px, 3vw, 48px) 64px;
           width: 100%;
+          border-inline: 1px solid var(--border);
           font-size: 14px;
           line-height: 1.5;
         }
@@ -994,8 +995,8 @@ export default function ProgramComparison() {
                     dataKey="x"
                     name="Cost"
                     unit="k"
-                    domain={[38, 112]}
-                    ticks={[40, 50, 60, 70, 80, 90, 100, 110]}
+                    domain={[38, 125]}
+                    ticks={[50, 65, 80, 95, 110, 125]}
                     tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }}
                     stroke="#2a313c"
                     label={{ value: 'Total Cost ($k) — tuition + living', position: 'insideBottom', offset: -14, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }}
@@ -1005,8 +1006,8 @@ export default function ProgramComparison() {
                     dataKey="y"
                     name="Salary"
                     unit="k"
-                    domain={[70, 140]}
-                    ticks={[75, 90, 105, 120, 135]}
+                    domain={[82, 125]}
+                    ticks={[90, 100, 110, 120]}
                     tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }}
                     stroke="#2a313c"
                     label={{ value: 'Expected Starting Salary ($k)', angle: -90, position: 'insideLeft', offset: 10, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }}
@@ -1017,7 +1018,7 @@ export default function ProgramComparison() {
                 </ScatterChart>
               </ResponsiveContainer>
               <p className="pc-chart-subtitle">
-                Salary estimates are median starting compensation (base + bonus) from recent cohort placement data. Bubble size encodes admit likelihood.
+                Salary estimates from verified program employment reports (April 2026). Bubble size encodes admit likelihood.
               </p>
             </div>
           </>
