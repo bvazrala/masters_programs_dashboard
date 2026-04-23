@@ -40,7 +40,7 @@ const programs = [
       'No published salary data; all salary estimates are based on industry benchmarks, not verified reports',
     ],
     applyUrl: 'https://foster.uw.edu/academics/degree-programs/master-of-science-in-computational-finance-risk-management/',
-    scores: { roi: 7, affordability: 7, jobMarket: 7, weatherFit: 3, lifestyle: 7, duration: 6, capstone: 7, prestige: 6, versatility: 7 },
+    scores: { roi: 7, affordability: 7, jobMarket: 7, marketAccess: 8, weatherFit: 3, lifestyle: 7, duration: 6, capstone: 7, prestige: 6, versatility: 7 },
   },
   {
     id: 'calpoly', name: 'Cal Poly SLO MSBA', shortName: 'Cal Poly', location: 'San Luis Obispo, CA', duration: '10 mo', durationMonths: 10,
@@ -62,7 +62,7 @@ const programs = [
       'Less quant depth; best for general business analytics rather than specialized quantitative roles',
     ],
     applyUrl: 'https://orfalea.calpoly.edu/graduate/ms-business-analytics',
-    scores: { roi: 9, affordability: 10, jobMarket: 5, weatherFit: 10, lifestyle: 10, duration: 10, capstone: 6, prestige: 4, versatility: 6 },
+    scores: { roi: 9, affordability: 10, jobMarket: 5, marketAccess: 5, weatherFit: 10, lifestyle: 10, duration: 10, capstone: 6, prestige: 4, versatility: 6 },
   },
   {
     id: 'utaustin', name: 'UT Austin MSBA', shortName: 'UT Austin', location: 'Austin, TX', duration: '10 mo', durationMonths: 10,
@@ -84,7 +84,7 @@ const programs = [
       'Selectivity has increased sharply as reputation has grown; admission is increasingly competitive',
     ],
     applyUrl: 'https://www.mccombs.utexas.edu/graduate/masters-programs/ms-business-analytics/',
-    scores: { roi: 8, affordability: 5, jobMarket: 8, weatherFit: 7, lifestyle: 8, duration: 10, capstone: 7, prestige: 7, versatility: 8 },
+    scores: { roi: 8, affordability: 5, jobMarket: 8, marketAccess: 7, weatherFit: 7, lifestyle: 8, duration: 10, capstone: 7, prestige: 7, versatility: 8 },
   },
   {
     id: 'gatech', name: 'Georgia Tech MSA', shortName: 'GA Tech', location: 'Atlanta, GA', duration: '12 mo', durationMonths: 12,
@@ -106,7 +106,7 @@ const programs = [
       'Less finance-specific pipeline than Rutgers or UIUC; best for tech, consulting, and analytics roles',
     ],
     applyUrl: 'https://scheller.gatech.edu/degree-programs/master-of-science/master-of-science-in-analytics/',
-    scores: { roi: 9, affordability: 6, jobMarket: 8, weatherFit: 6, lifestyle: 6, duration: 9, capstone: 9, prestige: 8, versatility: 9 },
+    scores: { roi: 9, affordability: 6, jobMarket: 8, marketAccess: 7, weatherFit: 6, lifestyle: 6, duration: 9, capstone: 9, prestige: 8, versatility: 9 },
   },
   {
     id: 'usc', name: 'USC Marshall MSBA', shortName: 'USC', location: 'Los Angeles, CA', duration: '12 mo', durationMonths: 12,
@@ -128,7 +128,7 @@ const programs = [
       'Rising selectivity; increasingly competitive admission as the program\'s reputation has grown',
     ],
     applyUrl: 'https://www.marshall.usc.edu/programs/specialized-masters-programs/master-science-business-analytics',
-    scores: { roi: 7, affordability: 5, jobMarket: 9, weatherFit: 10, lifestyle: 10, duration: 9, capstone: 7, prestige: 8, versatility: 8 },
+    scores: { roi: 7, affordability: 5, jobMarket: 9, marketAccess: 9, weatherFit: 10, lifestyle: 10, duration: 9, capstone: 7, prestige: 8, versatility: 8 },
   },
   {
     id: 'gwu', name: 'GWU MSBA', shortName: 'GWU', location: 'Washington, DC', duration: '12 mo', durationMonths: 12,
@@ -150,7 +150,7 @@ const programs = [
       'High DC cost of living relative to program salary outcomes reduces effective financial return',
     ],
     applyUrl: 'https://business.gwu.edu/masters-program-business-analytics',
-    scores: { roi: 5, affordability: 4, jobMarket: 7, weatherFit: 6, lifestyle: 7, duration: 8, capstone: 8, prestige: 5, versatility: 7 },
+    scores: { roi: 5, affordability: 4, jobMarket: 7, marketAccess: 9, weatherFit: 6, lifestyle: 7, duration: 8, capstone: 8, prestige: 5, versatility: 7 },
   },
   {
     id: 'rutgers', name: 'Rutgers MQF', shortName: 'Rutgers', location: 'Newark, NJ', duration: '18 mo', durationMonths: 18,
@@ -172,7 +172,7 @@ const programs = [
       'Specialist track; less effective if career interests shift toward general tech, analytics, or consulting',
     ],
     applyUrl: 'https://business.rutgers.edu/master-quantitative-finance',
-    scores: { roi: 7, affordability: 3, jobMarket: 9, weatherFit: 5, lifestyle: 5, duration: 5, capstone: 6, prestige: 7, versatility: 6 },
+    scores: { roi: 7, affordability: 3, jobMarket: 9, marketAccess: 10, weatherFit: 5, lifestyle: 5, duration: 5, capstone: 6, prestige: 7, versatility: 6 },
   },
   {
     id: 'ncstate', name: 'NC State MFM', shortName: 'NC State', location: 'Raleigh, NC', duration: '18 mo', durationMonths: 18,
@@ -194,7 +194,7 @@ const programs = [
       'Specialist quant track — pivoting to general tech analytics, consulting, or product management is harder',
     ],
     applyUrl: 'https://financial.math.ncsu.edu/',
-    scores: { roi: 10, affordability: 7, jobMarket: 7, weatherFit: 8, lifestyle: 7, duration: 5, capstone: 8, prestige: 6, versatility: 6 },
+    scores: { roi: 10, affordability: 7, jobMarket: 7, marketAccess: 5, weatherFit: 8, lifestyle: 7, duration: 5, capstone: 8, prestige: 6, versatility: 6 },
   },
   {
     id: 'uiuc', name: 'UIUC MSFE', shortName: 'UIUC', location: 'Champaign, IL', duration: '18 mo', durationMonths: 18,
@@ -216,7 +216,7 @@ const programs = [
       'Cold midwestern winters with extended grey periods November through March — significant weather mismatch',
     ],
     applyUrl: 'https://msfe.illinois.edu/',
-    scores: { roi: 7, affordability: 3, jobMarket: 8, weatherFit: 4, lifestyle: 4, duration: 5, capstone: 9, prestige: 8, versatility: 6 },
+    scores: { roi: 7, affordability: 3, jobMarket: 8, marketAccess: 6, weatherFit: 4, lifestyle: 4, duration: 5, capstone: 9, prestige: 8, versatility: 6 },
   },
   {
     id: 'cmu', name: 'CMU EPP', shortName: 'CMU', location: 'Pittsburgh, PA', duration: '9 mo', durationMonths: 9,
@@ -238,7 +238,7 @@ const programs = [
       'Pittsburgh is the cloudiest major US city (~42% sunshine) and has limited lifestyle appeal',
     ],
     applyUrl: 'https://www.cmu.edu/epp/master/',
-    scores: { roi: 5, affordability: 3, jobMarket: 7, weatherFit: 2, lifestyle: 4, duration: 8, capstone: 7, prestige: 8, versatility: 7 },
+    scores: { roi: 5, affordability: 3, jobMarket: 7, marketAccess: 5, weatherFit: 2, lifestyle: 4, duration: 8, capstone: 7, prestige: 8, versatility: 7 },
   },
   {
     id: 'sjsu', name: 'SJSU MS Financial Analytics', shortName: 'SJSU', location: 'San Jose, CA', duration: '12 mo', durationMonths: 12,
@@ -246,7 +246,7 @@ const programs = [
     admitOdds: 'Safety', admitOddsScore: 78, expectedSalary: 100,
     coordinates: [-121.89, 37.34],
     placementRate: 80, pipelineScore: 6,
-    hubs: [{ hub: 'la', strength: 2 }, { hub: 'nyc', strength: 1 }],
+    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'la', strength: 2 }, { hub: 'nyc', strength: 1 }],
     topRoles: 'Fintech analyst, quantitative analyst, financial data analyst, risk analyst',
     topEmployers: 'PayPal, Visa, Charles Schwab, Wells Fargo, Bloomberg, Salesforce, Bay Area fintech firms',
     pros: [
@@ -260,7 +260,7 @@ const programs = [
       'No well-documented salary or placement data published; outcomes are harder to verify than most programs here',
     ],
     applyUrl: 'https://www.sjsu.edu/lucas/programs/ms-financial-analytics/',
-    scores: { roi: 9, affordability: 9, jobMarket: 8, weatherFit: 7, lifestyle: 7, duration: 9, capstone: 5, prestige: 4, versatility: 6 },
+    scores: { roi: 9, affordability: 9, jobMarket: 8, marketAccess: 10, weatherFit: 7, lifestyle: 7, duration: 9, capstone: 5, prestige: 4, versatility: 6 },
   },
   {
     id: 'tamu', name: 'Texas A&M Mays MSBA', shortName: 'TX A&M', location: 'College Station, TX', duration: '12 mo', durationMonths: 12,
@@ -282,7 +282,7 @@ const programs = [
       'Employer pipeline skews Texas-based and energy-sector; less access to West Coast tech or Wall Street finance',
     ],
     applyUrl: 'https://mays.tamu.edu/master-of-science-in-business-analytics/',
-    scores: { roi: 9, affordability: 9, jobMarket: 7, weatherFit: 6, lifestyle: 5, duration: 9, capstone: 7, prestige: 7, versatility: 8 },
+    scores: { roi: 9, affordability: 9, jobMarket: 7, marketAccess: 4, weatherFit: 6, lifestyle: 5, duration: 9, capstone: 7, prestige: 7, versatility: 8 },
   },
   {
     id: 'asu', name: 'ASU W.P. Carey MSBA', shortName: 'ASU', location: 'Tempe, AZ', duration: '12 mo', durationMonths: 12,
@@ -304,7 +304,7 @@ const programs = [
       'Pipeline skews toward supply chain, operations analytics, and Arizona-based corporates',
     ],
     applyUrl: 'https://wpcarey.asu.edu/master-science-business-analytics',
-    scores: { roi: 8, affordability: 8, jobMarket: 7, weatherFit: 8, lifestyle: 7, duration: 9, capstone: 7, prestige: 6, versatility: 8 },
+    scores: { roi: 8, affordability: 8, jobMarket: 7, marketAccess: 6, weatherFit: 8, lifestyle: 7, duration: 9, capstone: 7, prestige: 6, versatility: 8 },
   },
   {
     id: 'vanderbilt', name: 'Vanderbilt Owen MSBA', shortName: 'Vandy', location: 'Nashville, TN', duration: '12 mo', durationMonths: 12,
@@ -326,7 +326,7 @@ const programs = [
       'Less depth in quant finance or pure data science compared to UIUC, Rutgers, or GA Tech',
     ],
     applyUrl: 'https://business.vanderbilt.edu/graduate/master-of-science-in-business-analytics/',
-    scores: { roi: 7, affordability: 5, jobMarket: 7, weatherFit: 7, lifestyle: 8, duration: 9, capstone: 8, prestige: 8, versatility: 8 },
+    scores: { roi: 7, affordability: 5, jobMarket: 7, marketAccess: 3, weatherFit: 7, lifestyle: 8, duration: 9, capstone: 8, prestige: 8, versatility: 8 },
   },
   {
     id: 'bu', name: 'BU Questrom MSBA', shortName: 'BU', location: 'Boston, MA', duration: '12 mo', durationMonths: 12,
@@ -348,20 +348,21 @@ const programs = [
       'BU Questrom competes against Harvard, MIT, and Boston College for top employer attention in Boston',
     ],
     applyUrl: 'https://questromworld.bu.edu/msba/',
-    scores: { roi: 7, affordability: 5, jobMarket: 8, weatherFit: 3, lifestyle: 7, duration: 9, capstone: 7, prestige: 7, versatility: 8 },
+    scores: { roi: 7, affordability: 5, jobMarket: 8, marketAccess: 10, weatherFit: 3, lifestyle: 7, duration: 9, capstone: 7, prestige: 7, versatility: 8 },
   },
 ];
 
 const criteria = [
-  { key: 'roi',          label: 'ROI',           description: 'Expected salary outcome relative to program cost' },
-  { key: 'affordability',label: 'Affordability',  description: 'Absolute program cost (cheaper = higher)' },
-  { key: 'jobMarket',    label: 'Job Market',     description: 'Local employer depth for target roles' },
-  { key: 'weatherFit',   label: 'Weather Fit',    description: 'Match to warm, sunny SoCal-style preference' },
-  { key: 'lifestyle',    label: 'Lifestyle',      description: 'Food, culture, activities, city vibe' },
-  { key: 'duration',     label: 'Duration',       description: 'Program length (shorter = higher)' },
-  { key: 'capstone',     label: 'Capstone',       description: 'Quality of applied project / industry partnership' },
-  { key: 'prestige',     label: 'Prestige',       description: 'Brand strength with employers' },
-  { key: 'versatility',  label: 'Versatility',    description: 'Breadth of career paths program opens' },
+  { key: 'roi',           label: 'ROI',            description: 'Expected salary outcome relative to program cost' },
+  { key: 'affordability', label: 'Affordability',  description: 'Absolute program cost (cheaper = higher)' },
+  { key: 'jobMarket',     label: 'Job Market',     description: 'Local employer depth for target roles' },
+  { key: 'marketAccess',  label: 'Market Access',  description: 'Geographic proximity to major hiring hubs (SF, NYC, LA, DC, Boston, Chicago)' },
+  { key: 'weatherFit',    label: 'Weather Fit',    description: 'Match to warm, sunny SoCal-style preference' },
+  { key: 'lifestyle',     label: 'Lifestyle',      description: 'Food, culture, activities, city vibe' },
+  { key: 'duration',      label: 'Duration',       description: 'Program length (shorter = higher)' },
+  { key: 'capstone',      label: 'Capstone',       description: 'Quality of applied project / industry partnership' },
+  { key: 'prestige',      label: 'Prestige',       description: 'Brand strength with employers' },
+  { key: 'versatility',   label: 'Versatility',    description: 'Breadth of career paths program opens' },
 ];
 
 const TIER_COLORS = { Reach: '#c96e5c', Target: '#e4a853', Safety: '#5e8a85' };
@@ -433,9 +434,9 @@ const SectionHeader = ({ num, title, extra, onToggle, open }) => (
 
 export default function ProgramComparison() {
   const [selected, setSelected]           = useState(['cmu', 'uw', 'utaustin']);
-  const [weights, setWeights]             = useState({ roi: 9, affordability: 7, jobMarket: 10, weatherFit: 4, lifestyle: 6, duration: 5, capstone: 9, prestige: 9, versatility: 8 });
+  const [weights, setWeights]             = useState({ roi: 9, affordability: 7, jobMarket: 10, marketAccess: 9, weatherFit: 4, lifestyle: 6, duration: 5, capstone: 9, prestige: 9, versatility: 8 });
   const [trackFilter, setTrackFilter]     = useState('All');
-  const [collapsed, setCollapsed]         = useState({});
+  const [collapsed, setCollapsed]         = useState({ '01': true, '02': true, '03': true, '04': true, '05': true, '06': true, '07': true });
   const [rankingTab, setRankingTab]       = useState('weighted');
   const [detailsModal, setDetailsModal]       = useState(null);
   const [mapLayers, setMapLayers]             = useState({ jobMarket: true });
@@ -1005,16 +1006,16 @@ export default function ProgramComparison() {
                 {selectedProgram && selectedProgram.hubs.map(h => {
                   const hub = HUB_CITIES[h.hub];
                   if (!hub) return null;
-                  const lw = hub.label.length * 6.8 + 14;
-                  const rectX = hub.textAnchor === 'start' ? hub.textDx - 4
-                              : hub.textAnchor === 'end'   ? hub.textDx - lw + 4
+                  const lw = hub.label.length * 7.2 + 16;
+                  const rectX = hub.textAnchor === 'start' ? hub.textDx - 5
+                              : hub.textAnchor === 'end'   ? hub.textDx - lw + 5
                               : hub.textDx - lw / 2;
                   return (
                     <Marker key={`hub-label-${h.hub}`} coordinates={hub.coordinates}>
-                      <circle r={4.5} fill="#0f1216" stroke={selectedProgram.color} strokeWidth={1.8} style={{ pointerEvents: 'none' }} />
-                      <rect x={rectX} y={-26} width={lw} height={16} fill="#0f1216" fillOpacity={0.92} rx={2} style={{ pointerEvents: 'none' }} />
-                      <text x={hub.textDx} textAnchor={hub.textAnchor} y={-13}
-                        fill={selectedProgram.color} fontSize={10.5} fontFamily="IBM Plex Mono" fontWeight="500"
+                      <circle r={6} fill="#0f1216" stroke={selectedProgram.color} strokeWidth={2} style={{ pointerEvents: 'none' }} />
+                      <rect x={rectX} y={-28} width={lw} height={17} fill="#171b22" fillOpacity={0.96} stroke={selectedProgram.color} strokeWidth={0.5} rx={2} style={{ pointerEvents: 'none' }} />
+                      <text x={hub.textDx} textAnchor={hub.textAnchor} y={-14}
+                        fill={selectedProgram.color} fontSize={11} fontFamily="IBM Plex Mono" fontWeight="500"
                         style={{ pointerEvents: 'none' }}>
                         {hub.label}
                       </text>
@@ -1022,15 +1023,17 @@ export default function ProgramComparison() {
                   );
                 })}
 
-                {/* Faint hub dots when nothing selected */}
-                {!selectedProgram && activeHubs.map(hubKey => {
+                {/* Hub dots — always visible, brighter when a school is selected */}
+                {activeHubs.map(hubKey => {
                   const hub = HUB_CITIES[hubKey];
                   if (!hub) return null;
+                  const isConnected = selectedProgram?.hubs.some(h => h.hub === hubKey);
+                  if (isConnected) return null; // hub label marker handles the selected case
                   return (
-                    <Marker key={`hub-faint-${hubKey}`} coordinates={hub.coordinates}>
-                      <circle r={2.5} fill="#1a1f28" stroke="#404550" strokeWidth={1} style={{ pointerEvents: 'none' }} />
-                      <text x={hub.textDx} textAnchor={hub.textAnchor} y={-8}
-                        fill="#404550" fontSize={8} fontFamily="IBM Plex Mono"
+                    <Marker key={`hub-dot-${hubKey}`} coordinates={hub.coordinates}>
+                      <circle r={3.5} fill="#0f1216" stroke="#6a7080" strokeWidth={1.2} style={{ pointerEvents: 'none' }} />
+                      <text x={hub.textDx} textAnchor={hub.textAnchor} y={-9}
+                        fill="#6a7080" fontSize={9} fontFamily="IBM Plex Mono"
                         style={{ pointerEvents: 'none' }}>
                         {hub.label}
                       </text>
