@@ -4,76 +4,76 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Responsi
          BarChart, Bar, LabelList } from 'recharts';
 
 const programs = [
-  { id: 'uw', name: 'UW CFRM', shortName: 'UW', location: 'Seattle, WA', duration: '12 mo', durationMonths: 12,
-    cost: '~$75k total', totalCost: 75, tuitionOnly: '$49k tuition + $26k living', overBudget: false,
+  { id: 'uw', name: 'UW CFRM', shortName: 'UW', location: 'Seattle, WA', duration: '15 mo', durationMonths: 15,
+    cost: '~$63k total', totalCost: 63, tuitionOnly: '$49k tuition + $14k living', overBudget: false,
     track: 'Quant Finance', color: '#5e8a85',
-    admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 110,
+    admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 115,
     topRoles: 'Quant risk, fintech, tech-finance, risk modeling',
-    topEmployers: 'Russell, Parametric, Amazon Finance, MSFT Treasury, Moody\'s',
-    scores: { roi: 8, affordability: 7, jobMarket: 6, weatherFit: 10, lifestyle: 9, shortDuration: 7, capstone: 6, prestige: 7, versatility: 4 } },
+    topEmployers: "Russell, Parametric, Amazon Finance, MSFT Treasury, Moody's",
+    scores: { roi: 7, affordability: 7, jobMarket: 7, weatherFit: 3, lifestyle: 7, duration: 6, capstone: 7, prestige: 6, versatility: 7 } },
   { id: 'calpoly', name: 'Cal Poly SLO MSBA', shortName: 'Cal Poly', location: 'San Luis Obispo, CA', duration: '10 mo', durationMonths: 10,
-    cost: '~$50k total', totalCost: 50, tuitionOnly: '$31k tuition + $19k living', overBudget: false,
+    cost: '~$46k total', totalCost: 46, tuitionOnly: '$31k tuition + $15k living', overBudget: false,
     track: 'Business Analytics', color: '#d4a952',
-    admitOdds: 'Safety', admitOddsScore: 85, expectedSalary: 95,
+    admitOdds: 'Safety', admitOddsScore: 85, expectedSalary: 79,
     topRoles: 'Data analyst, BI, product analytics, marketing analytics',
     topEmployers: 'Oracle, Google, Deloitte, Capital One, PwC, T-Mobile',
-    scores: { roi: 9, affordability: 10, jobMarket: 7, weatherFit: 10, lifestyle: 5, shortDuration: 9, capstone: 8, prestige: 5, versatility: 5 } },
-  { id: 'utaustin', name: 'UT Austin MSBA', shortName: 'UT Austin', location: 'Austin, TX', duration: '10 mo', durationMonths: 10,
-    cost: '~$72k total', totalCost: 72, tuitionOnly: '$53k tuition + $19k living', overBudget: false,
+    scores: { roi: 6, affordability: 10, jobMarket: 5, weatherFit: 10, lifestyle: 10, duration: 9, capstone: 5, prestige: 3, versatility: 6 } },
+  { id: 'utaustin', name: 'UT Austin MSBA', shortName: 'UT Austin', location: 'Austin, TX', duration: '12 mo', durationMonths: 12,
+    cost: '~$80k total', totalCost: 80, tuitionOnly: '$53k tuition + $27k living', overBudget: false,
     track: 'Business Analytics', color: '#b8923b',
-    admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 115,
+    admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 103,
     topRoles: 'Data scientist, BI, product analytics, consulting',
     topEmployers: 'Apple, Tesla, Google, Oracle, Dell, Indeed, Meta, Deloitte',
-    scores: { roi: 8, affordability: 7, jobMarket: 8, weatherFit: 3, lifestyle: 9, shortDuration: 9, capstone: 8, prestige: 9, versatility: 8 } },
+    scores: { roi: 8, affordability: 5, jobMarket: 7, weatherFit: 7, lifestyle: 8, duration: 9, capstone: 7, prestige: 7, versatility: 8 } },
   { id: 'gatech', name: 'Georgia Tech MSBA', shortName: 'GA Tech', location: 'Atlanta, GA', duration: '12 mo', durationMonths: 12,
-    cost: '~$75k total', totalCost: 75, tuitionOnly: '$55k tuition + $20k living', overBudget: false,
+    cost: '~$70k total', totalCost: 70, tuitionOnly: '$50k tuition + $20k living', overBudget: false,
     track: 'Business Analytics', color: '#a0614a',
-    admitOdds: 'Target', admitOddsScore: 55, expectedSalary: 115,
+    admitOdds: 'Target', admitOddsScore: 55, expectedSalary: 109,
     topRoles: 'Data scientist, ML engineer, business analyst, consultant',
     topEmployers: 'Delta, Home Depot, UPS, Coca-Cola, Microsoft, ICE/NYSE, Truist',
-    scores: { roi: 8, affordability: 7, jobMarket: 8, weatherFit: 3, lifestyle: 7, shortDuration: 8, capstone: 8, prestige: 9, versatility: 8 } },
-  { id: 'unc', name: 'UNC Kenan MSBA', shortName: 'UNC', location: 'Chapel Hill, NC', duration: '10 mo', durationMonths: 10,
-    cost: '~$81k total', totalCost: 81, tuitionOnly: '$65k tuition + $16k living', overBudget: false,
+    scores: { roi: 9, affordability: 6, jobMarket: 8, weatherFit: 6, lifestyle: 6, duration: 9, capstone: 9, prestige: 8, versatility: 9 } },
+  { id: 'unc', name: 'UNC Kenan MSBA', shortName: 'UNC', location: 'Chapel Hill, NC', duration: '21 mo', durationMonths: 21,
+    cost: '~$103k total', totalCost: 103, tuitionOnly: '$75k tuition + $28k living', overBudget: false,
     track: 'Business Analytics', color: '#6b8cae',
-    admitOdds: 'Target', admitOddsScore: 55, expectedSalary: 105,
+    admitOdds: 'Target', admitOddsScore: 55, expectedSalary: 100,
     topRoles: 'Data analyst, BI, consulting, financial analyst',
     topEmployers: 'IBM, Cisco, SAS, Red Hat, Fidelity, Deloitte, BoA (Charlotte)',
-    scores: { roi: 7, affordability: 6, jobMarket: 8, weatherFit: 5, lifestyle: 7, shortDuration: 9, capstone: 8, prestige: 8, versatility: 7 } },
+    scores: { roi: 4, affordability: 2, jobMarket: 6, weatherFit: 8, lifestyle: 7, duration: 3, capstone: 6, prestige: 7, versatility: 8 } },
   { id: 'gwu', name: 'GWU MSBA', shortName: 'GWU', location: 'Washington, DC', duration: '12 mo', durationMonths: 12,
-    cost: '~$82k total', totalCost: 82, tuitionOnly: '$55k tuition + $27k living', overBudget: false,
+    cost: '~$90k total', totalCost: 90, tuitionOnly: '$60k tuition + $30k living', overBudget: false,
     track: 'Business Analytics', color: '#8b5a8a',
-    admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 100,
+    admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 95,
     topRoles: 'Consulting, federal analytics, business analyst, BI',
     topEmployers: 'Deloitte, Accenture, Booz Allen, Guidehouse, IBM, MITRE, federal',
-    scores: { roi: 7, affordability: 5, jobMarket: 8, weatherFit: 6, lifestyle: 9, shortDuration: 8, capstone: 8, prestige: 7, versatility: 8 } },
-  { id: 'rutgers', name: 'Rutgers MQF', shortName: 'Rutgers', location: 'Newark, NJ', duration: '16 mo', durationMonths: 16,
-    cost: '~$80k / $95k*', totalCost: 85, tuitionOnly: '$50k–65k tuition + $30k living', overBudget: false,
+    scores: { roi: 5, affordability: 4, jobMarket: 7, weatherFit: 6, lifestyle: 7, duration: 8, capstone: 8, prestige: 5, versatility: 7 } },
+  { id: 'rutgers', name: 'Rutgers MQF', shortName: 'Rutgers', location: 'Newark, NJ', duration: '18 mo', durationMonths: 18,
+    cost: '~$90k total', totalCost: 90, tuitionOnly: '$58k tuition + $32k living', overBudget: false,
     track: 'Quant Finance', color: '#4a6b4a',
-    admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 135,
+    admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 87,
     topRoles: 'Quant analyst, risk, quant research, trading, asset mgmt',
     topEmployers: 'Goldman, JPM, MS, Bloomberg, Prudential, BNY, Citi',
-    scores: { roi: 9, affordability: 6, jobMarket: 10, weatherFit: 5, lifestyle: 6, shortDuration: 5, capstone: 8, prestige: 7, versatility: 7 } },
-  { id: 'ncstate', name: 'NC State MS Financial Math', shortName: 'NC State', location: 'Raleigh, NC', duration: '14 mo', durationMonths: 14,
-    cost: '~$62k total', totalCost: 62, tuitionOnly: '$40k tuition + $22k living', overBudget: false,
+    scores: { roi: 7, affordability: 4, jobMarket: 9, weatherFit: 5, lifestyle: 5, duration: 5, capstone: 6, prestige: 7, versatility: 6 } },
+  { id: 'ncstate', name: 'NC State MS Financial Math', shortName: 'NC State', location: 'Raleigh, NC', duration: '18 mo', durationMonths: 18,
+    cost: '~$55k total', totalCost: 55, tuitionOnly: '$35k tuition + $20k living', overBudget: false,
     track: 'Quant Finance', color: '#6e5a9e',
-    admitOdds: 'Target', admitOddsScore: 70, expectedSalary: 105,
+    admitOdds: 'Target', admitOddsScore: 70, expectedSalary: 112,
     topRoles: 'Quant risk, financial analyst, risk modeling',
     topEmployers: 'BoA (Charlotte pipeline), Wells Fargo, Truist, Fidelity, SAS',
-    scores: { roi: 8, affordability: 8, jobMarket: 6, weatherFit: 5, lifestyle: 6, shortDuration: 6, capstone: 7, prestige: 6, versatility: 3 } },
-  { id: 'uiuc', name: 'UIUC MSFE', shortName: 'UIUC', location: 'Champaign, IL', duration: '16 mo', durationMonths: 16,
-    cost: '~$82k total', totalCost: 82, tuitionOnly: '$60k tuition + $22k living', overBudget: false,
+    scores: { roi: 8, affordability: 8, jobMarket: 7, weatherFit: 8, lifestyle: 7, duration: 5, capstone: 8, prestige: 6, versatility: 6 } },
+  { id: 'uiuc', name: 'UIUC MSFE', shortName: 'UIUC', location: 'Champaign, IL', duration: '18 mo', durationMonths: 18,
+    cost: '~$95k total', totalCost: 95, tuitionOnly: '$65k tuition + $30k living', overBudget: false,
     track: 'Quant Finance', color: '#8c8a4a',
     admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 130,
     topRoles: 'Quant analyst, risk, quant research, trading',
     topEmployers: 'Citadel, Jump, DRW, IMC, Morningstar, CME, Allstate',
-    scores: { roi: 7, affordability: 5, jobMarket: 8, weatherFit: 4, lifestyle: 4, shortDuration: 5, capstone: 7, prestige: 7, versatility: 3 } },
+    scores: { roi: 6, affordability: 3, jobMarket: 8, weatherFit: 4, lifestyle: 4, duration: 5, capstone: 9, prestige: 8, versatility: 6 } },
   { id: 'cmu', name: 'CMU EPP', shortName: 'CMU', location: 'Pittsburgh, PA', duration: '9 mo', durationMonths: 9,
-    cost: '~$75k total', totalCost: 75, tuitionOnly: '$60k tuition + $15k living', overBudget: false,
+    cost: '~$95k total', totalCost: 95, tuitionOnly: '$72k tuition + $23k living', overBudget: false,
     track: 'Policy/Consulting', color: '#9e7b5a',
     admitOdds: 'Reach', admitOddsScore: 35, expectedSalary: 110,
     topRoles: 'Tech-policy consultant, strategy analyst, govt, industry strategy',
     topEmployers: 'Deloitte Gov, Booz Allen, MBB consulting, RAND, think tanks',
-    scores: { roi: 7, affordability: 7, jobMarket: 7, weatherFit: 7, lifestyle: 7, shortDuration: 9, capstone: 6, prestige: 9, versatility: 10 } },
+    scores: { roi: 6, affordability: 3, jobMarket: 7, weatherFit: 2, lifestyle: 4, duration: 8, capstone: 7, prestige: 8, versatility: 8 } },
 ];
 
 const criteria = [
@@ -82,7 +82,7 @@ const criteria = [
   { key: 'jobMarket', label: 'Job Market', description: 'Local employer depth for target roles' },
   { key: 'weatherFit', label: 'Weather Fit', description: 'Match to 50-70°F cloudy-morning preference' },
   { key: 'lifestyle', label: 'Lifestyle', description: 'Food, culture, activities, city vibe' },
-  { key: 'shortDuration', label: 'Short Duration', description: 'Program length (shorter = higher)' },
+  { key: 'duration', label: 'Duration', description: 'Program length (shorter = higher)' },
   { key: 'capstone', label: 'Capstone', description: 'Quality of applied project / industry partnership' },
   { key: 'prestige', label: 'Prestige', description: 'Brand strength with employers' },
   { key: 'versatility', label: 'Versatility', description: 'Breadth of career paths program opens (generalist vs specialist)' },
@@ -94,21 +94,19 @@ const TIER_COLORS = {
   'Safety': '#5e8a85',
 };
 
-// Per-point label offsets to prevent overlapping in the scatter chart
 const SCATTER_LABEL_OFFSETS = {
-  uw:       { dx: -16, dy: -16, anchor: 'end' },
-  calpoly:  { dx: 16, dy: 8, anchor: 'start' },
-  utaustin: { dx: -16, dy: -16, anchor: 'end' },
-  gatech:   { dx: 16, dy: -16, anchor: 'start' },
-  unc:      { dx: -16, dy: -16, anchor: 'end' },
-  gwu:      { dx: 16, dy: 14, anchor: 'start' },
-  rutgers:  { dx: 16, dy: -8, anchor: 'start' },
-  ncstate:  { dx: 16, dy: 6, anchor: 'start' },
-  uiuc:     { dx: -16, dy: -16, anchor: 'end' },
-  cmu:      { dx: 16, dy: 14, anchor: 'start' },
+  uw:       { dx: 12,  dy: -18, anchor: 'start' },
+  calpoly:  { dx: 12,  dy: -16, anchor: 'start' },
+  utaustin: { dx: 12,  dy: -15, anchor: 'start' },
+  gatech:   { dx: 0,   dy: -18, anchor: 'middle' },
+  unc:      { dx: -12, dy: -18, anchor: 'end' },
+  gwu:      { dx: -12, dy: -18, anchor: 'end' },
+  rutgers:  { dx: 12,  dy: 14,  anchor: 'start' },
+  ncstate:  { dx: -12, dy: -18, anchor: 'end' },
+  uiuc:     { dx: 12,  dy: -18, anchor: 'start' },
+  cmu:      { dx: -12, dy: 0,   anchor: 'end' },
 };
 
-// Module-level derived data (no state dependency)
 const scatterData = programs.map(p => ({
   x: p.totalCost, y: p.expectedSalary, z: p.admitOddsScore,
   name: p.shortName, fullName: p.name, location: p.location,
@@ -145,11 +143,13 @@ function ScatterLabel({ x, y, index }) {
 }
 
 const SectionHeader = ({ num, title, extra, onToggle, open }) => (
-  <div className="pc-section-header" onClick={onToggle} style={{ cursor: 'pointer' }}>
+  <div className="pc-section-header" onClick={onToggle} role="button" aria-expanded={open}>
     <span className="pc-section-number">{num}</span>
     <h2 className="pc-section-title">{title}</h2>
     {extra}
-    <span className="pc-collapse-chevron">{open ? '▾' : '▸'}</span>
+    <span className="pc-collapse-btn" aria-label={open ? 'Collapse' : 'Expand'}>
+      {open ? '−' : '+'}
+    </span>
   </div>
 );
 
@@ -157,7 +157,7 @@ export default function ProgramComparison() {
   const [selected, setSelected] = useState(['cmu', 'uw', 'utaustin']);
   const [weights, setWeights] = useState({
     roi: 9, affordability: 7, jobMarket: 10, weatherFit: 4,
-    lifestyle: 6, shortDuration: 5, capstone: 9, prestige: 9, versatility: 8,
+    lifestyle: 6, duration: 5, capstone: 9, prestige: 9, versatility: 8,
   });
   const [trackFilter, setTrackFilter] = useState('All');
   const [collapsed, setCollapsed] = useState({});
@@ -184,7 +184,6 @@ export default function ProgramComparison() {
     }
   };
 
-  // Drag handlers for personal ranking
   const handleDragStart = (e, id) => {
     e.dataTransfer.effectAllowed = 'move';
     setDragState({ dragging: id, over: null });
@@ -270,7 +269,8 @@ export default function ProgramComparison() {
           color: var(--text);
           font-family: var(--sans);
           min-height: 100vh;
-          padding: 32px clamp(16px, 3vw, 48px) 64px;
+          padding: 32px clamp(12px, 3vw, 48px) 64px;
+          width: 100%;
           max-width: 1600px;
           margin: 0 auto;
           font-size: 14px;
@@ -295,7 +295,7 @@ export default function ProgramComparison() {
         .pc-title {
           font-family: var(--serif);
           font-weight: 600;
-          font-size: 42px;
+          font-size: clamp(28px, 5vw, 42px);
           line-height: 1.05;
           letter-spacing: -0.02em;
           margin: 0 0 12px 0;
@@ -314,7 +314,7 @@ export default function ProgramComparison() {
         }
         .pc-stats-row {
           display: flex;
-          gap: 40px;
+          gap: 32px;
           margin-top: 24px;
           flex-wrap: wrap;
         }
@@ -332,7 +332,7 @@ export default function ProgramComparison() {
         }
         .pc-stat-value {
           font-family: var(--serif);
-          font-size: 28px;
+          font-size: clamp(22px, 4vw, 28px);
           font-weight: 600;
           color: var(--text);
           letter-spacing: -0.01em;
@@ -340,38 +340,72 @@ export default function ProgramComparison() {
         .pc-stat-value .accent { color: var(--accent); }
 
         .pc-section {
-          margin-bottom: 48px;
+          margin-bottom: 40px;
         }
+
+        /* Section header — full-width clickable strip */
         .pc-section-header {
           display: flex;
-          align-items: baseline;
-          gap: 16px;
-          margin-bottom: 16px;
-          padding-bottom: 8px;
-          border-bottom: 1px solid var(--border);
+          align-items: center;
+          gap: 14px;
+          padding: 14px 18px;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-left: 3px solid var(--border);
+          cursor: pointer;
           user-select: none;
+          transition: background 0.15s, border-left-color 0.15s;
+          margin-bottom: 16px;
         }
-        .pc-section-header:hover .pc-section-title { color: var(--accent); }
+        .pc-section-header:hover {
+          background: var(--surface-2);
+          border-left-color: var(--accent);
+        }
         .pc-section-number {
           font-family: var(--mono);
           font-size: 11px;
           color: var(--accent);
           letter-spacing: 0.1em;
+          flex-shrink: 0;
         }
         .pc-section-title {
           font-family: var(--serif);
           font-weight: 600;
-          font-size: 22px;
+          font-size: clamp(18px, 3vw, 22px);
           letter-spacing: -0.01em;
           margin: 0;
           flex: 1;
+          color: var(--text);
           transition: color 0.15s;
+          text-align: left;
         }
-        .pc-collapse-chevron {
-          font-size: 14px;
-          color: var(--text-faint);
+        .pc-section-header:hover .pc-section-title {
+          color: var(--accent);
+        }
+        .pc-collapse-btn {
+          width: 32px;
+          height: 32px;
+          border: 1px solid var(--border);
+          background: var(--surface-2);
+          color: var(--text-dim);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 20px;
+          line-height: 1;
+          font-family: var(--mono);
+          font-weight: 400;
           flex-shrink: 0;
+          border-radius: 2px;
+          transition: all 0.15s;
+          pointer-events: none;
         }
+        .pc-section-header:hover .pc-collapse-btn {
+          background: var(--accent);
+          color: var(--bg);
+          border-color: var(--accent);
+        }
+
         .pc-section-desc {
           font-size: 13px;
           color: var(--text-dim);
@@ -566,7 +600,6 @@ export default function ProgramComparison() {
           border-radius: 0;
         }
 
-        /* Ranking section tabs */
         .pc-tab-row {
           display: flex;
           gap: 0;
@@ -578,7 +611,7 @@ export default function ProgramComparison() {
           font-size: 11px;
           letter-spacing: 0.1em;
           text-transform: uppercase;
-          padding: 8px 20px;
+          padding: 10px 20px;
           border: none;
           background: transparent;
           color: var(--text-dim);
@@ -593,7 +626,6 @@ export default function ProgramComparison() {
           border-bottom-color: var(--accent);
         }
 
-        /* Weighted ranking rows */
         .pc-ranking {
           display: flex;
           flex-direction: column;
@@ -644,6 +676,9 @@ export default function ProgramComparison() {
           color: var(--text-faint);
           letter-spacing: 0.08em;
           text-transform: uppercase;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         .pc-rank-bar-container {
           width: 140px;
@@ -665,7 +700,6 @@ export default function ProgramComparison() {
           font-variant-numeric: tabular-nums;
         }
 
-        /* Personal ranking rows */
         .pc-personal-ranking {
           display: flex;
           flex-direction: column;
@@ -702,10 +736,9 @@ export default function ProgramComparison() {
           margin-top: 16px;
         }
 
-        /* Program cards */
         .pc-cards {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
           gap: 12px;
         }
         .pc-card {
@@ -812,10 +845,36 @@ export default function ProgramComparison() {
           line-height: 1.6;
         }
 
-        @media (max-width: 900px) {
+        /* Mobile */
+        @media (max-width: 768px) {
+          .pc-root {
+            padding: 20px 12px 48px;
+          }
+          .pc-stats-row { gap: 20px; }
+          .pc-subtitle { font-size: 13px; }
           .pc-sliders { grid-template-columns: 1fr; }
-          .pc-rank-row { grid-template-columns: 40px 1fr 60px; }
+          .pc-cards { grid-template-columns: 1fr; }
+          .pc-rank-row {
+            grid-template-columns: 36px 1fr 52px;
+            gap: 10px;
+            padding: 12px 12px;
+          }
           .pc-rank-bar-container { display: none; }
+          .pc-rank-num { font-size: 18px; }
+          .pc-rank-name { font-size: 14px; }
+          .pc-rank-meta { font-size: 9px; }
+          .pc-personal-row { padding: 12px; }
+          .pc-section-header { padding: 12px 14px; gap: 10px; }
+          .pc-collapse-btn { width: 28px; height: 28px; font-size: 18px; }
+          .pc-chart-panel { padding: 16px 12px; }
+          .pc-chip { padding: 8px 12px; font-size: 12px; }
+          .pc-chip-meta { display: none; }
+        }
+
+        @media (max-width: 480px) {
+          .pc-rank-meta { display: none; }
+          .pc-cards { gap: 8px; }
+          .pc-tier-legend { gap: 12px; }
         }
       `}</style>
 
@@ -922,38 +981,40 @@ export default function ProgramComparison() {
         {isOpen('02') && (
           <>
             <p className="pc-section-desc">
-              Upper-left quadrant is best ROI (low cost, high salary). Bubble size reflects admit odds — bigger dots are easier to get into.
+              Upper-left is best ROI (low cost, high salary). Bubble size encodes admit odds — bigger means easier to get in. Hover for details.
             </p>
             <div className="pc-chart-panel">
               <div className="pc-chart-title">ROI Quadrant · All 10 Programs</div>
-              <ResponsiveContainer width="100%" height={440}>
-                <ScatterChart margin={{ top: 30, right: 60, bottom: 50, left: 70 }}>
+              <ResponsiveContainer width="100%" height={460}>
+                <ScatterChart margin={{ top: 30, right: 80, bottom: 56, left: 70 }}>
                   <CartesianGrid stroke="#2a313c" strokeDasharray="2 4" />
                   <XAxis
                     type="number"
                     dataKey="x"
                     name="Cost"
                     unit="k"
-                    domain={[40, 100]}
+                    domain={[38, 112]}
+                    ticks={[40, 50, 60, 70, 80, 90, 100, 110]}
                     tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }}
                     stroke="#2a313c"
-                    label={{ value: 'Total Cost ($k) — tuition + living', position: 'insideBottom', offset: -10, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }}
+                    label={{ value: 'Total Cost ($k) — tuition + living', position: 'insideBottom', offset: -14, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }}
                   />
                   <YAxis
                     type="number"
                     dataKey="y"
                     name="Salary"
                     unit="k"
-                    domain={[80, 150]}
+                    domain={[70, 140]}
+                    ticks={[75, 90, 105, 120, 135]}
                     tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }}
                     stroke="#2a313c"
                     label={{ value: 'Expected Starting Salary ($k)', angle: -90, position: 'insideLeft', offset: 10, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }}
                   />
-                  <ZAxis type="number" dataKey="z" range={[80, 400]} />
+                  <ZAxis type="number" dataKey="z" range={[80, 420]} />
                   <Tooltip content={CustomScatterTooltip} cursor={{ strokeDasharray: '3 3' }} />
                   <Scatter data={scatterData}>
                     {scatterData.map((entry, idx) => (
-                      <Cell key={idx} fill={entry.color} stroke={entry.color} strokeWidth={1} fillOpacity={0.7} />
+                      <Cell key={idx} fill={entry.color} stroke={entry.color} strokeWidth={1} fillOpacity={0.75} />
                     ))}
                     <LabelList content={ScatterLabel} />
                   </Scatter>
@@ -973,13 +1034,13 @@ export default function ProgramComparison() {
         {isOpen('03') && (
           <>
             <p className="pc-section-desc">
-              Rough admit probability estimates given your profile (3.0→3.6 GPA trend, CS major + Management minor, honors thesis in progress, research + strong project).
+              Rough admit probability estimates given your profile (3.0→3.6 GPA trend, CS major + Management minor, honors thesis in progress, research + strong projects).
               Use as relative guidance, not prediction.
             </p>
             <div className="pc-chart-panel">
               <div className="pc-chart-title">Estimated Admit Probability by Program</div>
               <ResponsiveContainer width="100%" height={380}>
-                <BarChart data={admitOddsData} layout="vertical" margin={{ top: 10, right: 60, bottom: 10, left: 100 }}>
+                <BarChart data={admitOddsData} layout="vertical" margin={{ top: 10, right: 70, bottom: 10, left: 100 }}>
                   <CartesianGrid stroke="#2a313c" strokeDasharray="2 4" horizontal={false} />
                   <XAxis
                     type="number"
@@ -1265,10 +1326,9 @@ export default function ProgramComparison() {
             )}
 
             <p className="pc-note">
-              Total cost = approximate tuition (2025–26) plus estimated living expenses for program duration.
+              Total cost = approximate tuition (2025–26) plus estimated living expenses for program duration (graduating March 2027).
               Salary estimates are median starting compensation for recent graduating cohorts, inclusive of bonus.
               Admit odds reflect your profile (3.0→3.6 GPA trend, CS major with Management minor, honors thesis in progress) — they are directional, not predictive.
-              Rutgers MQF shows both scholarship-adjusted and list-price totals.
               Verify all figures directly with each school before making decisions.
             </p>
           </>
