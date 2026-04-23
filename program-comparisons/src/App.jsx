@@ -1,10 +1,23 @@
-import React, { useState, useMemo } from 'react';
-import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps';
+import React, { useState, useMemo, useEffect } from 'react';
+import { ComposableMap, Geographies, Geography, Line, Marker } from 'react-simple-maps';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip,
          ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, ZAxis, Cell,
          BarChart, Bar, LabelList } from 'recharts';
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json';
+
+// Major hiring hub cities (destinations, not school locations)
+const HUB_CITIES = {
+  siliconValley: { coordinates: [-122.05, 37.40], label: 'Silicon Valley' },
+  nyc:           { coordinates: [-74.00,  40.71], label: 'NYC' },
+  chicago:       { coordinates: [-87.63,  41.88], label: 'Chicago' },
+  boston:        { coordinates: [-71.06,  42.36], label: 'Boston' },
+  la:            { coordinates: [-118.25, 34.05], label: 'LA' },
+  dc:            { coordinates: [-77.04,  38.91], label: 'DC' },
+  dallas:        { coordinates: [-96.80,  32.78], label: 'Dallas' },
+  houston:       { coordinates: [-95.37,  29.76], label: 'Houston' },
+  austin:        { coordinates: [-97.74,  30.27], label: 'Austin' },
+};
 
 const programs = [
   {
@@ -13,6 +26,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 105,
     coordinates: [-122.30, 47.66],
     placementRate: 95, pipelineScore: 7,
+    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'nyc', strength: 1 }],
     topRoles: 'Quant risk, fintech, tech-finance, risk modeling',
     topEmployers: "Russell Investments, Parametric, Amazon Finance, MSFT Treasury, Moody's",
     pros: [
@@ -34,6 +48,7 @@ const programs = [
     admitOdds: 'Safety', admitOddsScore: 85, expectedSalary: 95,
     coordinates: [-120.66, 35.31],
     placementRate: 88, pipelineScore: 4,
+    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'la', strength: 2 }],
     topRoles: 'Data analyst, BI, product analytics, marketing analytics',
     topEmployers: 'Oracle, Google, Deloitte, Capital One, PwC, T-Mobile',
     pros: [
@@ -55,6 +70,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 106,
     coordinates: [-97.73, 30.28],
     placementRate: 98, pipelineScore: 8,
+    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'nyc', strength: 2 }, { hub: 'dallas', strength: 2 }, { hub: 'houston', strength: 1 }],
     topRoles: 'Data scientist, BI, product analytics, consulting',
     topEmployers: 'Apple, Tesla, Google, Oracle, Dell, Indeed, Meta, Deloitte',
     pros: [
@@ -76,6 +92,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 55, expectedSalary: 109,
     coordinates: [-84.40, 33.78],
     placementRate: 87, pipelineScore: 9,
+    hubs: [{ hub: 'nyc', strength: 2 }, { hub: 'dc', strength: 2 }],
     topRoles: 'Data scientist, ML engineer, business analyst, consultant',
     topEmployers: 'Delta, Home Depot, UPS, Coca-Cola, Microsoft, ICE/NYSE, Truist',
     pros: [
@@ -97,6 +114,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 55, expectedSalary: 105,
     coordinates: [-118.29, 34.02],
     placementRate: 90, pipelineScore: 8,
+    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'nyc', strength: 2 }],
     topRoles: 'Data scientist, product analytics, fintech, consulting, entertainment analytics',
     topEmployers: 'Amazon, Netflix, Disney, Deloitte, JPMorgan, Google, Goldman Sachs, SpaceX',
     pros: [
@@ -118,6 +136,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 90,
     coordinates: [-77.05, 38.90],
     placementRate: 80, pipelineScore: 6,
+    hubs: [{ hub: 'nyc', strength: 2 }, { hub: 'boston', strength: 1 }],
     topRoles: 'Consulting, federal analytics, business analyst, BI',
     topEmployers: 'Deloitte, Accenture, Booz Allen, Guidehouse, IBM, MITRE, federal agencies',
     pros: [
@@ -139,6 +158,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 106,
     coordinates: [-74.17, 40.73],
     placementRate: 89, pipelineScore: 9,
+    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'chicago', strength: 2 }, { hub: 'boston', strength: 1 }],
     topRoles: 'Quant analyst, risk, quant research, trading, asset mgmt',
     topEmployers: 'Goldman Sachs, JPMorgan, Morgan Stanley, Bloomberg, Prudential, BNY, Citi, HSBC, UBS',
     pros: [
@@ -160,6 +180,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 70, expectedSalary: 118,
     coordinates: [-78.69, 35.79],
     placementRate: 100, pipelineScore: 8,
+    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'chicago', strength: 3 }, { hub: 'boston', strength: 2 }],
     topRoles: 'Quant risk, financial analyst, risk modeling, derivatives',
     topEmployers: 'Goldman Sachs, JPMorgan, Morgan Stanley, UBS, BlackRock, Fidelity, T. Rowe Price, BoA',
     pros: [
@@ -181,6 +202,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 115,
     coordinates: [-88.23, 40.10],
     placementRate: 91, pipelineScore: 9,
+    hubs: [{ hub: 'chicago', strength: 3 }, { hub: 'nyc', strength: 3 }, { hub: 'siliconValley', strength: 2 }],
     topRoles: 'Quant analyst, risk, quant research, trading',
     topEmployers: 'Citadel, Jane Street, Jump Trading, DRW, IMC, CME Group, Morgan Stanley, JPMorgan',
     pros: [
@@ -202,6 +224,7 @@ const programs = [
     admitOdds: 'Reach', admitOddsScore: 35, expectedSalary: 97,
     coordinates: [-79.94, 40.44],
     placementRate: 85, pipelineScore: 7,
+    hubs: [{ hub: 'dc', strength: 3 }, { hub: 'nyc', strength: 2 }, { hub: 'chicago', strength: 2 }],
     topRoles: 'Tech-policy consultant, strategy analyst, govt, industry strategy',
     topEmployers: 'Deloitte Gov, Booz Allen, RAND, McKinsey, BCG, Bain (via CMU halo), federal agencies',
     pros: [
@@ -217,13 +240,13 @@ const programs = [
     applyUrl: 'https://www.cmu.edu/epp/master/',
     scores: { roi: 5, affordability: 3, jobMarket: 7, weatherFit: 2, lifestyle: 4, duration: 8, capstone: 7, prestige: 8, versatility: 7 },
   },
-  // ── 5 new programs ──────────────────────────────────────────
   {
     id: 'sjsu', name: 'SJSU MS Financial Analytics', shortName: 'SJSU', location: 'San Jose, CA', duration: '12 mo', durationMonths: 12,
     cost: '~$40k total', totalCost: 40, overBudget: false, track: 'Quant Finance', color: '#3b7dbf',
     admitOdds: 'Safety', admitOddsScore: 78, expectedSalary: 100,
     coordinates: [-121.89, 37.34],
     placementRate: 80, pipelineScore: 6,
+    hubs: [{ hub: 'la', strength: 2 }, { hub: 'nyc', strength: 1 }],
     topRoles: 'Fintech analyst, quantitative analyst, financial data analyst, risk analyst',
     topEmployers: 'PayPal, Visa, Charles Schwab, Wells Fargo, Bloomberg, Salesforce, Bay Area fintech firms',
     pros: [
@@ -245,6 +268,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 70, expectedSalary: 95,
     coordinates: [-96.33, 30.63],
     placementRate: 88, pipelineScore: 7,
+    hubs: [{ hub: 'dallas', strength: 3 }, { hub: 'houston', strength: 3 }, { hub: 'austin', strength: 2 }],
     topRoles: 'Business analyst, data analyst, consulting, supply chain analytics, energy analytics',
     topEmployers: 'EY, KPMG, Deloitte, Dell, AT&T, Chevron, ExxonMobil, Capital One',
     pros: [
@@ -266,6 +290,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 68, expectedSalary: 98,
     coordinates: [-111.94, 33.42],
     placementRate: 85, pipelineScore: 6,
+    hubs: [{ hub: 'siliconValley', strength: 2 }, { hub: 'la', strength: 2 }, { hub: 'nyc', strength: 1 }],
     topRoles: 'Data analyst, supply chain analyst, operations analytics, consulting',
     topEmployers: 'Intel, Amazon, Honeywell, Deloitte, American Express, GoDaddy, TSMC',
     pros: [
@@ -287,6 +312,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 105,
     coordinates: [-86.80, 36.14],
     placementRate: 90, pipelineScore: 7,
+    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'chicago', strength: 2 }],
     topRoles: 'Data analyst, healthcare analytics, consulting, financial analyst',
     topEmployers: 'Deloitte, EY, Amazon, HCA Healthcare, Bridgestone, Dollar General, Asurion',
     pros: [
@@ -308,6 +334,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 62, expectedSalary: 105,
     coordinates: [-71.11, 42.35],
     placementRate: 88, pipelineScore: 7,
+    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'chicago', strength: 1 }],
     topRoles: 'Financial analyst, data scientist, consulting, healthcare analytics',
     topEmployers: 'State Street, Fidelity, Liberty Mutual, Bain & Company, PwC, HubSpot, Amazon',
     pros: [
@@ -410,7 +437,7 @@ export default function ProgramComparison() {
   const [trackFilter, setTrackFilter]     = useState('All');
   const [collapsed, setCollapsed]         = useState({});
   const [rankingTab, setRankingTab]       = useState('weighted');
-  const [expandedCards, setExpandedCards] = useState(new Set());
+  const [detailsModal, setDetailsModal]   = useState(null);
   const [mapLayers, setMapLayers]         = useState({ jobMarket: true, pipeline: true });
   const [hoveredSchool, setHoveredSchool] = useState(null);
   const [personalRanking, setPersonalRanking] = useState(() => {
@@ -421,20 +448,23 @@ export default function ProgramComparison() {
   });
   const [dragState, setDragState] = useState({ dragging: null, over: null });
 
+  // Modal: ESC to close + prevent body scroll
+  useEffect(() => {
+    if (!detailsModal) return;
+    const handleKey = (e) => { if (e.key === 'Escape') setDetailsModal(null); };
+    document.addEventListener('keydown', handleKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handleKey);
+      document.body.style.overflow = '';
+    };
+  }, [detailsModal]);
+
   const toggleCollapse = (key) => setCollapsed(prev => ({ ...prev, [key]: !prev[key] }));
   const isOpen         = (key) => !collapsed[key];
 
   const toggleSelect = (id) =>
     setSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
-
-  const toggleCard = (id, e) => {
-    e.stopPropagation();
-    setExpandedCards(prev => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  };
 
   const toggleMapLayer = (layer) =>
     setMapLayers(prev => ({ ...prev, [layer]: !prev[layer] }));
@@ -471,9 +501,28 @@ export default function ProgramComparison() {
   const tracks = ['All', ...new Set(programs.map(p => p.track))];
   const filteredPrograms = trackFilter === 'All' ? programs : programs.filter(p => p.track === trackFilter);
   const maxWeightedScore = rankedPrograms[0]?.weightedScore || 10;
-
   const maxPlacementR = Math.max(...programs.map(p => p.placementRate));
-  const maxPipelineR  = Math.max(...programs.map(p => p.pipelineScore));
+
+  // Compute which hub cities are actually used
+  const activeHubs = useMemo(() => {
+    const used = new Set();
+    programs.forEach(p => p.hubs.forEach(h => used.add(h.hub)));
+    return Array.from(used).filter(k => HUB_CITIES[k]);
+  }, []);
+
+  const getArcOpacity = (programId, strength) => {
+    const base = strength === 3 ? 0.6 : strength === 2 ? 0.35 : 0.18;
+    if (!hoveredSchool) return base;
+    return hoveredSchool.id === programId ? Math.min(base * 1.6, 0.9) : base * 0.12;
+  };
+
+  const getArcWidth = (strength) => strength === 3 ? 1.6 : strength === 2 ? 1.0 : 0.6;
+
+  const getHubDotStyle = (hubKey) => {
+    if (!hoveredSchool) return { r: 3, opacity: 0.55 };
+    const connected = hoveredSchool.hubs.some(h => h.hub === hubKey);
+    return connected ? { r: 4.5, opacity: 1 } : { r: 2.5, opacity: 0.15 };
+  };
 
   return (
     <div className="pc-root">
@@ -523,9 +572,9 @@ export default function ProgramComparison() {
         .pc-filter-chip.active { color: var(--bg); background: var(--accent); border-color: var(--accent); }
 
         /* Cards */
-        .pc-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 12px; }
-        .pc-card { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--border); transition: all .15s; }
-        .pc-card-body { padding: 20px; cursor: pointer; }
+        .pc-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 12px; align-items: start; }
+        .pc-card { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--border); transition: border-top-color .15s; display: flex; flex-direction: column; }
+        .pc-card-body { padding: 20px; cursor: pointer; flex: 1; }
         .pc-card-body:hover { background: var(--surface-2); }
         .pc-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; gap: 12px; }
         .pc-card-title { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--text); letter-spacing: -.01em; line-height: 1.2; margin: 0 0 4px; }
@@ -540,18 +589,9 @@ export default function ProgramComparison() {
         .pc-card-section-label { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 4px; }
         .pc-card-section-text { font-size: 12px; color: var(--text-dim); line-height: 1.4; }
 
-        /* Card details toggle */
-        .pc-card-details-toggle { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; border-top: 1px solid var(--border); cursor: pointer; background: transparent; width: 100%; text-align: left; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-faint); transition: background .15s, color .15s; }
-        .pc-card-details-toggle:hover { background: var(--surface-2); color: var(--accent); }
-        .pc-card-details-panel { padding: 16px 20px; border-top: 1px solid var(--border); background: var(--bg); }
-        .pc-card-pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; margin-bottom: 14px; }
-        .pc-card-pros-cons-col-label { font-family: var(--mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 8px; }
-        .pc-card-bullet { display: flex; gap: 8px; font-size: 11px; color: var(--text-dim); line-height: 1.5; margin-bottom: 6px; }
-        .pc-card-bullet-icon { flex-shrink: 0; font-size: 11px; margin-top: 1px; }
-        .pc-card-bullet-icon.pro  { color: var(--safety); }
-        .pc-card-bullet-icon.con  { color: var(--reach); }
-        .pc-card-apply { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); text-decoration: none; border: 1px solid var(--accent); padding: 6px 12px; transition: all .15s; }
-        .pc-card-apply:hover { background: var(--accent); color: var(--bg); }
+        /* Details button */
+        .pc-card-details-btn { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; border-top: 1px solid var(--border); cursor: pointer; background: transparent; width: 100%; text-align: left; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-faint); transition: background .15s, color .15s; border-bottom: none; border-left: none; border-right: none; }
+        .pc-card-details-btn:hover { background: var(--surface-2); color: var(--accent); }
 
         /* Tier legend */
         .pc-tier-legend { display: flex; gap: 20px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -621,12 +661,30 @@ export default function ProgramComparison() {
         .pc-layer-btn:hover { color: var(--text); border-color: var(--text-dim); }
         .pc-layer-btn.active { color: var(--text); border-color: var(--accent); background: rgba(228,168,83,.08); }
         .pc-layer-indicator { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-        .pc-map-wrapper { position: relative; background: var(--surface); border: 1px solid var(--border); padding: 0; overflow: hidden; }
+        .pc-map-wrapper { position: relative; background: var(--surface); border: 1px solid var(--border); overflow: hidden; }
         .pc-map-hover-panel { padding: 14px 20px; border-top: 1px solid var(--border); min-height: 72px; display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap; }
         .pc-map-hover-name { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--text); margin: 0 0 4px; }
         .pc-map-hover-loc { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-faint); }
         .pc-map-hover-employers { font-size: 12px; color: var(--text-dim); margin-top: 6px; line-height: 1.5; }
         .pc-map-hover-hint { font-family: var(--mono); font-size: 11px; color: var(--text-faint); letter-spacing: .08em; text-transform: uppercase; align-self: center; }
+
+        /* Modal */
+        .pc-modal-backdrop { position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.75); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .pc-modal { background: var(--surface); border: 1px solid var(--border); max-width: 720px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
+        .pc-modal-header { display: flex; justify-content: space-between; align-items: flex-start; padding: 28px 28px 20px; border-bottom: 1px solid var(--border); gap: 16px; }
+        .pc-modal-title { font-family: var(--serif); font-size: 22px; font-weight: 600; letter-spacing: -.02em; margin: 0 0 6px; }
+        .pc-modal-meta { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-faint); line-height: 1.6; }
+        .pc-modal-close { width: 36px; height: 36px; border: 1px solid var(--border); background: transparent; color: var(--text-dim); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .15s; }
+        .pc-modal-close:hover { background: var(--reach); color: var(--text); border-color: var(--reach); }
+        .pc-modal-body { padding: 24px 28px 28px; }
+        .pc-pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+        .pc-pros-cons-col-label { font-family: var(--mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 10px; }
+        .pc-bullet { display: flex; gap: 10px; font-size: 13px; color: var(--text-dim); line-height: 1.55; margin-bottom: 10px; }
+        .pc-bullet-icon { flex-shrink: 0; font-size: 12px; margin-top: 2px; }
+        .pc-bullet-icon.pro { color: var(--safety); }
+        .pc-bullet-icon.con { color: var(--reach); }
+        .pc-apply-link { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); text-decoration: none; border: 1px solid var(--accent); padding: 8px 16px; transition: all .15s; }
+        .pc-apply-link:hover { background: var(--accent); color: var(--bg); }
 
         /* Misc */
         .pc-note { font-size: 12px; color: var(--text-faint); font-style: italic; margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px; line-height: 1.6; }
@@ -635,10 +693,12 @@ export default function ProgramComparison() {
           .pc-root { padding: 20px 12px 48px; }
           .pc-sliders { grid-template-columns: 1fr; }
           .pc-cards { grid-template-columns: 1fr; }
-          .pc-card-pros-cons { grid-template-columns: 1fr; }
+          .pc-pros-cons { grid-template-columns: 1fr; }
           .pc-rank-row { grid-template-columns: 36px 1fr 52px; gap: 10px; padding: 12px; }
           .pc-rank-bar-container { display: none; }
           .pc-chip-meta { display: none; }
+          .pc-modal { max-height: 95vh; }
+          .pc-modal-header, .pc-modal-body { padding-left: 18px; padding-right: 18px; }
         }
       `}</style>
 
@@ -647,8 +707,8 @@ export default function ProgramComparison() {
         <div className="pc-kicker">Personalized Decision Tool · {programs.length} Programs</div>
         <h1 className="pc-title">Graduate Program <em>Comparison</em></h1>
         <p className="pc-subtitle">
-          Fifteen master's programs scored across nine dimensions. Radar overlays, cost-versus-outcome analysis,
-          admit-odds estimates, weighted rankings, and an interactive program location map.
+          Fifteen master's programs scored across nine dimensions. Radar overlays, cost-versus-outcome
+          analysis, admit-odds estimates, weighted rankings, and an interactive program location map.
         </p>
         <div className="pc-stats-row">
           <div className="pc-stat"><div className="pc-stat-label">Programs</div><div className="pc-stat-value">{programs.length}</div></div>
@@ -663,7 +723,7 @@ export default function ProgramComparison() {
         <SectionHeader num="01" title="Program Overview" onToggle={() => toggleCollapse('01')} open={isOpen('01')} />
         {isOpen('01') && (
           <>
-            <p className="pc-section-desc">Each program at a glance. Click any card to toggle it on the radar chart. Use Details to see pros, cons, and application link.</p>
+            <p className="pc-section-desc">Each program at a glance. Click any card to toggle it on the radar chart. Use Details to view pros, cons, and the application link.</p>
             <div className="pc-tier-legend">
               {['Reach','Target','Safety'].map(t => (
                 <span key={t} className="pc-tier-badge" style={{ color: `var(--${t.toLowerCase()})` }}>
@@ -674,7 +734,6 @@ export default function ProgramComparison() {
             <div className="pc-cards">
               {programs.map(p => {
                 const isSelected = selected.includes(p.id);
-                const isExpanded = expandedCards.has(p.id);
                 return (
                   <div key={p.id} className="pc-card" style={{ borderTopColor: p.color, background: isSelected ? 'var(--surface-2)' : 'var(--surface)' }}>
                     <div className="pc-card-body" onClick={() => toggleSelect(p.id)}>
@@ -694,35 +753,10 @@ export default function ProgramComparison() {
                       <div className="pc-card-section"><div className="pc-card-section-label">Top Roles</div><div className="pc-card-section-text">{p.topRoles}</div></div>
                       <div className="pc-card-section"><div className="pc-card-section-label">Key Employers</div><div className="pc-card-section-text">{p.topEmployers}</div></div>
                     </div>
-                    <button className="pc-card-details-toggle" onClick={e => toggleCard(p.id, e)}>
+                    <button className="pc-card-details-btn" onClick={e => { e.stopPropagation(); setDetailsModal(p); }}>
                       <span>Details</span>
-                      <span>{isExpanded ? '▴' : '▾'}</span>
+                      <span style={{ fontSize: 14 }}>↗</span>
                     </button>
-                    {isExpanded && (
-                      <div className="pc-card-details-panel">
-                        <div className="pc-card-pros-cons">
-                          <div>
-                            <div className="pc-card-pros-cons-col-label">Pros</div>
-                            {p.pros.map((pt, i) => (
-                              <div key={i} className="pc-card-bullet">
-                                <span className="pc-card-bullet-icon pro">✓</span>
-                                <span>{pt}</span>
-                              </div>
-                            ))}
-                          </div>
-                          <div>
-                            <div className="pc-card-pros-cons-col-label">Cons</div>
-                            {p.cons.map((ct, i) => (
-                              <div key={i} className="pc-card-bullet">
-                                <span className="pc-card-bullet-icon con">✗</span>
-                                <span>{ct}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        <a href={p.applyUrl} target="_blank" rel="noopener noreferrer" className="pc-card-apply">Apply / Learn More →</a>
-                      </div>
-                    )}
                   </div>
                 );
               })}
@@ -930,7 +964,7 @@ export default function ProgramComparison() {
         {isOpen('07') && (
           <>
             <p className="pc-section-desc">
-              Each dot is a program location. Hover to see the employer pipeline for that school.
+              School dots on the map. Job Market Reach shows placement-rate bubbles. Employer Pipeline draws arcs to the cities where each school's graduates actually get hired — hover a school to see its connections.
             </p>
             <div className="pc-map-controls">
               <button className={`pc-layer-btn ${mapLayers.jobMarket ? 'active' : ''}`} onClick={() => toggleMapLayer('jobMarket')}>
@@ -938,12 +972,13 @@ export default function ProgramComparison() {
                 Job Market Reach
               </button>
               <button className={`pc-layer-btn ${mapLayers.pipeline ? 'active' : ''}`} onClick={() => toggleMapLayer('pipeline')}>
-                <span className="pc-layer-indicator" style={{ background: 'transparent', border: '2px dashed #ebe3d0' }} />
+                <span className="pc-layer-indicator" style={{ background: 'transparent', border: '2px solid #ebe3d0', borderRadius: 0 }} />
                 Employer Pipeline
               </button>
             </div>
             <div className="pc-map-wrapper">
-              <ComposableMap projection="geoAlbersUsa" width={960} height={520} style={{ width: '100%', height: 'auto', display: 'block' }}>
+              <ComposableMap projection="geoAlbersUsa" width={960} height={520}
+                style={{ width: '100%', height: 'auto', display: 'block' }}>
                 <Geographies geography={GEO_URL}>
                   {({ geographies }) => geographies.map(geo => (
                     <Geography key={geo.rsmKey} geography={geo}
@@ -955,16 +990,42 @@ export default function ProgramComparison() {
                 {/* Job market reach bubbles */}
                 {mapLayers.jobMarket && programs.map(p => (
                   <Marker key={`jm-${p.id}`} coordinates={p.coordinates}>
-                    <circle r={(p.placementRate / maxPlacementR) * 28 + 6} fill={p.color} fillOpacity={0.15} stroke={p.color} strokeWidth={1} strokeOpacity={0.4} />
+                    <circle r={(p.placementRate / maxPlacementR) * 28 + 6} fill={p.color} fillOpacity={0.13} stroke={p.color} strokeWidth={1} strokeOpacity={0.35} />
                   </Marker>
                 ))}
 
-                {/* Employer pipeline bubbles */}
-                {mapLayers.pipeline && programs.map(p => (
-                  <Marker key={`pl-${p.id}`} coordinates={p.coordinates}>
-                    <circle r={(p.pipelineScore / maxPipelineR) * 20 + 4} fill="none" stroke="#ebe3d0" strokeWidth={1.2} strokeDasharray="3 2" strokeOpacity={0.45} />
-                  </Marker>
-                ))}
+                {/* Employer pipeline arcs: Line from school to hub cities */}
+                {mapLayers.pipeline && programs.map(p =>
+                  p.hubs.map(h => {
+                    const hub = HUB_CITIES[h.hub];
+                    if (!hub) return null;
+                    return (
+                      <Line key={`arc-${p.id}-${h.hub}`}
+                        from={p.coordinates}
+                        to={hub.coordinates}
+                        stroke={p.color}
+                        strokeWidth={getArcWidth(h.strength)}
+                        strokeOpacity={getArcOpacity(p.id, h.strength)}
+                        strokeLinecap="round"
+                        fill="transparent"
+                      />
+                    );
+                  })
+                )}
+
+                {/* Hub city dots */}
+                {mapLayers.pipeline && activeHubs.map(hubKey => {
+                  const hub = HUB_CITIES[hubKey];
+                  const style = getHubDotStyle(hubKey);
+                  return (
+                    <Marker key={`hub-${hubKey}`} coordinates={hub.coordinates}>
+                      <circle r={style.r} fill="#1a1f28" stroke="#ebe3d0" strokeWidth={1.2} opacity={style.opacity} />
+                      <text textAnchor="middle" y={-8} fill="#ebe3d0" fontSize={8} fontFamily="IBM Plex Mono" opacity={style.opacity} style={{ pointerEvents: 'none' }}>
+                        {hub.label}
+                      </text>
+                    </Marker>
+                  );
+                })}
 
                 {/* School dots + labels */}
                 {programs.map(p => (
@@ -988,34 +1049,87 @@ export default function ProgramComparison() {
                       <div className="pc-map-hover-loc">{hoveredSchool.location} · {hoveredSchool.track} · {hoveredSchool.duration}</div>
                     </div>
                     <div style={{ flex: 1, minWidth: 200 }}>
-                      <div className="pc-card-pros-cons-col-label" style={{ marginBottom: 6 }}>Employer Pipeline</div>
-                      <div className="pc-map-hover-employers">{hoveredSchool.topEmployers}</div>
+                      <div style={{ fontFamily: 'IBM Plex Mono', fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--text-faint)', marginBottom: 6 }}>Hiring Hubs</div>
+                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                        {hoveredSchool.hubs.map(h => {
+                          const hub = HUB_CITIES[h.hub];
+                          const label = hub?.label || h.hub;
+                          const opacity = h.strength === 3 ? 1 : h.strength === 2 ? 0.7 : 0.45;
+                          return (
+                            <span key={h.hub} style={{ fontFamily: 'IBM Plex Mono', fontSize: 10, color: hoveredSchool.color, opacity, border: `1px solid ${hoveredSchool.color}`, padding: '2px 7px', whiteSpace: 'nowrap' }}>
+                              {label}
+                            </span>
+                          );
+                        })}
+                      </div>
+                      <div className="pc-map-hover-employers" style={{ marginTop: 8 }}>{hoveredSchool.topEmployers}</div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontFamily: 'IBM Plex Mono', fontSize: 10, color: 'var(--text-faint)' }}>
                       <span>Placement: <span style={{ color: 'var(--text-dim)' }}>{hoveredSchool.placementRate}%</span></span>
-                      <span>Pipeline: <span style={{ color: 'var(--text-dim)' }}>{hoveredSchool.pipelineScore}/10</span></span>
                       <span>Est. Salary: <span style={{ color: 'var(--accent)' }}>${hoveredSchool.expectedSalary}k</span></span>
                     </div>
                   </>
                 ) : (
-                  <div className="pc-map-hover-hint">Hover a school to see its employer pipeline</div>
+                  <div className="pc-map-hover-hint">Hover a school to see its hiring hub connections</div>
                 )}
               </div>
 
               <div style={{ display: 'flex', gap: 24, padding: '12px 20px', borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'IBM Plex Mono', fontSize: 10, color: 'var(--text-faint)' }}>
-                  <svg width={24} height={14}><circle cx={12} cy={7} r={6} fill="rgba(228,168,83,0.2)" stroke="#e4a853" strokeWidth={1} /></svg>
-                  Larger = higher grad placement rate
+                  <svg width={24} height={14}><circle cx={12} cy={7} r={6} fill="rgba(228,168,83,0.15)" stroke="#e4a853" strokeWidth={1} /></svg>
+                  Larger bubble = higher placement rate
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'IBM Plex Mono', fontSize: 10, color: 'var(--text-faint)' }}>
-                  <svg width={24} height={14}><circle cx={12} cy={7} r={5} fill="none" stroke="#ebe3d0" strokeWidth={1.2} strokeDasharray="3 2" /></svg>
-                  Larger dashed ring = broader employer pipeline
+                  <svg width={32} height={14}><line x1={2} y1={7} x2={30} y2={7} stroke="#ebe3d0" strokeWidth={1.5} /></svg>
+                  Thicker arc = stronger hiring pipeline to that city
                 </div>
               </div>
             </div>
           </>
         )}
       </section>
+
+      {/* Details modal */}
+      {detailsModal && (
+        <div className="pc-modal-backdrop" onClick={() => setDetailsModal(null)}>
+          <div className="pc-modal" style={{ borderTop: `3px solid ${detailsModal.color}` }} onClick={e => e.stopPropagation()}>
+            <div className="pc-modal-header">
+              <div>
+                <div className="pc-modal-title" style={{ color: detailsModal.color }}>{detailsModal.name}</div>
+                <div className="pc-modal-meta">
+                  {detailsModal.location} · {detailsModal.track} · {detailsModal.duration} · ${detailsModal.totalCost}k total · Est. ${detailsModal.expectedSalary}k salary
+                </div>
+              </div>
+              <button className="pc-modal-close" onClick={() => setDetailsModal(null)}>✕</button>
+            </div>
+            <div className="pc-modal-body">
+              <div className="pc-pros-cons">
+                <div>
+                  <div className="pc-pros-cons-col-label">Pros</div>
+                  {detailsModal.pros.map((pt, i) => (
+                    <div key={i} className="pc-bullet">
+                      <span className="pc-bullet-icon pro">✓</span>
+                      <span>{pt}</span>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <div className="pc-pros-cons-col-label">Cons</div>
+                  {detailsModal.cons.map((ct, i) => (
+                    <div key={i} className="pc-bullet">
+                      <span className="pc-bullet-icon con">✗</span>
+                      <span>{ct}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <a href={detailsModal.applyUrl} target="_blank" rel="noopener noreferrer" className="pc-apply-link">
+                Apply / Learn More →
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
