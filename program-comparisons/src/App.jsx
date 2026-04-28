@@ -423,6 +423,32 @@ function ScatterDot({ cx, cy, r, payload }) {
   );
 }
 
+function BubbleDot({ cx, cy, r, payload }) {
+  if (!cx || !cy || !payload) return null;
+  const radius = Math.max(r || 10, 8);
+  return (
+    <g>
+      <circle cx={cx} cy={cy} r={radius} fill={payload.color} fillOpacity={0.65} stroke={payload.color} strokeWidth={1.5} />
+      <text x={cx} y={cy + radius + 13} fill="#ebe3d0" fontSize={9} fontFamily="IBM Plex Mono" textAnchor="middle">
+        {payload.shortName}
+      </text>
+    </g>
+  );
+}
+
+function CustomBubbleTooltip({ active, payload }) {
+  if (!active || !payload?.length) return null;
+  const d = payload[0].payload;
+  return (
+    <div style={{ background: '#0f1216', border: `1px solid ${d.color}`, padding: '10px 14px', fontFamily: 'IBM Plex Mono', fontSize: 12 }}>
+      <div style={{ color: d.color, fontWeight: 600, marginBottom: 4 }}>{d.name}</div>
+      <div style={{ color: '#ebe3d0' }}>Composite: <strong>{d.composite.toFixed(2)}</strong></div>
+      <div style={{ color: '#8f8876', marginTop: 4 }}>Criteria: {d.weightedScore.toFixed(2)} · Personal rank #{d.personalPos + 1}</div>
+      <div style={{ color: '#8f8876' }}>Market access: {d.marketAccess}/10</div>
+    </div>
+  );
+}
+
 const SectionHeader = ({ num, title, extra, onToggle, open }) => (
   <div className="pc-section-header" onClick={onToggle} role="button" aria-expanded={open}>
     <span className="pc-section-number">{num}</span>
@@ -498,6 +524,20 @@ export default function ProgramComparison() {
       .map(p => ({ ...p, weightedScore: criteria.reduce((sum, c) => sum + p.scores[c.key] * weights[c.key], 0) / totalWeight }))
       .sort((a, b) => b.weightedScore - a.weightedScore);
   }, [weights]);
+
+  const combinedRanked = useMemo(() => {
+    const totalWeight = Object.values(weights).reduce((s, w) => s + w, 0) || 1;
+    const n = programs.length;
+    return [...programs]
+      .map(p => {
+        const weightedScore = criteria.reduce((sum, c) => sum + p.scores[c.key] * weights[c.key], 0) / totalWeight;
+        const personalPos = personalRanking.indexOf(p.id);
+        const personalRankScore = personalPos >= 0 ? (n - 1 - personalPos) / (n - 1) * 10 : 5;
+        const composite = weightedScore * 0.6 + personalRankScore * 0.4;
+        return { ...p, weightedScore, personalRankScore, composite, personalPos };
+      })
+      .sort((a, b) => b.composite - a.composite);
+  }, [weights, personalRanking]);
 
   const tracks = ['All', ...new Set(programs.map(p => p.track))];
   const filteredPrograms = trackFilter === 'All' ? programs : programs.filter(p => p.track === trackFilter);
@@ -895,6 +935,7 @@ export default function ProgramComparison() {
             <div className="pc-tab-row">
               <button className={`pc-tab ${rankingTab === 'weighted' ? 'active' : ''}`} onClick={() => setRankingTab('weighted')}>Weighted Ranking</button>
               <button className={`pc-tab ${rankingTab === 'personal' ? 'active' : ''}`} onClick={() => setRankingTab('personal')}>Personal Ranking</button>
+              <button className={`pc-tab ${rankingTab === 'combined' ? 'active' : ''}`} onClick={() => setRankingTab('combined')}>Combined</button>
             </div>
             {rankingTab === 'weighted' && (
               <>
@@ -944,6 +985,72 @@ export default function ProgramComparison() {
                 </div>
               </>
             )}
+            {rankingTab === 'combined' && (() => {
+              const bubbleData = combinedRanked.map(p => ({
+                x: p.weightedScore, y: p.personalRankScore, z: p.scores.marketAccess,
+                id: p.id, shortName: p.shortName, name: p.name, color: p.color,
+                composite: p.composite, personalPos: p.personalPos,
+                weightedScore: p.weightedScore, marketAccess: p.scores.marketAccess,
+              }));
+              const maxComposite = combinedRanked[0]?.composite || 10;
+              return (
+                <>
+                  <p className="pc-section-desc">
+                    Composite = 60% criteria-weighted score + 40% personal ranking. Bubble size = market access score.
+                    Top-right = strong on both dimensions.
+                  </p>
+                  <div className="pc-chart-panel" style={{ marginBottom: 20 }}>
+                    <div className="pc-chart-title">Composite Score · Criteria vs. Personal Preference</div>
+                    <ResponsiveContainer width="100%" height={420}>
+                      <ScatterChart margin={{ top: 30, right: 60, bottom: 60, left: 70 }}>
+                        <CartesianGrid stroke="#2a313c" strokeDasharray="2 4" />
+                        <XAxis type="number" dataKey="x" name="Criteria Score" domain={[4, 9]} ticks={[4, 5, 6, 7, 8, 9]}
+                          tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }} stroke="#2a313c"
+                          label={{ value: 'Criteria-Weighted Score', position: 'insideBottom', offset: -14, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }} />
+                        <YAxis type="number" dataKey="y" name="Personal Rank Score" domain={[0, 10]} ticks={[0, 2, 4, 6, 8, 10]}
+                          tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }} stroke="#2a313c"
+                          label={{ value: 'Personal Rank Score', angle: -90, position: 'insideLeft', offset: 10, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }} />
+                        <ZAxis type="number" dataKey="z" range={[80, 500]} />
+                        <Tooltip content={CustomBubbleTooltip} cursor={{ strokeDasharray: '3 3' }} />
+                        <Scatter data={bubbleData} shape={BubbleDot} />
+                      </ScatterChart>
+                    </ResponsiveContainer>
+                    <p className="pc-chart-subtitle">Bubble size encodes market access score. Programs top-right have both high criteria scores and high personal ranking.</p>
+                  </div>
+                  <div className="pc-ranking">
+                    {combinedRanked.map((p, i) => (
+                      <div key={p.id} className={`pc-rank-row ${i < 3 ? 'top3' : ''}`}
+                        style={{ alignItems: 'start', ...(selected.includes(p.id) ? { borderLeftColor: p.color, background: 'var(--surface-2)' } : {}) }}
+                        onClick={() => toggleSelect(p.id)}>
+                        <div className="pc-rank-num" style={{ paddingTop: 2 }}>{String(i + 1).padStart(2, '0')}</div>
+                        <div className="pc-rank-name-group">
+                          <div className="pc-rank-name">{p.name}</div>
+                          <div className="pc-rank-meta">{p.location} · {p.duration} · {p.cost}</div>
+                          <div style={{ display: 'flex', gap: 5, marginTop: 8, flexWrap: 'wrap' }}>
+                            {p.hubs.map(h => {
+                              const hub = HUB_CITIES[h.hub];
+                              return (
+                                <span key={h.hub} style={{
+                                  fontFamily: 'IBM Plex Mono', fontSize: 9, letterSpacing: '.08em', textTransform: 'uppercase',
+                                  color: p.color, border: `1px solid ${p.color}`, padding: '2px 7px',
+                                  opacity: h.strength === 3 ? 1 : h.strength === 2 ? 0.65 : 0.4,
+                                }}>
+                                  {hub?.label || h.hub}
+                                </span>
+                              );
+                            })}
+                          </div>
+                        </div>
+                        <div className="pc-rank-bar-container" style={{ marginTop: 6 }}>
+                          <div className="pc-rank-bar" style={{ width: `${(p.composite / maxComposite) * 100}%`, background: p.color }} />
+                        </div>
+                        <div className="pc-rank-score" style={{ paddingTop: 2 }}>{p.composite.toFixed(2)}</div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              );
+            })()}
             <p className="pc-note">
               Total cost = approximate tuition (2025–26) plus estimated living expenses for program duration (graduating March 2027).
               Salary estimates are from verified program employment reports where available; otherwise estimated from market benchmarks.
