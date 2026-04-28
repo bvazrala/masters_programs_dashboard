@@ -1,4 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { fetchClimateData } from './api/openMeteo';
+import { fetchScorecardData } from './api/collegeScorecard';
 import { ComposableMap, Geographies, Geography, Line, Marker } from 'react-simple-maps';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip,
          ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, ZAxis, Cell,
@@ -21,7 +23,7 @@ const HUB_CITIES = {
 
 const programs = [
   {
-    id: 'uw', name: 'UW CFRM', shortName: 'UW', location: 'Seattle, WA', duration: '15 mo', durationMonths: 15,
+    id: 'uw', scorecardId: 236948, name: 'UW CFRM', shortName: 'UW', location: 'Seattle, WA', duration: '15 mo', durationMonths: 15,
     cost: '~$70k total', totalCost: 70, overBudget: false, track: 'Quant Finance', color: '#5e8a85',
     admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 105,
     coordinates: [-122.30, 47.66],
@@ -43,7 +45,7 @@ const programs = [
     scores: { roi: 7, affordability: 7, jobMarket: 7, marketAccess: 8, weatherFit: 3, lifestyle: 7, duration: 6, capstone: 7, prestige: 6, versatility: 7 },
   },
   {
-    id: 'calpoly', name: 'Cal Poly SLO MSBA', shortName: 'Cal Poly', location: 'San Luis Obispo, CA', duration: '10 mo', durationMonths: 10,
+    id: 'calpoly', scorecardId: 110422, name: 'Cal Poly SLO MSBA', shortName: 'Cal Poly', location: 'San Luis Obispo, CA', duration: '10 mo', durationMonths: 10,
     cost: '~$46k total', totalCost: 46, overBudget: false, track: 'Business Analytics', color: '#d4a952',
     admitOdds: 'Safety', admitOddsScore: 85, expectedSalary: 95,
     coordinates: [-120.66, 35.31],
@@ -65,7 +67,7 @@ const programs = [
     scores: { roi: 9, affordability: 10, jobMarket: 5, marketAccess: 5, weatherFit: 10, lifestyle: 10, duration: 10, capstone: 6, prestige: 4, versatility: 6 },
   },
   {
-    id: 'utaustin', name: 'UT Austin MSBA', shortName: 'UT Austin', location: 'Austin, TX', duration: '10 mo', durationMonths: 10,
+    id: 'utaustin', scorecardId: 228778, name: 'UT Austin MSBA', shortName: 'UT Austin', location: 'Austin, TX', duration: '10 mo', durationMonths: 10,
     cost: '~$80k total', totalCost: 80, overBudget: false, track: 'Business Analytics', color: '#b8923b',
     admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 106,
     coordinates: [-97.73, 30.28],
@@ -87,7 +89,7 @@ const programs = [
     scores: { roi: 8, affordability: 5, jobMarket: 8, marketAccess: 7, weatherFit: 7, lifestyle: 8, duration: 10, capstone: 7, prestige: 7, versatility: 8 },
   },
   {
-    id: 'gatech', name: 'Georgia Tech MSA', shortName: 'GA Tech', location: 'Atlanta, GA', duration: '12 mo', durationMonths: 12,
+    id: 'gatech', scorecardId: 139755, name: 'Georgia Tech MSA', shortName: 'GA Tech', location: 'Atlanta, GA', duration: '12 mo', durationMonths: 12,
     cost: '~$70k total', totalCost: 70, overBudget: false, track: 'Business Analytics', color: '#a0614a',
     admitOdds: 'Target', admitOddsScore: 55, expectedSalary: 109,
     coordinates: [-84.40, 33.78],
@@ -109,7 +111,7 @@ const programs = [
     scores: { roi: 9, affordability: 6, jobMarket: 8, marketAccess: 7, weatherFit: 6, lifestyle: 6, duration: 9, capstone: 9, prestige: 8, versatility: 9 },
   },
   {
-    id: 'usc', name: 'USC Marshall MSBA', shortName: 'USC', location: 'Los Angeles, CA', duration: '12 mo', durationMonths: 12,
+    id: 'usc', scorecardId: 123961, name: 'USC Marshall MSBA', shortName: 'USC', location: 'Los Angeles, CA', duration: '12 mo', durationMonths: 12,
     cost: '~$88k total', totalCost: 88, overBudget: false, track: 'Business Analytics', color: '#a32035',
     admitOdds: 'Target', admitOddsScore: 55, expectedSalary: 105,
     coordinates: [-118.29, 34.02],
@@ -131,7 +133,7 @@ const programs = [
     scores: { roi: 7, affordability: 5, jobMarket: 9, marketAccess: 9, weatherFit: 10, lifestyle: 10, duration: 9, capstone: 7, prestige: 8, versatility: 8 },
   },
   {
-    id: 'gwu', name: 'GWU MSBA', shortName: 'GWU', location: 'Washington, DC', duration: '12 mo', durationMonths: 12,
+    id: 'gwu', scorecardId: 131469, name: 'GWU MSBA', shortName: 'GWU', location: 'Washington, DC', duration: '12 mo', durationMonths: 12,
     cost: '~$90k total', totalCost: 90, overBudget: false, track: 'Business Analytics', color: '#8b5a8a',
     admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 90,
     coordinates: [-77.05, 38.90],
@@ -153,7 +155,7 @@ const programs = [
     scores: { roi: 5, affordability: 4, jobMarket: 7, marketAccess: 9, weatherFit: 6, lifestyle: 7, duration: 8, capstone: 8, prestige: 5, versatility: 7 },
   },
   {
-    id: 'rutgers', name: 'Rutgers MQF', shortName: 'Rutgers', location: 'Newark, NJ', duration: '18 mo', durationMonths: 18,
+    id: 'rutgers', scorecardId: 186380, name: 'Rutgers MQF', shortName: 'Rutgers', location: 'Newark, NJ', duration: '18 mo', durationMonths: 18,
     cost: '~$115k total', totalCost: 115, overBudget: true, track: 'Quant Finance', color: '#4a6b4a',
     admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 106,
     coordinates: [-74.17, 40.73],
@@ -175,7 +177,7 @@ const programs = [
     scores: { roi: 7, affordability: 3, jobMarket: 9, marketAccess: 10, weatherFit: 5, lifestyle: 5, duration: 5, capstone: 6, prestige: 7, versatility: 6 },
   },
   {
-    id: 'ncstate', name: 'NC State MFM', shortName: 'NC State', location: 'Raleigh, NC', duration: '18 mo', durationMonths: 18,
+    id: 'ncstate', scorecardId: 199193, name: 'NC State MFM', shortName: 'NC State', location: 'Raleigh, NC', duration: '18 mo', durationMonths: 18,
     cost: '~$68k total', totalCost: 68, overBudget: false, track: 'Quant Finance', color: '#6e5a9e',
     admitOdds: 'Target', admitOddsScore: 70, expectedSalary: 118,
     coordinates: [-78.69, 35.79],
@@ -197,7 +199,7 @@ const programs = [
     scores: { roi: 10, affordability: 7, jobMarket: 7, marketAccess: 5, weatherFit: 8, lifestyle: 7, duration: 5, capstone: 8, prestige: 6, versatility: 6 },
   },
   {
-    id: 'uiuc', name: 'UIUC MSFE', shortName: 'UIUC', location: 'Champaign, IL', duration: '18 mo', durationMonths: 18,
+    id: 'uiuc', scorecardId: 145637, name: 'UIUC MSFE', shortName: 'UIUC', location: 'Champaign, IL', duration: '18 mo', durationMonths: 18,
     cost: '~$98k total', totalCost: 98, overBudget: true, track: 'Quant Finance', color: '#8c8a4a',
     admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 115,
     coordinates: [-88.23, 40.10],
@@ -219,7 +221,7 @@ const programs = [
     scores: { roi: 7, affordability: 3, jobMarket: 8, marketAccess: 6, weatherFit: 4, lifestyle: 4, duration: 5, capstone: 9, prestige: 8, versatility: 6 },
   },
   {
-    id: 'cmu', name: 'CMU EPP', shortName: 'CMU', location: 'Pittsburgh, PA', duration: '9 mo', durationMonths: 9,
+    id: 'cmu', scorecardId: 211440, name: 'CMU EPP', shortName: 'CMU', location: 'Pittsburgh, PA', duration: '9 mo', durationMonths: 9,
     cost: '~$92k total', totalCost: 92, overBudget: true, track: 'Policy/Consulting', color: '#9e7b5a',
     admitOdds: 'Reach', admitOddsScore: 35, expectedSalary: 97,
     coordinates: [-79.94, 40.44],
@@ -241,7 +243,7 @@ const programs = [
     scores: { roi: 5, affordability: 3, jobMarket: 7, marketAccess: 5, weatherFit: 2, lifestyle: 4, duration: 8, capstone: 7, prestige: 8, versatility: 7 },
   },
   {
-    id: 'sjsu', name: 'SJSU MS Financial Analytics', shortName: 'SJSU', location: 'San Jose, CA', duration: '12 mo', durationMonths: 12,
+    id: 'sjsu', scorecardId: 122492, name: 'SJSU MS Financial Analytics', shortName: 'SJSU', location: 'San Jose, CA', duration: '12 mo', durationMonths: 12,
     cost: '~$40k total', totalCost: 40, overBudget: false, track: 'Quant Finance', color: '#3b7dbf',
     admitOdds: 'Safety', admitOddsScore: 78, expectedSalary: 100,
     coordinates: [-121.89, 37.34],
@@ -263,7 +265,7 @@ const programs = [
     scores: { roi: 9, affordability: 9, jobMarket: 8, marketAccess: 10, weatherFit: 7, lifestyle: 7, duration: 9, capstone: 5, prestige: 4, versatility: 6 },
   },
   {
-    id: 'tamu', name: 'Texas A&M Mays MSBA', shortName: 'TX A&M', location: 'College Station, TX', duration: '12 mo', durationMonths: 12,
+    id: 'tamu', scorecardId: 228723, name: 'Texas A&M Mays MSBA', shortName: 'TX A&M', location: 'College Station, TX', duration: '12 mo', durationMonths: 12,
     cost: '~$48k total', totalCost: 48, overBudget: false, track: 'Business Analytics', color: '#7d2a1e',
     admitOdds: 'Target', admitOddsScore: 70, expectedSalary: 95,
     coordinates: [-96.33, 30.63],
@@ -285,7 +287,7 @@ const programs = [
     scores: { roi: 9, affordability: 9, jobMarket: 7, marketAccess: 4, weatherFit: 6, lifestyle: 5, duration: 9, capstone: 7, prestige: 7, versatility: 8 },
   },
   {
-    id: 'asu', name: 'ASU W.P. Carey MSBA', shortName: 'ASU', location: 'Tempe, AZ', duration: '12 mo', durationMonths: 12,
+    id: 'asu', scorecardId: 104151, name: 'ASU W.P. Carey MSBA', shortName: 'ASU', location: 'Tempe, AZ', duration: '12 mo', durationMonths: 12,
     cost: '~$58k total', totalCost: 58, overBudget: false, track: 'Business Analytics', color: '#d4651a',
     admitOdds: 'Target', admitOddsScore: 68, expectedSalary: 98,
     coordinates: [-111.94, 33.42],
@@ -307,7 +309,7 @@ const programs = [
     scores: { roi: 8, affordability: 8, jobMarket: 7, marketAccess: 6, weatherFit: 8, lifestyle: 7, duration: 9, capstone: 7, prestige: 6, versatility: 8 },
   },
   {
-    id: 'vanderbilt', name: 'Vanderbilt Owen MSBA', shortName: 'Vandy', location: 'Nashville, TN', duration: '12 mo', durationMonths: 12,
+    id: 'vanderbilt', scorecardId: 221999, name: 'Vanderbilt Owen MSBA', shortName: 'Vandy', location: 'Nashville, TN', duration: '12 mo', durationMonths: 12,
     cost: '~$78k total', totalCost: 78, overBudget: false, track: 'Business Analytics', color: '#4a7c59',
     admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 105,
     coordinates: [-86.80, 36.14],
@@ -329,7 +331,7 @@ const programs = [
     scores: { roi: 7, affordability: 5, jobMarket: 7, marketAccess: 3, weatherFit: 7, lifestyle: 8, duration: 9, capstone: 8, prestige: 8, versatility: 8 },
   },
   {
-    id: 'bu', name: 'BU Questrom MSBA', shortName: 'BU', location: 'Boston, MA', duration: '12 mo', durationMonths: 12,
+    id: 'bu', scorecardId: 109785, name: 'BU Questrom MSBA', shortName: 'BU', location: 'Boston, MA', duration: '12 mo', durationMonths: 12,
     cost: '~$82k total', totalCost: 82, overBudget: false, track: 'Business Analytics', color: '#c95c7a',
     admitOdds: 'Target', admitOddsScore: 62, expectedSalary: 105,
     coordinates: [-71.11, 42.35],
@@ -474,6 +476,8 @@ export default function ProgramComparison() {
     } catch { return programs.map(p => p.id); }
   });
   const [dragState, setDragState] = useState({ dragging: null, over: null });
+  const [liveData, setLiveData]   = useState({});
+  const [liveLoading, setLiveLoading] = useState(true);
 
   // Modal: ESC to close + prevent body scroll
   useEffect(() => {
@@ -486,6 +490,37 @@ export default function ProgramComparison() {
       document.body.style.overflow = '';
     };
   }, [detailsModal]);
+
+  // Fetch live climate (Open-Meteo) + earnings (College Scorecard) data on mount
+  useEffect(() => {
+    const weatherFetches = programs.map(async p => {
+      try {
+        const data = await fetchClimateData(p.coordinates[1], p.coordinates[0]);
+        return [p.id, { weather: data }];
+      } catch {
+        return [p.id, {}];
+      }
+    });
+
+    const apiKey = import.meta.env.VITE_COLLEGE_SCORECARD_KEY;
+    const hasKey = apiKey && apiKey !== 'YOUR_KEY_HERE';
+    const idMap = Object.fromEntries(
+      programs.filter(p => p.scorecardId).map(p => [p.id, p.scorecardId])
+    );
+    const scorecardFetch = hasKey
+      ? fetchScorecardData(idMap, apiKey).catch(() => ({}))
+      : Promise.resolve({});
+
+    Promise.all([Promise.all(weatherFetches), scorecardFetch]).then(([weatherEntries, scorecard]) => {
+      setLiveData(prev => {
+        const next = { ...prev };
+        for (const [id, data] of weatherEntries) next[id] = { ...next[id], ...data };
+        for (const [id, data] of Object.entries(scorecard)) next[id] = { ...next[id], scorecard: data };
+        return next;
+      });
+      setLiveLoading(false);
+    });
+  }, []);
 
   const toggleCollapse = (key) => setCollapsed(prev => ({ ...prev, [key]: !prev[key] }));
   const isOpen         = (key) => !collapsed[key];
@@ -1252,6 +1287,69 @@ export default function ProgramComparison() {
               <a href={detailsModal.applyUrl} target="_blank" rel="noopener noreferrer" className="pc-apply-link">
                 Apply / Learn More →
               </a>
+
+              {/* Live API data panel */}
+              {liveLoading && !liveData[detailsModal.id]?.weather && (
+                <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid var(--border)', fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text-faint)', letterSpacing: '.08em' }}>
+                  Fetching live data…
+                </div>
+              )}
+              {!liveLoading && (liveData[detailsModal.id]?.weather || liveData[detailsModal.id]?.scorecard) && (() => {
+                const ld = liveData[detailsModal.id];
+                return (
+                  <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid var(--border)' }}>
+                    <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--text-faint)', marginBottom: 14 }}>Live API Data</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: ld.scorecard ? '1fr 1fr' : '1fr', gap: 20 }}>
+
+                      {ld.weather && (
+                        <div>
+                          <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 10 }}>Open-Meteo · 2024</div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
+                              <span style={{ color: 'var(--text-dim)' }}>Annual sunshine</span>
+                              <span style={{ fontFamily: 'var(--mono)', color: 'var(--text)' }}>{ld.weather.annualSunHrs.toLocaleString()} hrs</span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
+                              <span style={{ color: 'var(--text-dim)' }}>Avg temperature</span>
+                              <span style={{ fontFamily: 'var(--mono)', color: 'var(--text)' }}>
+                                {ld.weather.avgTempC}°C · {Math.round(ld.weather.avgTempC * 9 / 5 + 32)}°F
+                              </span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
+                              <span style={{ color: 'var(--text-dim)' }}>Climate score</span>
+                              <span style={{ fontFamily: 'var(--mono)', color: 'var(--accent)', fontWeight: 600 }}>{ld.weather.weatherFit} / 10</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {ld.scorecard && (
+                        <div>
+                          <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 10 }}>College Scorecard</div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                            {ld.scorecard.earnings6yr && (
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
+                                <span style={{ color: 'var(--text-dim)' }}>6yr median earnings</span>
+                                <span style={{ fontFamily: 'var(--mono)', color: 'var(--text)' }}>${ld.scorecard.earnings6yr.toLocaleString()}</span>
+                              </div>
+                            )}
+                            {ld.scorecard.tuitionOOS && (
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
+                                <span style={{ color: 'var(--text-dim)' }}>OOS tuition / yr</span>
+                                <span style={{ fontFamily: 'var(--mono)', color: 'var(--text)' }}>${ld.scorecard.tuitionOOS.toLocaleString()}</span>
+                              </div>
+                            )}
+                            <div style={{ fontSize: 11, color: 'var(--text-faint)', fontStyle: 'italic', marginTop: 2 }}>
+                              Institution-wide · not program-specific
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </div>
