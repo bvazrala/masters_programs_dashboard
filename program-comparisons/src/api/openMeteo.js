@@ -26,14 +26,18 @@ export async function fetchClimateData(lat, lon) {
   return { annualSunHrs, avgTempC, weatherFit: computeWeatherFit(annualSunHrs, avgTempC) };
 }
 
-// Score 1–10 calibrated to user's warm/sunny SoCal preference.
-// Sunshine is the primary driver; temperature adds a mild modifier.
+// Score 1–10 for preferred climate: overcast midday, visible sun at dawn/dusk, cool temps.
+// Ideal is ~1900–2400 hrs/year (marine-layer / temperate maritime pattern).
+// Penalises both relentlessly sunny (>2800 hrs) and genuinely bleak (<1400 hrs).
 function computeWeatherFit(sunHrs, avgTempC) {
-  // 1500 hrs → ~1, 3300 hrs → ~10 (linear)
-  const sunScore = Math.min(10, Math.max(1, (sunHrs - 1500) / 200 + 1));
-  // Ideal ~18 °C; cold hurts more than mild warmth
+  const idealSun = 2100;
+  const spread   = 850; // hrs from ideal before score bottoms out
+  const sunScore = Math.max(1, 10 - (Math.abs(sunHrs - idealSun) / spread) * 9);
+
+  // Cool comfort zone 10–16 °C; extra penalty for heat above 22 °C
   const tempScore = avgTempC != null
-    ? Math.min(10, Math.max(1, 10 - Math.abs(avgTempC - 18) * 0.55))
+    ? Math.max(1, 10 - Math.abs(avgTempC - 13) * 0.6 - Math.max(0, avgTempC - 22) * 0.5)
     : 5;
-  return Math.min(10, Math.max(1, Math.round(sunScore * 0.7 + tempScore * 0.3)));
+
+  return Math.min(10, Math.max(1, Math.round(sunScore * 0.6 + tempScore * 0.4)));
 }

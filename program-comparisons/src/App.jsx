@@ -41,8 +41,8 @@ const programs = [
       'Placement is heavily Seattle-centric; limited access to East Coast or Wall Street firms',
       'No published salary data; all salary estimates are based on industry benchmarks, not verified reports',
     ],
-    applyUrl: 'https://foster.uw.edu/academics/degree-programs/master-of-science-in-computational-finance-risk-management/',
-    scores: { roi: 7, affordability: 7, jobMarket: 7, marketAccess: 8, weatherFit: 3, lifestyle: 7, duration: 6, capstone: 7, prestige: 6, versatility: 7 },
+    applyUrl: 'https://depts.washington.edu/compfin/cfrm-ms/',
+    scores: { roi: 7, affordability: 7, jobMarket: 7, marketAccess: 8, weatherFit: 8, lifestyle: 7, duration: 6, capstone: 7, prestige: 6, versatility: 7 },
   },
   {
     id: 'calpoly', scorecardId: 110422, name: 'Cal Poly SLO MSBA', shortName: 'Cal Poly', location: 'San Luis Obispo, CA', duration: '10 mo', durationMonths: 10,
@@ -63,8 +63,8 @@ const programs = [
       'Regional California brand; limited access to East Coast finance, national consulting, or Wall Street',
       'Less quant depth; best for general business analytics rather than specialized quantitative roles',
     ],
-    applyUrl: 'https://orfalea.calpoly.edu/graduate/ms-business-analytics',
-    scores: { roi: 9, affordability: 10, jobMarket: 5, marketAccess: 5, weatherFit: 10, lifestyle: 10, duration: 10, capstone: 6, prestige: 4, versatility: 6 },
+    applyUrl: 'https://orfalea.calpoly.edu/graduate-programs/ms-business-analytics',
+    scores: { roi: 9, affordability: 10, jobMarket: 5, marketAccess: 5, weatherFit: 5, lifestyle: 10, duration: 10, capstone: 6, prestige: 4, versatility: 6 },
   },
   {
     id: 'utaustin', scorecardId: 228778, name: 'UT Austin MSBA', shortName: 'UT Austin', location: 'Austin, TX', duration: '10 mo', durationMonths: 10,
@@ -86,7 +86,7 @@ const programs = [
       'Selectivity has increased sharply as reputation has grown; admission is increasingly competitive',
     ],
     applyUrl: 'https://www.mccombs.utexas.edu/graduate/masters-programs/ms-business-analytics/',
-    scores: { roi: 8, affordability: 5, jobMarket: 8, marketAccess: 7, weatherFit: 7, lifestyle: 8, duration: 10, capstone: 7, prestige: 7, versatility: 8 },
+    scores: { roi: 8, affordability: 5, jobMarket: 8, marketAccess: 7, weatherFit: 5, lifestyle: 8, duration: 10, capstone: 7, prestige: 7, versatility: 8 },
   },
   {
     id: 'gatech', scorecardId: 139755, name: 'Georgia Tech MSA', shortName: 'GA Tech', location: 'Atlanta, GA', duration: '12 mo', durationMonths: 12,
@@ -107,8 +107,8 @@ const programs = [
       'Hot and humid summers; climate does not match SoCal coastal preferences',
       'Less finance-specific pipeline than Rutgers or UIUC; best for tech, consulting, and analytics roles',
     ],
-    applyUrl: 'https://scheller.gatech.edu/degree-programs/master-of-science/master-of-science-in-analytics/',
-    scores: { roi: 9, affordability: 6, jobMarket: 8, marketAccess: 7, weatherFit: 6, lifestyle: 6, duration: 9, capstone: 9, prestige: 8, versatility: 9 },
+    applyUrl: 'https://www.analytics.gatech.edu/',
+    scores: { roi: 9, affordability: 6, jobMarket: 8, marketAccess: 7, weatherFit: 5, lifestyle: 6, duration: 9, capstone: 9, prestige: 8, versatility: 9 },
   },
   {
     id: 'usc', scorecardId: 123961, name: 'USC Marshall MSBA', shortName: 'USC', location: 'Los Angeles, CA', duration: '12 mo', durationMonths: 12,
@@ -130,7 +130,7 @@ const programs = [
       'Rising selectivity; increasingly competitive admission as the program\'s reputation has grown',
     ],
     applyUrl: 'https://www.marshall.usc.edu/programs/specialized-masters-programs/master-science-business-analytics',
-    scores: { roi: 7, affordability: 5, jobMarket: 9, marketAccess: 9, weatherFit: 10, lifestyle: 10, duration: 9, capstone: 7, prestige: 8, versatility: 8 },
+    scores: { roi: 7, affordability: 5, jobMarket: 9, marketAccess: 9, weatherFit: 6, lifestyle: 10, duration: 9, capstone: 7, prestige: 8, versatility: 8 },
   },
   {
     id: 'gwu', scorecardId: 131469, name: 'GWU MSBA', shortName: 'GWU', location: 'Washington, DC', duration: '12 mo', durationMonths: 12,
@@ -151,8 +151,8 @@ const programs = [
       'GWU brand is strong in DC but has limited national employer recognition outside government and consulting',
       'High DC cost of living relative to program salary outcomes reduces effective financial return',
     ],
-    applyUrl: 'https://business.gwu.edu/masters-program-business-analytics',
-    scores: { roi: 5, affordability: 4, jobMarket: 7, marketAccess: 9, weatherFit: 6, lifestyle: 7, duration: 8, capstone: 8, prestige: 5, versatility: 7 },
+    applyUrl: 'https://business.gwu.edu/academics/programs/masters/ms-in-business-analytics',
+    scores: { roi: 5, affordability: 4, jobMarket: 7, marketAccess: 9, weatherFit: 7, lifestyle: 7, duration: 8, capstone: 8, prestige: 5, versatility: 7 },
   },
   {
     id: 'rutgers', scorecardId: 186380, name: 'Rutgers MQF', shortName: 'Rutgers', location: 'Newark, NJ', duration: '18 mo', durationMonths: 18,
@@ -173,7 +173,7 @@ const programs = [
       '18-month timeline is the longest among quant programs, increasing opportunity cost',
       'Specialist track; less effective if career interests shift toward general tech, analytics, or consulting',
     ],
-    applyUrl: 'https://business.rutgers.edu/master-quantitative-finance',
+    applyUrl: 'https://www.business.rutgers.edu/masters-quantitative-finance',
     scores: { roi: 7, affordability: 3, jobMarket: 9, marketAccess: 10, weatherFit: 5, lifestyle: 5, duration: 5, capstone: 6, prestige: 7, versatility: 6 },
   },
   {
@@ -196,7 +196,7 @@ const programs = [
       'Specialist quant track — pivoting to general tech analytics, consulting, or product management is harder',
     ],
     applyUrl: 'https://financial.math.ncsu.edu/',
-    scores: { roi: 10, affordability: 7, jobMarket: 7, marketAccess: 5, weatherFit: 8, lifestyle: 7, duration: 5, capstone: 8, prestige: 6, versatility: 6 },
+    scores: { roi: 10, affordability: 7, jobMarket: 7, marketAccess: 5, weatherFit: 6, lifestyle: 7, duration: 5, capstone: 8, prestige: 6, versatility: 6 },
   },
   {
     id: 'uiuc', scorecardId: 145637, name: 'UIUC MSFE', shortName: 'UIUC', location: 'Champaign, IL', duration: '18 mo', durationMonths: 18,
@@ -239,8 +239,8 @@ const programs = [
       'No published MS EPP salary data; outcomes depend heavily on chosen specialization and are hard to benchmark',
       'Pittsburgh is the cloudiest major US city (~42% sunshine) and has limited lifestyle appeal',
     ],
-    applyUrl: 'https://www.cmu.edu/epp/master/',
-    scores: { roi: 5, affordability: 3, jobMarket: 7, marketAccess: 5, weatherFit: 2, lifestyle: 4, duration: 8, capstone: 7, prestige: 8, versatility: 7 },
+    applyUrl: 'https://epp.engineering.cmu.edu/education/graduate/masters-programs/ms-in-epp/index.html',
+    scores: { roi: 5, affordability: 3, jobMarket: 7, marketAccess: 5, weatherFit: 7, lifestyle: 4, duration: 8, capstone: 7, prestige: 8, versatility: 7 },
   },
   {
     id: 'sjsu', scorecardId: 122492, name: 'SJSU MS Financial Analytics', shortName: 'SJSU', location: 'San Jose, CA', duration: '12 mo', durationMonths: 12,
@@ -261,8 +261,8 @@ const programs = [
       'Competitive Bay Area market heavily favors graduates from Stanford, Berkeley, and top-ranked MFE programs',
       'No well-documented salary or placement data published; outcomes are harder to verify than most programs here',
     ],
-    applyUrl: 'https://www.sjsu.edu/lucas/programs/ms-financial-analytics/',
-    scores: { roi: 9, affordability: 9, jobMarket: 8, marketAccess: 10, weatherFit: 7, lifestyle: 7, duration: 9, capstone: 5, prestige: 4, versatility: 6 },
+    applyUrl: 'https://www.sjsu.edu/lucasgsb/prospective-students/msfa/index.php',
+    scores: { roi: 9, affordability: 9, jobMarket: 8, marketAccess: 10, weatherFit: 9, lifestyle: 7, duration: 9, capstone: 5, prestige: 4, versatility: 6 },
   },
   {
     id: 'tamu', scorecardId: 228723, name: 'Texas A&M Mays MSBA', shortName: 'TX A&M', location: 'College Station, TX', duration: '12 mo', durationMonths: 12,
@@ -283,52 +283,52 @@ const programs = [
       'Texas heat and humidity is a significant mismatch for SoCal coastal weather preferences',
       'Employer pipeline skews Texas-based and energy-sector; less access to West Coast tech or Wall Street finance',
     ],
-    applyUrl: 'https://mays.tamu.edu/master-of-science-in-business-analytics/',
-    scores: { roi: 9, affordability: 9, jobMarket: 7, marketAccess: 4, weatherFit: 6, lifestyle: 5, duration: 9, capstone: 7, prestige: 7, versatility: 8 },
+    applyUrl: 'https://mays.tamu.edu/graduate/masters/ms-programs/analytics/',
+    scores: { roi: 9, affordability: 9, jobMarket: 7, marketAccess: 4, weatherFit: 4, lifestyle: 5, duration: 9, capstone: 7, prestige: 7, versatility: 8 },
   },
   {
-    id: 'asu', scorecardId: 104151, name: 'ASU W.P. Carey MSBA', shortName: 'ASU', location: 'Tempe, AZ', duration: '12 mo', durationMonths: 12,
-    cost: '~$58k total', totalCost: 58, overBudget: false, track: 'Business Analytics', color: '#d4651a',
-    admitOdds: 'Target', admitOddsScore: 68, expectedSalary: 98,
-    coordinates: [-111.94, 33.42],
-    placementRate: 85, pipelineScore: 6,
-    hubs: [{ hub: 'siliconValley', strength: 2 }, { hub: 'la', strength: 2 }, { hub: 'nyc', strength: 1 }],
-    topRoles: 'Data analyst, supply chain analyst, operations analytics, consulting',
-    topEmployers: 'Intel, Amazon, Honeywell, Deloitte, American Express, GoDaddy, TSMC',
+    id: 'michigan', scorecardId: 170976, name: 'Michigan Ross MBAN', shortName: 'Michigan', location: 'Ann Arbor, MI', duration: '10 mo', durationMonths: 10,
+    cost: '~$97k total', totalCost: 97, overBudget: true, track: 'Business Analytics', color: '#1a7ab8',
+    admitOdds: 'Target', admitOddsScore: 50, expectedSalary: 100,
+    coordinates: [-83.74, 42.28],
+    placementRate: 88, pipelineScore: 8,
+    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'chicago', strength: 3 }, { hub: 'siliconValley', strength: 2 }],
+    topRoles: 'Data scientist, BI analyst, consulting, product analytics, financial analyst',
+    topEmployers: 'Amazon, Deloitte, McKinsey, Goldman Sachs, Microsoft, Ford, Google, EY, Accenture',
     pros: [
-      'Affordable at ~$58k all-in; W.P. Carey is ranked top-25 nationally in analytics with a growing employer footprint',
-      'Phoenix averages 300+ sunny days per year — one of the best weather matches on this list',
-      'Growing tech hub: Intel, Amazon, TSMC, and American Express all have major Phoenix operations and recruit directly',
+      'Ross is a top-3 U.S. business school — strongest employer brand of any program on this list; McKinsey, Deloitte, Goldman Sachs, and JPMorgan recruit directly on campus',
+      'Direct pipelines to Amazon, Microsoft, Ford, and Google alongside Big 4 and bulge-bracket banks; broad national reach from a single program',
+      '10-month STEM-designated format; famously loyal Ross alumni network opens doors in Chicago, NYC, and SF simultaneously',
     ],
     cons: [
-      'Phoenix summers reach 110°F+ — outdoor lifestyle is effectively impossible June through September',
-      'W.P. Carey has limited employer recognition on the East Coast or in quant finance circles',
-      'Pipeline skews toward supply chain, operations analytics, and Arizona-based corporates',
+      'At ~$97k all-in, ROI is one of the weakest on the list — salary-to-cost ratio of roughly 1:1 versus UT Austin\'s 1.3× advantage',
+      'No published aggregate MBAN salary or placement report online; verified outcomes require direct outreach to the program',
+      'Ann Arbor winters are cold, grey, and long — significant quality-of-life cost relative to warmer or coastal programs',
     ],
-    applyUrl: 'https://wpcarey.asu.edu/master-science-business-analytics',
-    scores: { roi: 8, affordability: 8, jobMarket: 7, marketAccess: 6, weatherFit: 8, lifestyle: 7, duration: 9, capstone: 7, prestige: 6, versatility: 8 },
+    applyUrl: 'https://michiganross.umich.edu/graduate/master-of-business-analytics',
+    scores: { roi: 6, affordability: 3, jobMarket: 9, marketAccess: 8, weatherFit: 7, lifestyle: 5, duration: 10, capstone: 8, prestige: 9, versatility: 9 },
   },
   {
-    id: 'vanderbilt', scorecardId: 221999, name: 'Vanderbilt Owen MSBA', shortName: 'Vandy', location: 'Nashville, TN', duration: '12 mo', durationMonths: 12,
-    cost: '~$78k total', totalCost: 78, overBudget: false, track: 'Business Analytics', color: '#4a7c59',
-    admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 105,
-    coordinates: [-86.80, 36.14],
-    placementRate: 90, pipelineScore: 7,
-    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'chicago', strength: 2 }],
-    topRoles: 'Data analyst, healthcare analytics, consulting, financial analyst',
-    topEmployers: 'Deloitte, EY, Amazon, HCA Healthcare, Bridgestone, Dollar General, Asurion',
+    id: 'georgetown', scorecardId: 131496, name: 'Georgetown McDonough MSBA', shortName: 'Georgetown', location: 'Washington, DC', duration: '10 mo', durationMonths: 10,
+    cost: '~$120k total', totalCost: 120, overBudget: true, track: 'Business Analytics', color: '#4a8a6b',
+    admitOdds: 'Target', admitOddsScore: 52, expectedSalary: 123,
+    coordinates: [-77.07, 38.93],
+    placementRate: 85, pipelineScore: 8,
+    hubs: [{ hub: 'dc', strength: 3 }, { hub: 'nyc', strength: 3 }, { hub: 'boston', strength: 2 }],
+    topRoles: 'Analytics consultant, financial analyst, data scientist, government analytics, strategy analyst',
+    topEmployers: 'Deloitte, McKinsey, Amazon, Capital One, EY, Accenture, JPMorgan, Booz Allen, Google',
     pros: [
-      'Vanderbilt is an Ivy-adjacent national brand — strong employer recognition across consulting, finance, and healthcare analytics',
-      'Nashville is a fast-growing city with a vibrant food, music, and culture scene; great mid-size city quality of life',
-      'Structured 12-month practicum with named company partnerships; strong consulting and healthcare analytics placement',
+      '$123,250 average base salary (Class of 2024) — highest verified starting salary of any program on this list by a wide margin',
+      'STEM-designated 10-month program in DC: simultaneous access to consulting (MBB/Big 4), federal analytics (Booz Allen, MITRE), finance (Capital One, JPMorgan), and tech (Amazon, Google DC)',
+      'Georgetown\'s Jesuit national brand is strong in consulting, government, and policy circles; alumni network runs deep in the DC–NYC corridor',
     ],
     cons: [
-      'Nashville job market is smaller than major metros — most Owen graduates relocate after graduation',
-      'At ~$78k all-in, mid-to-upper range without the salary outcomes of higher-ranked programs',
-      'Less depth in quant finance or pure data science compared to UIUC, Rutgers, or GA Tech',
+      'At ~$120k all-in, the most expensive program on this list — despite the high salary, cost-to-earnings ROI is approximately 1:1',
+      'DC cost of living, especially housing, applies real financial pressure during the program year',
+      '70% placement reported as "changed jobs within 6 months" — methodology differs from UT Austin\'s at-graduation metric, so direct comparison is difficult',
     ],
-    applyUrl: 'https://business.vanderbilt.edu/graduate/master-of-science-in-business-analytics/',
-    scores: { roi: 7, affordability: 5, jobMarket: 7, marketAccess: 3, weatherFit: 7, lifestyle: 8, duration: 9, capstone: 8, prestige: 8, versatility: 8 },
+    applyUrl: 'https://msb.georgetown.edu/msba/',
+    scores: { roi: 6, affordability: 2, jobMarket: 9, marketAccess: 10, weatherFit: 7, lifestyle: 7, duration: 10, capstone: 8, prestige: 9, versatility: 9 },
   },
   {
     id: 'bu', scorecardId: 109785, name: 'BU Questrom MSBA', shortName: 'BU', location: 'Boston, MA', duration: '12 mo', durationMonths: 12,
@@ -350,7 +350,7 @@ const programs = [
       'BU Questrom competes against Harvard, MIT, and Boston College for top employer attention in Boston',
     ],
     applyUrl: 'https://questromworld.bu.edu/msba/',
-    scores: { roi: 7, affordability: 5, jobMarket: 8, marketAccess: 10, weatherFit: 3, lifestyle: 7, duration: 9, capstone: 7, prestige: 7, versatility: 8 },
+    scores: { roi: 7, affordability: 5, jobMarket: 8, marketAccess: 10, weatherFit: 5, lifestyle: 7, duration: 9, capstone: 7, prestige: 7, versatility: 8 },
   },
 ];
 
@@ -359,7 +359,7 @@ const criteria = [
   { key: 'affordability', label: 'Affordability',  description: 'Absolute program cost (cheaper = higher)' },
   { key: 'jobMarket',     label: 'Job Market',     description: 'Local employer depth for target roles' },
   { key: 'marketAccess',  label: 'Market Access',  description: 'Geographic proximity to major hiring hubs (SF, NYC, LA, DC, Boston, Chicago)' },
-  { key: 'weatherFit',    label: 'Weather Fit',    description: 'Match to warm, sunny SoCal-style preference' },
+  { key: 'weatherFit',    label: 'Weather Fit',    description: 'Match to preferred climate: overcast midday, visible sun at dawn/dusk, cool temps — not relentlessly sunny, not freezing' },
   { key: 'lifestyle',     label: 'Lifestyle',      description: 'Food, culture, activities, city vibe' },
   { key: 'duration',      label: 'Duration',       description: 'Program length (shorter = higher)' },
   { key: 'capstone',      label: 'Capstone',       description: 'Quality of applied project / industry partnership' },
@@ -373,11 +373,11 @@ const SCATTER_LABEL_OFFSETS = {
   sjsu:       { dx: -12, dy: -16, anchor: 'end' },
   calpoly:    { dx:   0, dy:  18, anchor: 'middle' },
   tamu:       { dx:  12, dy: -16, anchor: 'start' },
-  asu:        { dx:  12, dy: -16, anchor: 'start' },
+  michigan:   { dx:  12, dy:  16, anchor: 'start' },
   ncstate:    { dx: -12, dy: -16, anchor: 'end' },
   uw:         { dx: -14, dy:  16, anchor: 'end' },
   gatech:     { dx:  14, dy: -16, anchor: 'start' },
-  vanderbilt: { dx:   0, dy:  18, anchor: 'middle' },
+  georgetown: { dx: -12, dy: -16, anchor: 'end' },
   utaustin:   { dx: -12, dy: -18, anchor: 'end' },
   bu:         { dx:  12, dy:  16, anchor: 'start' },
   usc:        { dx:  12, dy: -18, anchor: 'start' },
@@ -472,7 +472,11 @@ export default function ProgramComparison() {
   const [personalRanking, setPersonalRanking] = useState(() => {
     try {
       const saved = localStorage.getItem('pc-personal-ranking');
-      return saved ? JSON.parse(saved) : programs.map(p => p.id);
+      if (!saved) return programs.map(p => p.id);
+      const programIds = programs.map(p => p.id);
+      const parsed = JSON.parse(saved).filter(id => programIds.includes(id));
+      const missing = programIds.filter(id => !parsed.includes(id));
+      return [...parsed, ...missing];
     } catch { return programs.map(p => p.id); }
   });
   const [dragState, setDragState] = useState({ dragging: null, over: null });
@@ -846,10 +850,10 @@ export default function ProgramComparison() {
               <ResponsiveContainer width="100%" height={500}>
                 <ScatterChart margin={{ top: 30, right: 80, bottom: 56, left: 70 }}>
                   <CartesianGrid stroke="#2a313c" strokeDasharray="2 4" />
-                  <XAxis type="number" dataKey="x" name="Cost" unit="k" domain={[32, 122]} ticks={[40, 55, 70, 85, 100, 115]}
+                  <XAxis type="number" dataKey="x" name="Cost" unit="k" domain={[32, 130]} ticks={[40, 55, 70, 85, 100, 115]}
                     tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }} stroke="#2a313c"
                     label={{ value: 'Total Cost ($k)', position: 'insideBottom', offset: -14, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }} />
-                  <YAxis type="number" dataKey="y" name="Salary" unit="k" domain={[88, 124]} ticks={[90, 100, 110, 120]}
+                  <YAxis type="number" dataKey="y" name="Salary" unit="k" domain={[88, 132]} ticks={[90, 100, 110, 120, 130]}
                     tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }} stroke="#2a313c"
                     label={{ value: 'Expected Salary ($k)', angle: -90, position: 'insideLeft', offset: 10, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }} />
                   <ZAxis type="number" dataKey="z" range={[60, 360]} />
