@@ -8,17 +8,57 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Responsi
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json';
 
-// Major hiring hub cities — textDx/textAnchor control label positioning to avoid edge clipping
+// Top 50 US job markets — hidden by default; shown only when a school dot is clicked
 const HUB_CITIES = {
-  siliconValley: { coordinates: [-122.05, 37.40], label: 'Bay Area', textDx: 12,   textAnchor: 'start' },
-  nyc:           { coordinates: [-74.00,  40.71], label: 'NYC',      textDx: 0,    textAnchor: 'middle' },
-  chicago:       { coordinates: [-87.63,  41.88], label: 'Chicago',  textDx: 0,    textAnchor: 'middle' },
-  boston:        { coordinates: [-71.06,  42.36], label: 'Boston',   textDx: -12,  textAnchor: 'end' },
-  la:            { coordinates: [-118.25, 34.05], label: 'LA',       textDx: 0,    textAnchor: 'middle' },
-  dc:            { coordinates: [-77.04,  38.91], label: 'DC',       textDx: 12,   textAnchor: 'start' },
-  dallas:        { coordinates: [-96.80,  32.78], label: 'Dallas',   textDx: 12,   textAnchor: 'start' },
-  houston:       { coordinates: [-95.37,  29.76], label: 'Houston',  textDx: 12,   textAnchor: 'start' },
-  austin:        { coordinates: [-97.74,  30.27], label: 'Austin',   textDx: -12,  textAnchor: 'end' },
+  siliconValley: { coordinates: [-122.05, 37.40], label: 'Bay Area',     textDx:  12, textAnchor: 'start'  },
+  nyc:           { coordinates: [-74.00,  40.71], label: 'NYC',          textDx: -12, textAnchor: 'end'    },
+  chicago:       { coordinates: [-87.63,  41.88], label: 'Chicago',      textDx:   0, textAnchor: 'middle' },
+  boston:        { coordinates: [-71.06,  42.36], label: 'Boston',       textDx: -12, textAnchor: 'end'    },
+  la:            { coordinates: [-118.25, 34.05], label: 'LA',           textDx:  12, textAnchor: 'start'  },
+  dc:            { coordinates: [-77.04,  38.91], label: 'DC',           textDx: -12, textAnchor: 'end'    },
+  dallas:        { coordinates: [-96.80,  32.78], label: 'Dallas',       textDx:   0, textAnchor: 'middle' },
+  houston:       { coordinates: [-95.37,  29.76], label: 'Houston',      textDx:   0, textAnchor: 'middle' },
+  austin:        { coordinates: [-97.74,  30.27], label: 'Austin',       textDx:  12, textAnchor: 'start'  },
+  seattle:       { coordinates: [-122.33, 47.61], label: 'Seattle',      textDx:  12, textAnchor: 'start'  },
+  atlanta:       { coordinates: [-84.39,  33.75], label: 'Atlanta',      textDx:   0, textAnchor: 'middle' },
+  miami:         { coordinates: [-80.19,  25.76], label: 'Miami',        textDx: -12, textAnchor: 'end'    },
+  philadelphia:  { coordinates: [-75.16,  39.95], label: 'Philly',       textDx: -12, textAnchor: 'end'    },
+  phoenix:       { coordinates: [-112.07, 33.45], label: 'Phoenix',      textDx:  12, textAnchor: 'start'  },
+  denver:        { coordinates: [-104.99, 39.74], label: 'Denver',       textDx:  12, textAnchor: 'start'  },
+  minneapolis:   { coordinates: [-93.27,  44.98], label: 'Minneapolis',  textDx:   0, textAnchor: 'middle' },
+  sandiego:      { coordinates: [-117.16, 32.72], label: 'San Diego',    textDx:  12, textAnchor: 'start'  },
+  portland:      { coordinates: [-122.68, 45.52], label: 'Portland',     textDx:  12, textAnchor: 'start'  },
+  detroit:       { coordinates: [-83.05,  42.33], label: 'Detroit',      textDx: -12, textAnchor: 'end'    },
+  charlotte:     { coordinates: [-80.84,  35.23], label: 'Charlotte',    textDx: -12, textAnchor: 'end'    },
+  nashville:     { coordinates: [-86.78,  36.17], label: 'Nashville',    textDx:   0, textAnchor: 'middle' },
+  tampa:         { coordinates: [-82.46,  27.95], label: 'Tampa',        textDx: -12, textAnchor: 'end'    },
+  orlando:       { coordinates: [-81.38,  28.54], label: 'Orlando',      textDx: -12, textAnchor: 'end'    },
+  stlouis:       { coordinates: [-90.20,  38.63], label: 'St. Louis',    textDx:   0, textAnchor: 'middle' },
+  baltimore:     { coordinates: [-76.61,  39.29], label: 'Baltimore',    textDx: -12, textAnchor: 'end'    },
+  pittsburgh:    { coordinates: [-79.96,  40.44], label: 'Pittsburgh',   textDx: -12, textAnchor: 'end'    },
+  cleveland:     { coordinates: [-81.69,  41.50], label: 'Cleveland',    textDx: -12, textAnchor: 'end'    },
+  cincinnati:    { coordinates: [-84.51,  39.10], label: 'Cincinnati',   textDx:   0, textAnchor: 'middle' },
+  columbus:      { coordinates: [-82.99,  39.96], label: 'Columbus',     textDx: -12, textAnchor: 'end'    },
+  indianapolis:  { coordinates: [-86.16,  39.77], label: 'Indy',         textDx:   0, textAnchor: 'middle' },
+  kansascity:    { coordinates: [-94.58,  39.10], label: 'KC',           textDx:   0, textAnchor: 'middle' },
+  saltlakecity:  { coordinates: [-111.89, 40.76], label: 'Salt Lake',    textDx:  12, textAnchor: 'start'  },
+  sanantonio:    { coordinates: [-98.49,  29.42], label: 'San Antonio',  textDx:   0, textAnchor: 'middle' },
+  sacramento:    { coordinates: [-121.47, 38.58], label: 'Sacramento',   textDx:  12, textAnchor: 'start'  },
+  lasvegas:      { coordinates: [-115.14, 36.17], label: 'Las Vegas',    textDx:  12, textAnchor: 'start'  },
+  raleigh:       { coordinates: [-78.64,  35.78], label: 'Raleigh',      textDx: -12, textAnchor: 'end'    },
+  richmond:      { coordinates: [-77.46,  37.54], label: 'Richmond',     textDx: -12, textAnchor: 'end'    },
+  louisville:    { coordinates: [-85.76,  38.25], label: 'Louisville',   textDx:   0, textAnchor: 'middle' },
+  jacksonville:  { coordinates: [-81.66,  30.33], label: 'Jacksonville', textDx: -12, textAnchor: 'end'    },
+  hartford:      { coordinates: [-72.68,  41.76], label: 'Hartford',     textDx: -12, textAnchor: 'end'    },
+  providence:    { coordinates: [-71.41,  41.82], label: 'Providence',   textDx: -12, textAnchor: 'end'    },
+  memphis:       { coordinates: [-90.05,  35.15], label: 'Memphis',      textDx:   0, textAnchor: 'middle' },
+  neworleans:    { coordinates: [-90.07,  29.95], label: 'New Orleans',  textDx:   0, textAnchor: 'middle' },
+  oklahomacity:  { coordinates: [-97.52,  35.47], label: 'OKC',          textDx:   0, textAnchor: 'middle' },
+  birmingham:    { coordinates: [-86.80,  33.52], label: 'Birmingham',   textDx:   0, textAnchor: 'middle' },
+  buffalo:       { coordinates: [-78.88,  42.89], label: 'Buffalo',      textDx: -12, textAnchor: 'end'    },
+  omaha:         { coordinates: [-95.94,  41.26], label: 'Omaha',        textDx:   0, textAnchor: 'middle' },
+  milwaukee:     { coordinates: [-87.91,  43.04], label: 'Milwaukee',    textDx:   0, textAnchor: 'middle' },
+  tucson:        { coordinates: [-110.97, 32.25], label: 'Tucson',       textDx:  12, textAnchor: 'start'  },
 };
 
 const programs = [
@@ -28,7 +68,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 105,
     coordinates: [-122.30, 47.66],
     placementRate: 95, pipelineScore: 7,
-    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'nyc', strength: 1 }],
+    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'nyc', strength: 2 }, { hub: 'chicago', strength: 1 }, { hub: 'la', strength: 1 }, { hub: 'portland', strength: 1 }],
     topRoles: 'Quant risk, fintech, tech-finance, risk modeling',
     topEmployers: "Russell Investments, Parametric, Amazon Finance, MSFT Treasury, Moody's",
     pros: [
@@ -42,15 +82,15 @@ const programs = [
       'No published salary data; all salary estimates are based on industry benchmarks, not verified reports',
     ],
     applyUrl: 'https://depts.washington.edu/compfin/cfrm-ms/',
-    scores: { roi: 7, affordability: 7, jobMarket: 7, marketAccess: 8, weatherFit: 8, lifestyle: 7, duration: 6, capstone: 7, prestige: 6, versatility: 7 },
+    scores: { roi: 7, affordability: 7, jobMarket: 7, marketAccess: 8, weatherFit: 8, lifestyle: 8, duration: 6, capstone: 7, prestige: 6, versatility: 7 },
   },
   {
     id: 'calpoly', scorecardId: 110422, name: 'Cal Poly SLO MSBA', shortName: 'Cal Poly', location: 'San Luis Obispo, CA', duration: '10 mo', durationMonths: 10,
-    cost: '~$46k total', totalCost: 46, overBudget: false, track: 'Business Analytics', color: '#d4a952',
+    cost: '~$46k total', totalCost: 46, overBudget: false, track: 'Business Analytics', color: '#6db83a',
     admitOdds: 'Safety', admitOddsScore: 85, expectedSalary: 95,
     coordinates: [-120.66, 35.31],
     placementRate: 88, pipelineScore: 4,
-    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'la', strength: 2 }],
+    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'la', strength: 2 }, { hub: 'seattle', strength: 1 }, { hub: 'denver', strength: 1 }, { hub: 'portland', strength: 1 }],
     topRoles: 'Data analyst, BI, product analytics, marketing analytics',
     topEmployers: 'Oracle, Google, Deloitte, Capital One, PwC, T-Mobile',
     pros: [
@@ -64,7 +104,7 @@ const programs = [
       'Less quant depth; best for general business analytics rather than specialized quantitative roles',
     ],
     applyUrl: 'https://orfalea.calpoly.edu/graduate-programs/ms-business-analytics',
-    scores: { roi: 9, affordability: 10, jobMarket: 5, marketAccess: 5, weatherFit: 5, lifestyle: 10, duration: 10, capstone: 6, prestige: 4, versatility: 6 },
+    scores: { roi: 9, affordability: 10, jobMarket: 5, marketAccess: 5, weatherFit: 5, lifestyle: 7, duration: 10, capstone: 6, prestige: 4, versatility: 6 },
   },
   {
     id: 'utaustin', scorecardId: 228778, name: 'UT Austin MSBA', shortName: 'UT Austin', location: 'Austin, TX', duration: '10 mo', durationMonths: 10,
@@ -72,7 +112,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 106,
     coordinates: [-97.73, 30.28],
     placementRate: 98, pipelineScore: 8,
-    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'nyc', strength: 2 }, { hub: 'dallas', strength: 2 }, { hub: 'houston', strength: 1 }],
+    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'nyc', strength: 2 }, { hub: 'dallas', strength: 2 }, { hub: 'houston', strength: 2 }, { hub: 'chicago', strength: 1 }],
     topRoles: 'Data scientist, BI, product analytics, consulting',
     topEmployers: 'Apple, Tesla, Google, Oracle, Dell, Indeed, Meta, Deloitte',
     pros: [
@@ -86,7 +126,7 @@ const programs = [
       'Selectivity has increased sharply as reputation has grown; admission is increasingly competitive',
     ],
     applyUrl: 'https://www.mccombs.utexas.edu/graduate/masters-programs/ms-business-analytics/',
-    scores: { roi: 8, affordability: 5, jobMarket: 8, marketAccess: 7, weatherFit: 5, lifestyle: 8, duration: 10, capstone: 7, prestige: 7, versatility: 8 },
+    scores: { roi: 8, affordability: 5, jobMarket: 8, marketAccess: 7, weatherFit: 5, lifestyle: 7, duration: 10, capstone: 7, prestige: 7, versatility: 8 },
   },
   {
     id: 'gatech', scorecardId: 139755, name: 'Georgia Tech MSA', shortName: 'GA Tech', location: 'Atlanta, GA', duration: '12 mo', durationMonths: 12,
@@ -94,7 +134,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 55, expectedSalary: 109,
     coordinates: [-84.40, 33.78],
     placementRate: 87, pipelineScore: 9,
-    hubs: [{ hub: 'nyc', strength: 2 }, { hub: 'dc', strength: 2 }],
+    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'dc', strength: 2 }, { hub: 'chicago', strength: 2 }, { hub: 'siliconValley', strength: 1 }, { hub: 'charlotte', strength: 1 }],
     topRoles: 'Data scientist, ML engineer, business analyst, consultant',
     topEmployers: 'Delta, Home Depot, UPS, Coca-Cola, Microsoft, ICE/NYSE, Truist',
     pros: [
@@ -116,7 +156,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 55, expectedSalary: 105,
     coordinates: [-118.29, 34.02],
     placementRate: 90, pipelineScore: 8,
-    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'nyc', strength: 2 }],
+    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'nyc', strength: 2 }, { hub: 'chicago', strength: 1 }, { hub: 'seattle', strength: 1 }, { hub: 'sandiego', strength: 1 }],
     topRoles: 'Data scientist, product analytics, fintech, consulting, entertainment analytics',
     topEmployers: 'Amazon, Netflix, Disney, Deloitte, JPMorgan, Google, Goldman Sachs, SpaceX',
     pros: [
@@ -130,7 +170,7 @@ const programs = [
       'Rising selectivity; increasingly competitive admission as the program\'s reputation has grown',
     ],
     applyUrl: 'https://www.marshall.usc.edu/programs/specialized-masters-programs/master-science-business-analytics',
-    scores: { roi: 7, affordability: 5, jobMarket: 9, marketAccess: 9, weatherFit: 6, lifestyle: 10, duration: 9, capstone: 7, prestige: 8, versatility: 8 },
+    scores: { roi: 7, affordability: 5, jobMarket: 9, marketAccess: 9, weatherFit: 6, lifestyle: 7, duration: 9, capstone: 7, prestige: 8, versatility: 8 },
   },
   {
     id: 'gwu', scorecardId: 131469, name: 'GWU MSBA', shortName: 'GWU', location: 'Washington, DC', duration: '12 mo', durationMonths: 12,
@@ -138,7 +178,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 90,
     coordinates: [-77.05, 38.90],
     placementRate: 80, pipelineScore: 6,
-    hubs: [{ hub: 'nyc', strength: 2 }, { hub: 'boston', strength: 1 }],
+    hubs: [{ hub: 'dc', strength: 3 }, { hub: 'nyc', strength: 2 }, { hub: 'chicago', strength: 2 }, { hub: 'boston', strength: 1 }, { hub: 'philadelphia', strength: 1 }],
     topRoles: 'Consulting, federal analytics, business analyst, BI',
     topEmployers: 'Deloitte, Accenture, Booz Allen, Guidehouse, IBM, MITRE, federal agencies',
     pros: [
@@ -152,7 +192,7 @@ const programs = [
       'High DC cost of living relative to program salary outcomes reduces effective financial return',
     ],
     applyUrl: 'https://business.gwu.edu/academics/programs/masters/ms-in-business-analytics',
-    scores: { roi: 5, affordability: 4, jobMarket: 7, marketAccess: 9, weatherFit: 7, lifestyle: 7, duration: 8, capstone: 8, prestige: 5, versatility: 7 },
+    scores: { roi: 5, affordability: 4, jobMarket: 7, marketAccess: 9, weatherFit: 7, lifestyle: 9, duration: 8, capstone: 8, prestige: 5, versatility: 7 },
   },
   {
     id: 'rutgers', scorecardId: 186380, name: 'Rutgers MQF', shortName: 'Rutgers', location: 'Newark, NJ', duration: '18 mo', durationMonths: 18,
@@ -160,7 +200,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 106,
     coordinates: [-74.17, 40.73],
     placementRate: 89, pipelineScore: 9,
-    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'chicago', strength: 2 }, { hub: 'boston', strength: 1 }],
+    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'chicago', strength: 2 }, { hub: 'boston', strength: 2 }, { hub: 'philadelphia', strength: 2 }, { hub: 'dc', strength: 1 }],
     topRoles: 'Quant analyst, risk, quant research, trading, asset mgmt',
     topEmployers: 'Goldman Sachs, JPMorgan, Morgan Stanley, Bloomberg, Prudential, BNY, Citi, HSBC, UBS',
     pros: [
@@ -178,11 +218,11 @@ const programs = [
   },
   {
     id: 'ncstate', scorecardId: 199193, name: 'NC State MFM', shortName: 'NC State', location: 'Raleigh, NC', duration: '18 mo', durationMonths: 18,
-    cost: '~$68k total', totalCost: 68, overBudget: false, track: 'Quant Finance', color: '#6e5a9e',
+    cost: '~$68k total', totalCost: 68, overBudget: false, track: 'Quant Finance', color: '#b8602a',
     admitOdds: 'Target', admitOddsScore: 70, expectedSalary: 118,
     coordinates: [-78.69, 35.79],
     placementRate: 100, pipelineScore: 8,
-    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'chicago', strength: 3 }, { hub: 'boston', strength: 2 }],
+    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'chicago', strength: 3 }, { hub: 'boston', strength: 2 }, { hub: 'dc', strength: 2 }, { hub: 'charlotte', strength: 1 }],
     topRoles: 'Quant risk, financial analyst, risk modeling, derivatives',
     topEmployers: 'Goldman Sachs, JPMorgan, Morgan Stanley, UBS, BlackRock, Fidelity, T. Rowe Price, BoA',
     pros: [
@@ -204,7 +244,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 115,
     coordinates: [-88.23, 40.10],
     placementRate: 91, pipelineScore: 9,
-    hubs: [{ hub: 'chicago', strength: 3 }, { hub: 'nyc', strength: 3 }, { hub: 'siliconValley', strength: 2 }],
+    hubs: [{ hub: 'chicago', strength: 3 }, { hub: 'nyc', strength: 3 }, { hub: 'siliconValley', strength: 2 }, { hub: 'boston', strength: 1 }, { hub: 'dc', strength: 1 }],
     topRoles: 'Quant analyst, risk, quant research, trading',
     topEmployers: 'Citadel, Jane Street, Jump Trading, DRW, IMC, CME Group, Morgan Stanley, JPMorgan',
     pros: [
@@ -218,7 +258,7 @@ const programs = [
       'Cold midwestern winters with extended grey periods November through March — significant weather mismatch',
     ],
     applyUrl: 'https://msfe.illinois.edu/',
-    scores: { roi: 7, affordability: 3, jobMarket: 8, marketAccess: 6, weatherFit: 4, lifestyle: 4, duration: 5, capstone: 9, prestige: 8, versatility: 6 },
+    scores: { roi: 7, affordability: 3, jobMarket: 8, marketAccess: 6, weatherFit: 4, lifestyle: 3, duration: 5, capstone: 9, prestige: 8, versatility: 6 },
   },
   {
     id: 'cmu', scorecardId: 211440, name: 'CMU EPP', shortName: 'CMU', location: 'Pittsburgh, PA', duration: '9 mo', durationMonths: 9,
@@ -226,7 +266,7 @@ const programs = [
     admitOdds: 'Reach', admitOddsScore: 35, expectedSalary: 97,
     coordinates: [-79.94, 40.44],
     placementRate: 85, pipelineScore: 7,
-    hubs: [{ hub: 'dc', strength: 3 }, { hub: 'nyc', strength: 2 }, { hub: 'chicago', strength: 2 }],
+    hubs: [{ hub: 'dc', strength: 3 }, { hub: 'nyc', strength: 2 }, { hub: 'chicago', strength: 2 }, { hub: 'boston', strength: 1 }, { hub: 'siliconValley', strength: 1 }],
     topRoles: 'Tech-policy consultant, strategy analyst, govt, industry strategy',
     topEmployers: 'Deloitte Gov, Booz Allen, RAND, McKinsey, BCG, Bain (via CMU halo), federal agencies',
     pros: [
@@ -240,15 +280,15 @@ const programs = [
       'Pittsburgh is the cloudiest major US city (~42% sunshine) and has limited lifestyle appeal',
     ],
     applyUrl: 'https://epp.engineering.cmu.edu/education/graduate/masters-programs/ms-in-epp/index.html',
-    scores: { roi: 5, affordability: 3, jobMarket: 7, marketAccess: 5, weatherFit: 7, lifestyle: 4, duration: 8, capstone: 7, prestige: 8, versatility: 7 },
+    scores: { roi: 5, affordability: 3, jobMarket: 7, marketAccess: 5, weatherFit: 7, lifestyle: 6, duration: 8, capstone: 7, prestige: 8, versatility: 7 },
   },
   {
     id: 'sjsu', scorecardId: 122492, name: 'SJSU MS Financial Analytics', shortName: 'SJSU', location: 'San Jose, CA', duration: '12 mo', durationMonths: 12,
-    cost: '~$40k total', totalCost: 40, overBudget: false, track: 'Quant Finance', color: '#3b7dbf',
+    cost: '~$40k total', totalCost: 40, overBudget: false, track: 'Quant Finance', color: '#1aaa9a',
     admitOdds: 'Safety', admitOddsScore: 78, expectedSalary: 100,
     coordinates: [-121.89, 37.34],
     placementRate: 80, pipelineScore: 6,
-    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'la', strength: 2 }, { hub: 'nyc', strength: 1 }],
+    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'la', strength: 2 }, { hub: 'seattle', strength: 2 }, { hub: 'nyc', strength: 1 }, { hub: 'chicago', strength: 1 }],
     topRoles: 'Fintech analyst, quantitative analyst, financial data analyst, risk analyst',
     topEmployers: 'PayPal, Visa, Charles Schwab, Wells Fargo, Bloomberg, Salesforce, Bay Area fintech firms',
     pros: [
@@ -266,11 +306,11 @@ const programs = [
   },
   {
     id: 'tamu', scorecardId: 228723, name: 'Texas A&M Mays MSBA', shortName: 'TX A&M', location: 'College Station, TX', duration: '12 mo', durationMonths: 12,
-    cost: '~$48k total', totalCost: 48, overBudget: false, track: 'Business Analytics', color: '#7d2a1e',
+    cost: '~$48k total', totalCost: 48, overBudget: false, track: 'Business Analytics', color: '#7a2a4a',
     admitOdds: 'Target', admitOddsScore: 70, expectedSalary: 95,
     coordinates: [-96.33, 30.63],
     placementRate: 88, pipelineScore: 7,
-    hubs: [{ hub: 'dallas', strength: 3 }, { hub: 'houston', strength: 3 }, { hub: 'austin', strength: 2 }],
+    hubs: [{ hub: 'dallas', strength: 3 }, { hub: 'houston', strength: 3 }, { hub: 'austin', strength: 2 }, { hub: 'chicago', strength: 1 }, { hub: 'nyc', strength: 1 }],
     topRoles: 'Business analyst, data analyst, consulting, supply chain analytics, energy analytics',
     topEmployers: 'EY, KPMG, Deloitte, Dell, AT&T, Chevron, ExxonMobil, Capital One',
     pros: [
@@ -284,7 +324,7 @@ const programs = [
       'Employer pipeline skews Texas-based and energy-sector; less access to West Coast tech or Wall Street finance',
     ],
     applyUrl: 'https://mays.tamu.edu/graduate/masters/ms-programs/analytics/',
-    scores: { roi: 9, affordability: 9, jobMarket: 7, marketAccess: 4, weatherFit: 4, lifestyle: 5, duration: 9, capstone: 7, prestige: 7, versatility: 8 },
+    scores: { roi: 9, affordability: 9, jobMarket: 7, marketAccess: 4, weatherFit: 4, lifestyle: 3, duration: 9, capstone: 7, prestige: 7, versatility: 8 },
   },
   {
     id: 'michigan', scorecardId: 170976, name: 'Michigan Ross MBAN', shortName: 'Michigan', location: 'Ann Arbor, MI', duration: '10 mo', durationMonths: 10,
@@ -292,7 +332,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 50, expectedSalary: 100,
     coordinates: [-83.74, 42.28],
     placementRate: 88, pipelineScore: 8,
-    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'chicago', strength: 3 }, { hub: 'siliconValley', strength: 2 }],
+    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'chicago', strength: 3 }, { hub: 'siliconValley', strength: 2 }, { hub: 'detroit', strength: 2 }, { hub: 'boston', strength: 1 }],
     topRoles: 'Data scientist, BI analyst, consulting, product analytics, financial analyst',
     topEmployers: 'Amazon, Deloitte, McKinsey, Goldman Sachs, Microsoft, Ford, Google, EY, Accenture',
     pros: [
@@ -306,15 +346,15 @@ const programs = [
       'Ann Arbor winters are cold, grey, and long — significant quality-of-life cost relative to warmer or coastal programs',
     ],
     applyUrl: 'https://michiganross.umich.edu/graduate/master-of-business-analytics',
-    scores: { roi: 6, affordability: 3, jobMarket: 9, marketAccess: 8, weatherFit: 7, lifestyle: 5, duration: 10, capstone: 8, prestige: 9, versatility: 9 },
+    scores: { roi: 6, affordability: 3, jobMarket: 9, marketAccess: 8, weatherFit: 7, lifestyle: 7, duration: 10, capstone: 8, prestige: 9, versatility: 9 },
   },
   {
     id: 'georgetown', scorecardId: 131496, name: 'Georgetown McDonough MSBA', shortName: 'Georgetown', location: 'Washington, DC', duration: '10 mo', durationMonths: 10,
-    cost: '~$120k total', totalCost: 120, overBudget: true, track: 'Business Analytics', color: '#4a8a6b',
+    cost: '~$120k total', totalCost: 120, overBudget: true, track: 'Business Analytics', color: '#6a3a9a',
     admitOdds: 'Target', admitOddsScore: 52, expectedSalary: 123,
     coordinates: [-77.07, 38.93],
     placementRate: 85, pipelineScore: 8,
-    hubs: [{ hub: 'dc', strength: 3 }, { hub: 'nyc', strength: 3 }, { hub: 'boston', strength: 2 }],
+    hubs: [{ hub: 'dc', strength: 3 }, { hub: 'nyc', strength: 3 }, { hub: 'boston', strength: 2 }, { hub: 'chicago', strength: 1 }, { hub: 'philadelphia', strength: 1 }],
     topRoles: 'Analytics consultant, financial analyst, data scientist, government analytics, strategy analyst',
     topEmployers: 'Deloitte, McKinsey, Amazon, Capital One, EY, Accenture, JPMorgan, Booz Allen, Google',
     pros: [
@@ -328,7 +368,7 @@ const programs = [
       '70% placement reported as "changed jobs within 6 months" — methodology differs from UT Austin\'s at-graduation metric, so direct comparison is difficult',
     ],
     applyUrl: 'https://msb.georgetown.edu/msba/',
-    scores: { roi: 6, affordability: 2, jobMarket: 9, marketAccess: 10, weatherFit: 7, lifestyle: 7, duration: 10, capstone: 8, prestige: 9, versatility: 9 },
+    scores: { roi: 6, affordability: 2, jobMarket: 9, marketAccess: 10, weatherFit: 7, lifestyle: 9, duration: 10, capstone: 8, prestige: 9, versatility: 9 },
   },
   {
     id: 'bu', scorecardId: 109785, name: 'BU Questrom MSBA', shortName: 'BU', location: 'Boston, MA', duration: '12 mo', durationMonths: 12,
@@ -336,7 +376,7 @@ const programs = [
     admitOdds: 'Target', admitOddsScore: 62, expectedSalary: 105,
     coordinates: [-71.11, 42.35],
     placementRate: 88, pipelineScore: 7,
-    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'chicago', strength: 1 }],
+    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'boston', strength: 3 }, { hub: 'chicago', strength: 2 }, { hub: 'philadelphia', strength: 1 }, { hub: 'dc', strength: 1 }],
     topRoles: 'Financial analyst, data scientist, consulting, healthcare analytics',
     topEmployers: 'State Street, Fidelity, Liberty Mutual, Bain & Company, PwC, HubSpot, Amazon',
     pros: [
@@ -350,7 +390,7 @@ const programs = [
       'BU Questrom competes against Harvard, MIT, and Boston College for top employer attention in Boston',
     ],
     applyUrl: 'https://questromworld.bu.edu/msba/',
-    scores: { roi: 7, affordability: 5, jobMarket: 8, marketAccess: 10, weatherFit: 5, lifestyle: 7, duration: 9, capstone: 7, prestige: 7, versatility: 8 },
+    scores: { roi: 7, affordability: 5, jobMarket: 8, marketAccess: 10, weatherFit: 5, lifestyle: 9, duration: 9, capstone: 7, prestige: 7, versatility: 8 },
   },
 ];
 
@@ -360,7 +400,7 @@ const criteria = [
   { key: 'jobMarket',     label: 'Job Market',     description: 'Local employer depth for target roles' },
   { key: 'marketAccess',  label: 'Market Access',  description: 'Geographic proximity to major hiring hubs (SF, NYC, LA, DC, Boston, Chicago)' },
   { key: 'weatherFit',    label: 'Weather Fit',    description: 'Match to preferred climate: overcast midday, visible sun at dawn/dusk, cool temps — not relentlessly sunny, not freezing' },
-  { key: 'lifestyle',     label: 'Lifestyle',      description: 'Food, culture, activities, city vibe' },
+  { key: 'lifestyle',     label: 'Lifestyle',      description: 'Sightseeing, hiking/outdoors, food, architecture, public transit, novelty — penalizes traffic, unsafe areas, nightlife-only cities' },
   { key: 'duration',      label: 'Duration',       description: 'Program length (shorter = higher)' },
   { key: 'capstone',      label: 'Capstone',       description: 'Quality of applied project / industry partnership' },
   { key: 'prestige',      label: 'Prestige',       description: 'Brand strength with employers' },
@@ -582,13 +622,6 @@ export default function ProgramComparison() {
   const filteredPrograms = trackFilter === 'All' ? programs : programs.filter(p => p.track === trackFilter);
   const maxWeightedScore = rankedPrograms[0]?.weightedScore || 10;
   const maxPlacementR = Math.max(...programs.map(p => p.placementRate));
-
-  // Compute which hub cities are actually used
-  const activeHubs = useMemo(() => {
-    const used = new Set();
-    programs.forEach(p => p.hubs.forEach(h => used.add(h.hub)));
-    return Array.from(used).filter(k => HUB_CITIES[k]);
-  }, []);
 
   const selectedProgram = selectedMapSchool ? programs.find(p => p.id === selectedMapSchool) : null;
 
@@ -1105,7 +1138,7 @@ export default function ProgramComparison() {
         {isOpen('07') && (
           <>
             <p className="pc-section-desc">
-              School dots on the map. Job Market Reach shows placement-rate bubbles. Employer Pipeline draws arcs to the cities where each school's graduates actually get hired — hover a school to see its connections.
+              School dots on the map. Job Market Reach shows placement-rate bubbles. Click a school dot to reveal arcs to its top 5 hiring hubs — tracked across the 50 largest US job markets.
             </p>
             <div className="pc-map-controls">
               <button className={`pc-layer-btn ${mapLayers.jobMarket ? 'active' : ''}`} onClick={() => toggleMapLayer('jobMarket')}>
@@ -1162,24 +1195,6 @@ export default function ProgramComparison() {
                       <rect x={rectX} y={-28} width={lw} height={17} fill="#171b22" fillOpacity={0.96} stroke={selectedProgram.color} strokeWidth={0.5} rx={2} style={{ pointerEvents: 'none' }} />
                       <text x={hub.textDx} textAnchor={hub.textAnchor} y={-14}
                         fill={selectedProgram.color} fontSize={11} fontFamily="IBM Plex Mono" fontWeight="500"
-                        style={{ pointerEvents: 'none' }}>
-                        {hub.label}
-                      </text>
-                    </Marker>
-                  );
-                })}
-
-                {/* Hub dots — always visible, brighter when a school is selected */}
-                {activeHubs.map(hubKey => {
-                  const hub = HUB_CITIES[hubKey];
-                  if (!hub) return null;
-                  const isConnected = selectedProgram?.hubs.some(h => h.hub === hubKey);
-                  if (isConnected) return null; // hub label marker handles the selected case
-                  return (
-                    <Marker key={`hub-dot-${hubKey}`} coordinates={hub.coordinates}>
-                      <circle r={3.5} fill="#0f1216" stroke="#6a7080" strokeWidth={1.2} style={{ pointerEvents: 'none' }} />
-                      <text x={hub.textDx} textAnchor={hub.textAnchor} y={-9}
-                        fill="#6a7080" fontSize={9} fontFamily="IBM Plex Mono"
                         style={{ pointerEvents: 'none' }}>
                         {hub.label}
                       </text>
