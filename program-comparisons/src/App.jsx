@@ -410,21 +410,51 @@ const criteria = [
 const TIER_COLORS = { Reach: '#c96e5c', Target: '#e4a853', Safety: '#5e8a85' };
 
 const SCATTER_LABEL_OFFSETS = {
-  calpoly:    { dx:   0, dy:  18, anchor: 'middle' },
-  michigan:   { dx:  12, dy:  16, anchor: 'start' },
-  gatech:     { dx:  14, dy: -16, anchor: 'start' },
-  georgetown: { dx: -14, dy:   0, anchor: 'end' },
-  utaustin:   { dx: -12, dy: -18, anchor: 'end' },
-  bu:         { dx:  12, dy:  16, anchor: 'start' },
-  usc:        { dx:  12, dy: -18, anchor: 'start' },
-  uwfoster:   { dx: -14, dy: -16, anchor: 'end' },
-  ncstatemsa: { dx: -12, dy: -16, anchor: 'end' },
-  uiucmsba:   { dx:  12, dy:  16, anchor: 'start' },
-  cmutepper:  { dx:  12, dy: -16, anchor: 'start' },
-  duke:       { dx:   0, dy:  18, anchor: 'middle' },
-  mit:        { dx:  12, dy: -16, anchor: 'start' },
-  columbia:   { dx:  12, dy:  16, anchor: 'start' },
-  baruch:     { dx:   0, dy: -16, anchor: 'middle' },
+  baruch:     { dx:   0, dy: -26, anchor: 'middle' },
+  calpoly:    { dx:   0, dy:  26, anchor: 'middle' },
+  ncstatemsa: { dx: -20, dy: -22, anchor: 'end'    },
+  uiucmsba:   { dx:  20, dy:  22, anchor: 'start'  },
+  gatech:     { dx:  20, dy: -22, anchor: 'start'  },
+  utaustin:   { dx: -20, dy: -22, anchor: 'end'    },
+  bu:         { dx: -20, dy:  22, anchor: 'end'    },
+  usc:        { dx:  20, dy: -22, anchor: 'start'  },
+  uwfoster:   { dx:  28, dy:   0, anchor: 'start'  },
+  michigan:   { dx:  20, dy:  22, anchor: 'start'  },
+  cmutepper:  { dx:  20, dy: -22, anchor: 'start'  },
+  duke:       { dx:   0, dy:  26, anchor: 'middle' },
+  columbia:   { dx: -28, dy:  24, anchor: 'end'    },
+  georgetown: { dx: -20, dy: -24, anchor: 'end'    },
+  mit:        { dx:  20, dy: -24, anchor: 'start'  },
+};
+
+const MAP_DOT_OFFSETS = {
+  columbia: [ 0.5,   0.10],
+  baruch:   [-0.5,  -0.10],
+  mit:      [ 0.22,  0.04],
+  bu:       [-0.22, -0.04],
+};
+
+const MAP_SHORT_LABELS = {
+  columbia:   'Columbia',
+  baruch:     'Baruch',
+  mit:        'MIT',
+  cmutepper:  'CMU',
+  uiucmsba:   'UIUC',
+  uwfoster:   'UW Foster',
+  ncstatemsa: 'NC State',
+};
+
+const MAP_LABEL_OFFSETS = {
+  columbia:   { dx:  9, dy: -11, anchor: 'start'  },
+  baruch:     { dx: -9, dy: -11, anchor: 'end'    },
+  mit:        { dx:  9, dy: -11, anchor: 'start'  },
+  bu:         { dx: -9, dy: -11, anchor: 'end'    },
+  duke:       { dx:  0, dy:  16, anchor: 'middle' },
+};
+
+const getMapCoords = p => {
+  const off = MAP_DOT_OFFSETS[p.id];
+  return off ? [p.coordinates[0] + off[0], p.coordinates[1] + off[1]] : p.coordinates;
 };
 
 const scatterData = programs.map(p => ({
@@ -454,11 +484,18 @@ function CustomScatterTooltip({ active, payload }) {
 function ScatterDot({ cx, cy, r, payload }) {
   if (!cx || !cy || !payload) return null;
   const radius = r || 8;
-  const { dx, dy, anchor } = SCATTER_LABEL_OFFSETS[payload.id] || { dx: 0, dy: -16, anchor: 'middle' };
+  const { dx, dy, anchor } = SCATTER_LABEL_OFFSETS[payload.id] || { dx: 0, dy: -26, anchor: 'middle' };
+  const lx = cx + dx;
+  const ly = cy + dy;
+  const charW = 5.8;
+  const txtW = payload.name.length * charW + 8;
+  const rectX = anchor === 'middle' ? lx - txtW / 2 : anchor === 'start' ? lx - 4 : lx - txtW + 4;
   return (
     <g>
+      <line x1={cx} y1={cy} x2={lx} y2={ly} stroke={payload.color} strokeWidth={0.8} strokeOpacity={0.45} />
+      <rect x={rectX} y={ly - 10} width={txtW} height={13} fill="#0d1117" fillOpacity={0.9} rx={2} />
       <circle cx={cx} cy={cy} r={radius} fill={payload.color} fillOpacity={0.75} stroke={payload.color} strokeWidth={1} />
-      <text x={cx + dx} y={cy + dy} fill="#ebe3d0" fontSize={9} fontFamily="IBM Plex Mono" textAnchor={anchor}>
+      <text x={lx} y={ly} fill="#ebe3d0" fontSize={10} fontFamily="IBM Plex Mono" textAnchor={anchor}>
         {payload.name}
       </text>
     </g>
@@ -509,16 +546,7 @@ export default function ProgramComparison() {
   const [detailsModal, setDetailsModal]       = useState(null);
   const [mapLayers, setMapLayers]             = useState({ jobMarket: true });
   const [selectedMapSchool, setSelectedMapSchool] = useState(null);
-  const [personalRanking, setPersonalRanking] = useState(() => {
-    try {
-      const saved = localStorage.getItem('pc-personal-ranking');
-      if (!saved) return programs.map(p => p.id);
-      const programIds = programs.map(p => p.id);
-      const parsed = JSON.parse(saved).filter(id => programIds.includes(id));
-      const missing = programIds.filter(id => !parsed.includes(id));
-      return [...parsed, ...missing];
-    } catch { return programs.map(p => p.id); }
-  });
+  const [personalRanking, setPersonalRanking] = useState(programs.map(p => p.id));
   const [dragState, setDragState] = useState({ dragging: null, over: null });
   const [liveData, setLiveData]   = useState({});
   const [liveLoading, setLiveLoading] = useState(true);
@@ -585,11 +613,10 @@ export default function ProgramComparison() {
     next.splice(next.indexOf(fromId), 1);
     next.splice(next.indexOf(targetId), 0, fromId);
     setPersonalRanking(next);
-    localStorage.setItem('pc-personal-ranking', JSON.stringify(next));
     setDragState({ dragging: null, over: null });
   };
   const handleDragEnd = () => setDragState({ dragging: null, over: null });
-  const resetPersonalRanking = () => { setPersonalRanking(programs.map(p => p.id)); localStorage.removeItem('pc-personal-ranking'); };
+  const resetPersonalRanking = () => { setPersonalRanking(programs.map(p => p.id)); };
 
   const radarData = useMemo(() => criteria.map(c => {
     const entry = { criterion: c.label };
@@ -883,10 +910,10 @@ export default function ProgramComparison() {
               <ResponsiveContainer width="100%" height={500}>
                 <ScatterChart margin={{ top: 30, right: 80, bottom: 56, left: 70 }}>
                   <CartesianGrid stroke="#2a313c" strokeDasharray="2 4" />
-                  <XAxis type="number" dataKey="x" name="Cost" unit="k" domain={[32, 130]} ticks={[40, 55, 70, 85, 100, 115]}
+                  <XAxis type="number" dataKey="x" name="Cost" unit="k" domain={[32, 130]} ticks={[45, 60, 75, 90, 105, 120]}
                     tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }} stroke="#2a313c"
                     label={{ value: 'Total Cost ($k)', position: 'insideBottom', offset: -14, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }} />
-                  <YAxis type="number" dataKey="y" name="Salary" unit="k" domain={[88, 132]} ticks={[90, 100, 110, 120, 130]}
+                  <YAxis type="number" dataKey="y" name="Salary" unit="k" domain={[78, 135]} ticks={[80, 90, 100, 110, 120, 130]}
                     tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }} stroke="#2a313c"
                     label={{ value: 'Expected Salary ($k)', angle: -90, position: 'insideLeft', offset: 10, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }} />
                   <ZAxis type="number" dataKey="z" range={[60, 360]} />
@@ -1162,7 +1189,7 @@ export default function ProgramComparison() {
 
                 {/* Job market reach bubbles */}
                 {mapLayers.jobMarket && programs.map(p => (
-                  <Marker key={`jm-${p.id}`} coordinates={p.coordinates}>
+                  <Marker key={`jm-${p.id}`} coordinates={getMapCoords(p)}>
                     <circle r={(p.placementRate / maxPlacementR) * 28 + 6} fill={p.color} fillOpacity={0.13} stroke={p.color} strokeWidth={1} strokeOpacity={0.35} style={{ pointerEvents: 'none' }} />
                   </Marker>
                 ))}
@@ -1175,7 +1202,7 @@ export default function ProgramComparison() {
                   const so = h.strength === 3 ? 0.85 : h.strength === 2 ? 0.6 : 0.38;
                   return (
                     <Line key={`arc-${h.hub}`}
-                      from={selectedProgram.coordinates} to={hub.coordinates}
+                      from={getMapCoords(selectedProgram)} to={hub.coordinates}
                       stroke={selectedProgram.color} strokeWidth={sw} strokeOpacity={so}
                       strokeLinecap="round" fill="transparent" style={{ pointerEvents: 'none' }} />
                   );
@@ -1205,16 +1232,21 @@ export default function ProgramComparison() {
                 {/* School dots + labels */}
                 {programs.map(p => {
                   const isSelected = selectedMapSchool === p.id;
+                  const { dx = 0, dy = -11, anchor = 'middle' } = MAP_LABEL_OFFSETS[p.id] || {};
+                  const label = MAP_SHORT_LABELS[p.id] || p.shortName;
+                  const lblW = label.length * 5.6 + 6;
+                  const rectX = anchor === 'middle' ? dx - lblW / 2 : anchor === 'start' ? dx - 2 : dx - lblW + 2;
                   return (
-                    <Marker key={p.id} coordinates={p.coordinates}
+                    <Marker key={p.id} coordinates={getMapCoords(p)}
                       onClick={e => { e.stopPropagation(); setSelectedMapSchool(prev => prev === p.id ? null : p.id); }}>
                       {isSelected && <circle r={10} fill="none" stroke={p.color} strokeWidth={1.5} strokeOpacity={0.5} style={{ pointerEvents: 'none' }} />}
+                      <rect x={rectX} y={dy - 9} width={lblW} height={11} fill="#0d1117" fillOpacity={0.8} rx={2} style={{ pointerEvents: 'none' }} />
                       <circle r={5} fill={p.color} stroke="#0f1216" strokeWidth={1.5}
                         style={{ cursor: 'pointer', filter: isSelected ? `drop-shadow(0 0 5px ${p.color})` : 'none' }} />
-                      <text textAnchor="middle" y={-11} fill={isSelected ? p.color : '#ebe3d0'} fontSize={isSelected ? 10 : 9}
+                      <text x={dx} textAnchor={anchor} y={dy} fill={isSelected ? p.color : '#ebe3d0'} fontSize={isSelected ? 10 : 9}
                         fontFamily="IBM Plex Mono" fontWeight={isSelected ? '500' : '400'}
                         style={{ pointerEvents: 'none' }}>
-                        {p.shortName}
+                        {label}
                       </text>
                     </Marker>
                   );
