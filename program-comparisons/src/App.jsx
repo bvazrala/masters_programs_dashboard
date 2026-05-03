@@ -129,92 +129,26 @@ const programs = [
     scores: { roi: 9, affordability: 6, jobMarket: 8, marketAccess: 7, weatherFit: 5, lifestyle: 6, duration: 9, capstone: 9, prestige: 8, versatility: 9 },
   },
   {
-    id: 'usc', scorecardId: 123961, name: 'USC Marshall MSBA', shortName: 'USC', location: 'Los Angeles, CA', duration: '12 mo', durationMonths: 12,
-    cost: '~$88k total', totalCost: 88, overBudget: false, track: 'Business Analytics', color: '#a32035',
-    admitOdds: 'Target', admitOddsScore: 55, expectedSalary: 105,
-    coordinates: [-118.29, 34.02],
-    placementRate: 90, pipelineScore: 8,
-    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'nyc', strength: 2 }, { hub: 'chicago', strength: 1 }, { hub: 'seattle', strength: 1 }, { hub: 'sandiego', strength: 1 }],
-    topRoles: 'Data scientist, product analytics, fintech, consulting, entertainment analytics',
-    topEmployers: 'Amazon, Netflix, Disney, Deloitte, JPMorgan, Google, Goldman Sachs, SpaceX',
+    id: 'umd', scorecardId: 163286, name: 'UMD Smith MSBA&AI', shortName: 'UMD Smith', location: 'College Park, MD', duration: '12 mo', durationMonths: 12,
+    cost: '~$75k total', totalCost: 75, overBudget: false, track: 'Business Analytics', color: '#c02020',
+    admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 95,
+    coordinates: [-76.94, 38.98],
+    placementRate: 87, pipelineScore: 7,
+    hubs: [{ hub: 'dc', strength: 3 }, { hub: 'nyc', strength: 2 }, { hub: 'philadelphia', strength: 2 }, { hub: 'boston', strength: 1 }, { hub: 'chicago', strength: 1 }],
+    topRoles: 'Data Analyst, Business Analyst, Consultant',
+    topEmployers: 'Deloitte, Capital One, Booz Allen',
     pros: [
-      'LA location and 90,000+ Marshall alumni network — natural fit from UCI, same job market and weather',
-      'Broadest employer diversity: tech (Google, Amazon, SpaceX), entertainment (Netflix, Disney), and finance (JPMorgan) all recruit directly',
-      '12-month program at a nationally recognized brand with dominant West Coast employer relationships',
+      'DC-area access to federal + consulting pipeline (Booz Allen, MITRE, Deloitte, Capital One) | Top-50 public B-school brand',
+      'STEM-designated with AI-integrated curriculum; 12-month format keeps costs manageable',
+      'College Park location gives simultaneous access to DC, Baltimore, and NoVA tech corridors',
     ],
     cons: [
-      'At ~$88k all-in, sits at the top of the stated budget; LA cost of living adds real pressure during the program',
-      'More generalist and MBA-adjacent; less quantitative depth than UIUC, Rutgers, or NC State',
-      'Rising selectivity; increasingly competitive admission as the program\'s reputation has grown',
+      'Heavy international cohort skews some recruiting cohort dynamics | DC-area living costs add pressure',
+      'Limited West Coast tech recruiting; best fit for DC/mid-Atlantic career targets',
+      'Brand less recognized than Georgetown or GW for DC-specific consulting and government analytics',
     ],
-    applyUrl: 'https://www.marshall.usc.edu/programs/specialized-masters-programs/master-science-business-analytics',
-    scores: { roi: 7, affordability: 5, jobMarket: 9, marketAccess: 9, weatherFit: 6, lifestyle: 7, duration: 9, capstone: 7, prestige: 8, versatility: 8 },
-  },
-  {
-    id: 'michigan', scorecardId: 170976, name: 'Michigan Ross MBAN', shortName: 'Michigan', location: 'Ann Arbor, MI', duration: '10 mo', durationMonths: 10,
-    cost: '~$97k total', totalCost: 97, overBudget: true, track: 'Business Analytics', color: '#1a7ab8',
-    admitOdds: 'Target', admitOddsScore: 50, expectedSalary: 100,
-    coordinates: [-83.74, 42.28],
-    placementRate: 88, pipelineScore: 8,
-    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'chicago', strength: 3 }, { hub: 'siliconValley', strength: 2 }, { hub: 'detroit', strength: 2 }, { hub: 'boston', strength: 1 }],
-    topRoles: 'Data scientist, BI analyst, consulting, product analytics, financial analyst',
-    topEmployers: 'Amazon, Deloitte, McKinsey, Goldman Sachs, Microsoft, Ford, Google, EY, Accenture',
-    pros: [
-      'Ross is a top-3 U.S. business school — strongest employer brand of any program on this list; McKinsey, Deloitte, Goldman Sachs, and JPMorgan recruit directly on campus',
-      'Direct pipelines to Amazon, Microsoft, Ford, and Google alongside Big 4 and bulge-bracket banks; broad national reach from a single program',
-      '10-month STEM-designated format; famously loyal Ross alumni network opens doors in Chicago, NYC, and SF simultaneously',
-    ],
-    cons: [
-      'At ~$97k all-in, ROI is one of the weakest on the list — salary-to-cost ratio of roughly 1:1 versus UT Austin\'s 1.3× advantage',
-      'No published aggregate MBAN salary or placement report online; verified outcomes require direct outreach to the program',
-      'Ann Arbor winters are cold, grey, and long — significant quality-of-life cost relative to warmer or coastal programs',
-    ],
-    applyUrl: 'https://michiganross.umich.edu/graduate/master-of-business-analytics',
-    scores: { roi: 6, affordability: 3, jobMarket: 9, marketAccess: 8, weatherFit: 7, lifestyle: 7, duration: 10, capstone: 8, prestige: 9, versatility: 9 },
-  },
-  {
-    id: 'georgetown', scorecardId: 131496, name: 'Georgetown McDonough MSBA', shortName: 'Georgetown', location: 'Washington, DC', duration: '10 mo', durationMonths: 10,
-    cost: '~$120k total', totalCost: 120, overBudget: true, track: 'Business Analytics', color: '#6a3a9a',
-    admitOdds: 'Target', admitOddsScore: 52, expectedSalary: 123,
-    coordinates: [-77.07, 38.93],
-    placementRate: 85, pipelineScore: 8,
-    hubs: [{ hub: 'dc', strength: 3 }, { hub: 'nyc', strength: 3 }, { hub: 'boston', strength: 2 }, { hub: 'chicago', strength: 1 }, { hub: 'philadelphia', strength: 1 }],
-    topRoles: 'Analytics consultant, financial analyst, data scientist, government analytics, strategy analyst',
-    topEmployers: 'Deloitte, McKinsey, Amazon, Capital One, EY, Accenture, JPMorgan, Booz Allen, Google',
-    pros: [
-      '$123,250 average base salary (Class of 2024) — highest verified starting salary of any program on this list by a wide margin',
-      'STEM-designated 10-month program in DC: simultaneous access to consulting (MBB/Big 4), federal analytics (Booz Allen, MITRE), finance (Capital One, JPMorgan), and tech (Amazon, Google DC)',
-      'Georgetown\'s Jesuit national brand is strong in consulting, government, and policy circles; alumni network runs deep in the DC–NYC corridor',
-    ],
-    cons: [
-      'At ~$120k all-in, the most expensive program on this list — despite the high salary, cost-to-earnings ROI is approximately 1:1',
-      'DC cost of living, especially housing, applies real financial pressure during the program year',
-      '70% placement reported as "changed jobs within 6 months" — methodology differs from UT Austin\'s at-graduation metric, so direct comparison is difficult',
-    ],
-    applyUrl: 'https://msb.georgetown.edu/msba/',
-    scores: { roi: 6, affordability: 2, jobMarket: 9, marketAccess: 10, weatherFit: 7, lifestyle: 9, duration: 10, capstone: 8, prestige: 9, versatility: 9 },
-  },
-  {
-    id: 'bu', scorecardId: 109785, name: 'BU Questrom MSBA', shortName: 'BU', location: 'Boston, MA', duration: '12 mo', durationMonths: 12,
-    cost: '~$82k total', totalCost: 82, overBudget: false, track: 'Business Analytics', color: '#c95c7a',
-    admitOdds: 'Target', admitOddsScore: 62, expectedSalary: 105,
-    coordinates: [-71.11, 42.35],
-    placementRate: 88, pipelineScore: 7,
-    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'boston', strength: 3 }, { hub: 'chicago', strength: 2 }, { hub: 'philadelphia', strength: 1 }, { hub: 'dc', strength: 1 }],
-    topRoles: 'Financial analyst, data scientist, consulting, healthcare analytics',
-    topEmployers: 'State Street, Fidelity, Liberty Mutual, Bain & Company, PwC, HubSpot, Amazon',
-    pros: [
-      'Boston is a top-5 US financial hub: State Street, Fidelity, and Liberty Mutual recruit directly, alongside Bain & Company',
-      'Proximity to Harvard, MIT, and BCG creates an ecosystem effect for networking and career exposure',
-      'Strong quantitative analytics curriculum with solid finance orientation for a business school program',
-    ],
-    cons: [
-      'Boston winters are cold, grey, and snowy — a significant mismatch for SoCal weather preferences',
-      'At ~$82k all-in, sits at the top of the budget range without elite brand differentiation in a crowded Boston market',
-      'BU Questrom competes against Harvard, MIT, and Boston College for top employer attention in Boston',
-    ],
-    applyUrl: 'https://questromworld.bu.edu/msba/',
-    scores: { roi: 7, affordability: 5, jobMarket: 8, marketAccess: 10, weatherFit: 5, lifestyle: 9, duration: 9, capstone: 7, prestige: 7, versatility: 8 },
+    applyUrl: 'https://www.rhsmith.umd.edu/programs/master-science-business-analytics',
+    scores: { roi: 7, affordability: 6, jobMarket: 8, marketAccess: 8, weatherFit: 6, lifestyle: 8, duration: 9, capstone: 7, prestige: 6, versatility: 8 },
   },
   {
     id: 'uwfoster', scorecardId: 236948, name: 'UW Foster MSBA', shortName: 'UW Foster', location: 'Seattle, WA', duration: '12 mo', durationMonths: 12,
@@ -283,92 +217,92 @@ const programs = [
     scores: { roi: 8, affordability: 8, jobMarket: 6, marketAccess: 5, weatherFit: 4, lifestyle: 3, duration: 9, capstone: 7, prestige: 7, versatility: 8 },
   },
   {
-    id: 'cmutepper', scorecardId: 211440, name: 'CMU Tepper MSBA', shortName: 'CMU Tepper', location: 'Pittsburgh, PA', duration: '9 mo', durationMonths: 9,
-    cost: '~$108k total', totalCost: 108, overBudget: true, track: 'Business Analytics', color: '#7a3040',
-    admitOdds: 'Reach', admitOddsScore: 35, expectedSalary: 115,
-    coordinates: [-79.94, 40.44],
-    placementRate: 90, pipelineScore: 8,
-    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'chicago', strength: 2 }, { hub: 'siliconValley', strength: 2 }, { hub: 'dc', strength: 1 }, { hub: 'boston', strength: 1 }],
-    topRoles: 'Data Scientist, Business Analyst, ML Engineer',
-    topEmployers: 'Amazon, Microsoft, Deloitte',
+    id: 'stevens', scorecardId: 196176, name: 'Stevens MS BA&AI', shortName: 'Stevens', location: 'Hoboken, NJ', duration: '18 mo', durationMonths: 18,
+    cost: '~$80k total', totalCost: 80, overBudget: false, track: 'Business Analytics', color: '#c86428',
+    admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 90,
+    coordinates: [-74.03, 40.74],
+    placementRate: 82, pipelineScore: 7,
+    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'philadelphia', strength: 2 }, { hub: 'boston', strength: 1 }, { hub: 'dc', strength: 1 }, { hub: 'chicago', strength: 1 }],
+    topRoles: 'Data Analyst, ML Engineer, BI Analyst',
+    topEmployers: 'JPMorgan, Amazon, BlackRock',
     pros: [
-      'CMU brand for tech and analytics is elite — opens doors at Amazon, Microsoft, Deloitte, and bulge-bracket banks simultaneously',
-      'Heavy ML and optimization curriculum fits a CS background better than most business school analytics programs',
-      'GMAT/GRE test waiver available for STEM degree holders, reducing application friction',
+      'NYC-adjacent (short Hudson commute) | STEM, AI-focused curriculum with deep learning, NLP, and GenAI tracks',
+      'Hanlon Financial Systems Center pipeline connects directly to Wall Street and fintech employers',
+      'GRE/GMAT optional; strong international cohort with direct NYC employer access',
     ],
     cons: [
-      '~10–20% acceptance rate; one of the most selective analytics programs in the country',
-      'At ~$108k all-in, exceeds the budget threshold; cost-per-month ratio is among the highest on this list',
-      'Pittsburgh is the cloudiest major US city (~42% sunshine) and offers limited lifestyle relative to larger metros',
+      'Lower national brand than NYU or Columbia; employer recognition drops sharply outside the NYC metro',
+      'Hoboken/NJ living adds up; 18-month format means highest opportunity cost of any program on this list',
+      'Newer program — less alumni track record and placement history than established BA programs',
     ],
-    applyUrl: 'https://www.cmu.edu/tepper/programs/master-business-analytics/admissions',
-    scores: { roi: 6, affordability: 2, jobMarket: 7, marketAccess: 6, weatherFit: 5, lifestyle: 5, duration: 10, capstone: 8, prestige: 9, versatility: 8 },
+    applyUrl: 'https://www.stevens.edu/program/masters-in-business-analytics-and-artificial-intelligence',
+    scores: { roi: 6, affordability: 5, jobMarket: 7, marketAccess: 8, weatherFit: 5, lifestyle: 7, duration: 5, capstone: 6, prestige: 5, versatility: 7 },
   },
   {
-    id: 'duke', scorecardId: 198419, name: 'Duke Fuqua MQM', shortName: 'Duke MQM', location: 'Durham, NC', duration: '10 mo', durationMonths: 10,
-    cost: '~$110k total', totalCost: 110, overBudget: true, track: 'Business Analytics', color: '#005593',
-    admitOdds: 'Reach', admitOddsScore: 35, expectedSalary: 95,
-    coordinates: [-78.94, 36.00],
-    placementRate: 88, pipelineScore: 7,
-    hubs: [{ hub: 'nyc', strength: 2 }, { hub: 'dc', strength: 2 }, { hub: 'charlotte', strength: 2 }, { hub: 'chicago', strength: 1 }, { hub: 'boston', strength: 1 }],
-    topRoles: 'Business Analyst, Consultant, Data Analyst',
-    topEmployers: 'Deloitte, EY, P&G',
+    id: 'sjsu', scorecardId: 122468, name: 'SJSU MS Applied Data Intelligence', shortName: 'SJSU', location: 'San Jose, CA', duration: '16 mo', durationMonths: 16,
+    cost: '~$55k total', totalCost: 55, overBudget: false, track: 'Business Analytics', color: '#0d5c8a',
+    admitOdds: 'Safety', admitOddsScore: 80, expectedSalary: 95,
+    coordinates: [-121.89, 37.34],
+    placementRate: 85, pipelineScore: 6,
+    hubs: [{ hub: 'siliconValley', strength: 3 }, { hub: 'la', strength: 2 }, { hub: 'seattle', strength: 1 }, { hub: 'sandiego', strength: 1 }, { hub: 'denver', strength: 1 }],
+    topRoles: 'Data Analyst, Data Scientist, BI Analyst',
+    topEmployers: 'Apple, Google, Cisco',
     pros: [
-      'Duke/Fuqua brand opens consulting and finance doors — Deloitte, EY, McKinsey, and P&G recruit directly on campus',
-      'Track specialization (Finance, Marketing, Strategy, Risk) allows curriculum customization within a 10-month format',
-      'STEM-designated with 36-month OPT extension; strong national alumni network via Duke brand',
+      'Silicon Valley location with direct tech employer access — Apple, Google, Cisco, and Adobe recruit on-campus',
+      'STEM-designated CSU tuition is among the lowest on this list; best value in the Bay Area by a wide margin',
+      'GRE/GMAT optional; newer curriculum with ML and AI integration',
     ],
     cons: [
-      'Tuition alone is $85.6k — total all-in cost reaches ~$110k, well above the stated budget',
-      'Starts in July — very tight timeline from a UCI winter graduation with minimal transition buffer',
-      'Quant and analytics focus is heavy; less effective for pivoting toward general management or non-quantitative consulting',
+      'Bay Area living costs eat most of the tuition savings; total all-in is still ~$55k',
+      'Limited national brand outside Silicon Valley; placement history is newer and less documented',
+      'CSU brand is significantly weaker than UC or private programs for non-tech employer recruiting',
     ],
-    applyUrl: 'https://www.fuqua.duke.edu/programs/mqm-business-analytics/admissions-facts-dates',
-    scores: { roi: 5, affordability: 2, jobMarket: 6, marketAccess: 5, weatherFit: 6, lifestyle: 6, duration: 10, capstone: 8, prestige: 9, versatility: 8 },
+    applyUrl: 'https://www.sjsu.edu/lucasgsb/prospective-students/msadi/',
+    scores: { roi: 8, affordability: 8, jobMarket: 8, marketAccess: 8, weatherFit: 6, lifestyle: 6, duration: 6, capstone: 5, prestige: 4, versatility: 7 },
   },
   {
-    id: 'mit', scorecardId: 166683, name: 'MIT Sloan MBAn', shortName: 'MIT MBAn', location: 'Cambridge, MA', duration: '12 mo', durationMonths: 12,
-    cost: '~$120k total', totalCost: 120, overBudget: true, track: 'Business Analytics', color: '#8a1530',
-    admitOdds: 'Reach', admitOddsScore: 20, expectedSalary: 130,
-    coordinates: [-71.09, 42.36],
-    placementRate: 97, pipelineScore: 9,
-    hubs: [{ hub: 'boston', strength: 3 }, { hub: 'nyc', strength: 3 }, { hub: 'siliconValley', strength: 2 }, { hub: 'chicago', strength: 1 }, { hub: 'dc', strength: 1 }],
-    topRoles: 'Data Scientist, Analytics Consultant, ML Engineer',
-    topEmployers: 'McKinsey, Amazon, Google',
+    id: 'uf', scorecardId: 134130, name: 'UF Warrington MSBA', shortName: 'UF Warrington', location: 'Gainesville, FL', duration: '10 mo', durationMonths: 10,
+    cost: '~$48k total', totalCost: 48, overBudget: false, track: 'Business Analytics', color: '#f47a20',
+    admitOdds: 'Target', admitOddsScore: 60, expectedSalary: 85,
+    coordinates: [-82.34, 29.65],
+    placementRate: 85, pipelineScore: 6,
+    hubs: [{ hub: 'miami', strength: 3 }, { hub: 'tampa', strength: 2 }, { hub: 'atlanta', strength: 2 }, { hub: 'dc', strength: 1 }, { hub: 'nyc', strength: 1 }],
+    topRoles: 'Business Analyst, Data Analyst, Consultant',
+    topEmployers: 'Deloitte, EY, Citi',
     pros: [
-      'Top-tier global analytics brand; 97% placement within 6 months at a $130k average expected salary',
-      '7-month industry capstone with a $22k tuition credit — one of the strongest employer integrations in any analytics program',
-      'Technical interview covers math, probability, and CS — a natural fit for applicants with a strong STEM background',
+      'Top public B-school brand at low cost (~$48k all-in) | 10-month format; fastest possible workforce entry',
+      'Gainesville extremely affordable; no FL state income tax for post-grad work in Florida markets',
+      'GRE/GMAT waiver possible for STEM GPA ≥ 3.5; strong SE regional employer recruiting',
     ],
     cons: [
-      'Among the most selective programs globally (~5–10% admit rate); extremely competitive applicant pool',
-      'Total cost exceeds $120k all-in — highest on this list and well above the stated budget threshold',
-      'Boston winters are cold, grey, and snowy — a significant mismatch for SoCal coastal weather preferences',
+      'GRE/GMAT typically required (waiver not guaranteed) | Gainesville college-town isolation limits in-program networking',
+      'Southeast regional focus; limited national brand for West Coast or NYC finance recruiting',
+      'Hot, humid FL climate; less lifestyle appeal than coastal or urban programs',
     ],
-    applyUrl: 'https://mitsloan.mit.edu/master-of-business-analytics/admissions',
-    scores: { roi: 6, affordability: 1, jobMarket: 9, marketAccess: 9, weatherFit: 4, lifestyle: 8, duration: 9, capstone: 10, prestige: 10, versatility: 9 },
+    applyUrl: 'https://warrington.ufl.edu/master-of-science-in-business-analytics/',
+    scores: { roi: 8, affordability: 9, jobMarket: 4, marketAccess: 4, weatherFit: 4, lifestyle: 5, duration: 10, capstone: 6, prestige: 6, versatility: 5 },
   },
   {
-    id: 'columbia', scorecardId: 190150, name: 'Columbia IEOR MSBA', shortName: 'Columbia MSBA', location: 'New York, NY', duration: '12 mo', durationMonths: 12,
-    cost: '~$115k total', totalCost: 115, overBudget: true, track: 'Business Analytics', color: '#5080a0',
-    admitOdds: 'Reach', admitOddsScore: 30, expectedSalary: 125,
-    coordinates: [-73.96, 40.81],
-    placementRate: 95, pipelineScore: 9,
-    hubs: [{ hub: 'nyc', strength: 3 }, { hub: 'boston', strength: 2 }, { hub: 'siliconValley', strength: 2 }, { hub: 'chicago', strength: 1 }, { hub: 'dc', strength: 1 }],
-    topRoles: 'Data Scientist, Business Analyst, Quant Analyst',
-    topEmployers: 'Goldman Sachs, JPMorgan, Amazon',
+    id: 'pittkatz', scorecardId: 215293, name: 'Pitt Katz MSFBA', shortName: 'Pitt Katz', location: 'Pittsburgh, PA', duration: '12–17 mo', durationMonths: 14,
+    cost: '~$70k total', totalCost: 70, overBudget: false, track: 'Business Analytics', color: '#1a4a8a',
+    admitOdds: 'Target', admitOddsScore: 65, expectedSalary: 85,
+    coordinates: [-79.96, 40.44],
+    placementRate: 83, pipelineScore: 5,
+    hubs: [{ hub: 'pittsburgh', strength: 3 }, { hub: 'nyc', strength: 2 }, { hub: 'chicago', strength: 2 }, { hub: 'dc', strength: 1 }, { hub: 'philadelphia', strength: 1 }],
+    topRoles: 'Financial Analyst, Data Analyst, Risk Analyst',
+    topEmployers: 'PNC, BNY Mellon, Highmark',
     pros: [
-      'Ivy brand plus NYC location: Goldman Sachs, JPMorgan, and Amazon all recruit directly; ~95% placement at $124k average salary',
-      'Joint program between IEOR (Engineering) and Business School — bridges quantitative rigor and business application simultaneously',
-      'STEM-designated; NYC location provides simultaneous access to finance, tech, and consulting without relocation after graduation',
+      'STEM, CFA Partner School with 70% CFA exam curriculum coverage — rare finance + analytics combination',
+      'Pittsburgh low cost of living keeps the 70k all-in cost manageable; GRE/GMAT optional',
+      'PNC, BNY Mellon, and Highmark recruit directly on campus with strong regional finance pipeline',
     ],
     cons: [
-      'Housed in IEOR (engineering) — cohort skews highly technical; may feel isolated from MBA/business school culture',
-      'Tuition alone exceeds $93k; total all-in cost approaches $115k — well above the stated budget threshold',
-      'Multivariate calculus not formally required but typical admits have strong math foundations; CS background helps significantly',
+      'Regional brand strength; significantly weaker national recognition outside the Northeast and Midwest',
+      'Pittsburgh is the cloudiest major US city (~42% sunshine) — significant lifestyle/weather drawback',
+      'Heavier finance focus than pure analytics; limited West Coast tech and consulting recruiting',
     ],
-    applyUrl: 'https://ieor.columbia.edu/business-analytics-msba',
-    scores: { roi: 6, affordability: 1, jobMarket: 10, marketAccess: 10, weatherFit: 5, lifestyle: 10, duration: 9, capstone: 7, prestige: 9, versatility: 9 },
+    applyUrl: 'https://business.pitt.edu/katz-admissions/start-your-applications/',
+    scores: { roi: 6, affordability: 6, jobMarket: 5, marketAccess: 5, weatherFit: 4, lifestyle: 5, duration: 8, capstone: 6, prestige: 5, versatility: 7 },
   },
   {
     id: 'baruch', scorecardId: 190512, name: 'Baruch Zicklin MSBA', shortName: 'Baruch MSBA', location: 'New York, NY', duration: '18 mo', durationMonths: 18,
@@ -381,11 +315,11 @@ const programs = [
     topEmployers: 'JPMorgan, Citi, Deloitte',
     pros: [
       'Best NYC value on this list: ~$30–40k tuition for Manhattan access to JPMorgan, Citi, Deloitte, and Wall Street employers',
-      'Manhattan location provides direct recruiting access to finance and tech firms without the premium tuition of Columbia or NYU',
+      'Manhattan location provides direct recruiting access to finance and tech firms without paying Stevens, NYU, or Fordham premiums',
       'STEM-designated with 36-month OPT extension; Zicklin School has strong ties to the NYC financial industry',
     ],
     cons: [
-      'Less prestigious brand nationally than Columbia or NYU — employer recognition is strong in NYC but limited outside the region',
+      'Less prestigious brand nationally than NYU or Fordham — employer recognition is strong in NYC but limited outside the region',
       'Smaller alumni network outside NYC limits career flexibility if postgrad location preferences change',
       '18-month program is the longest format on this list — highest opportunity cost and latest possible workforce entry',
     ],
@@ -410,46 +344,42 @@ const criteria = [
 const TIER_COLORS = { Reach: '#c96e5c', Target: '#e4a853', Safety: '#5e8a85' };
 
 const SCATTER_LABEL_OFFSETS = {
-  baruch:     { dx:   0, dy: -26, anchor: 'middle' },
-  calpoly:    { dx:   0, dy:  26, anchor: 'middle' },
+  baruch:     { dx: -20, dy: -22, anchor: 'end'    },
+  calpoly:    { dx:   0, dy: -26, anchor: 'middle' },
   ncstatemsa: { dx: -20, dy: -22, anchor: 'end'    },
   uiucmsba:   { dx:  20, dy:  22, anchor: 'start'  },
   gatech:     { dx:  20, dy: -22, anchor: 'start'  },
   utaustin:   { dx: -20, dy: -22, anchor: 'end'    },
-  bu:         { dx: -20, dy:  22, anchor: 'end'    },
-  usc:        { dx:  20, dy: -22, anchor: 'start'  },
   uwfoster:   { dx:  28, dy:   0, anchor: 'start'  },
-  michigan:   { dx:  20, dy:  22, anchor: 'start'  },
-  cmutepper:  { dx:  20, dy: -22, anchor: 'start'  },
-  duke:       { dx:   0, dy:  26, anchor: 'middle' },
-  columbia:   { dx: -28, dy:  24, anchor: 'end'    },
-  georgetown: { dx: -20, dy: -24, anchor: 'end'    },
-  mit:        { dx:  20, dy: -24, anchor: 'start'  },
+  umd:        { dx: -28, dy:   0, anchor: 'end'    },
+  stevens:    { dx:  20, dy:  22, anchor: 'start'  },
+  sjsu:       { dx:   0, dy:  26, anchor: 'middle' },
+  uf:         { dx:  20, dy: -22, anchor: 'start'  },
+  pittkatz:   { dx: -20, dy:  26, anchor: 'end'    },
 };
 
 const MAP_DOT_OFFSETS = {
-  columbia: [ 0.5,   0.10],
-  baruch:   [-0.5,  -0.10],
-  mit:      [ 0.22,  0.04],
-  bu:       [-0.22, -0.04],
+  baruch:   [-0.5,  -0.20],
+  stevens:  [ 0.45,  0.15],
 };
 
 const MAP_SHORT_LABELS = {
-  columbia:   'Columbia',
   baruch:     'Baruch',
-  mit:        'MIT',
-  cmutepper:  'CMU',
   uiucmsba:   'UIUC',
   uwfoster:   'UW Foster',
   ncstatemsa: 'NC State',
+  stevens:    'Stevens',
+  sjsu:       'SJSU',
+  uf:         'UF',
+  pittkatz:   'Pitt Katz',
+  umd:        'UMD Smith',
 };
 
 const MAP_LABEL_OFFSETS = {
-  columbia:   { dx:  9, dy: -11, anchor: 'start'  },
   baruch:     { dx: -9, dy: -11, anchor: 'end'    },
-  mit:        { dx:  9, dy: -11, anchor: 'start'  },
-  bu:         { dx: -9, dy: -11, anchor: 'end'    },
-  duke:       { dx:  0, dy:  16, anchor: 'middle' },
+  stevens:    { dx:  9, dy: -11, anchor: 'start'  },
+  umd:        { dx:  0, dy:  16, anchor: 'middle' },
+  gatech:     { dx:  0, dy:  16, anchor: 'middle' },
 };
 
 const getMapCoords = p => {
@@ -538,9 +468,8 @@ const SectionHeader = ({ num, title, extra, onToggle, open }) => (
 );
 
 export default function ProgramComparison() {
-  const [selected, setSelected]           = useState(['cmutepper', 'uwfoster', 'utaustin']);
+  const [selected, setSelected]           = useState(['umd', 'uwfoster', 'utaustin']);
   const [weights, setWeights]             = useState({ roi: 9, affordability: 7, jobMarket: 10, marketAccess: 9, weatherFit: 4, lifestyle: 6, duration: 5, capstone: 9, prestige: 9, versatility: 8 });
-  const [trackFilter, setTrackFilter]     = useState('All');
   const [collapsed, setCollapsed]         = useState({ '01': true, '02': true, '03': true, '04': true, '05': true, '06': true, '07': true });
   const [rankingTab, setRankingTab]       = useState('weighted');
   const [detailsModal, setDetailsModal]       = useState(null);
@@ -645,8 +574,7 @@ export default function ProgramComparison() {
       .sort((a, b) => b.composite - a.composite);
   }, [weights, personalRanking]);
 
-  const tracks = ['All', ...new Set(programs.map(p => p.track))];
-  const filteredPrograms = trackFilter === 'All' ? programs : programs.filter(p => p.track === trackFilter);
+  const filteredPrograms = programs;
   const maxWeightedScore = rankedPrograms[0]?.weightedScore || 10;
   const maxPlacementR = Math.max(...programs.map(p => p.placementRate));
 
@@ -841,7 +769,7 @@ export default function ProgramComparison() {
         <div className="pc-kicker">Personalized Decision Tool · {programs.length} Programs</div>
         <h1 className="pc-title">Graduate Program <em>Comparison</em></h1>
         <p className="pc-subtitle">
-          Fifteen master's programs scored across nine dimensions. Radar overlays, cost-versus-outcome
+          Twelve master's programs scored across ten dimensions. Radar overlays, cost-versus-outcome
           analysis, admit-odds estimates, weighted rankings, and an interactive program location map.
         </p>
         <div className="pc-stats-row">
@@ -874,7 +802,7 @@ export default function ProgramComparison() {
                       <div className="pc-card-header">
                         <div>
                           <h3 className="pc-card-title">{p.name}</h3>
-                          <div className="pc-card-loc">{p.location} · {p.track}</div>
+                          <div className="pc-card-loc">{p.location}</div>
                         </div>
                         <span className={`pc-card-tier ${p.admitOdds}`}>{p.admitOdds}</span>
                       </div>
@@ -910,10 +838,10 @@ export default function ProgramComparison() {
               <ResponsiveContainer width="100%" height={500}>
                 <ScatterChart margin={{ top: 30, right: 80, bottom: 56, left: 70 }}>
                   <CartesianGrid stroke="#2a313c" strokeDasharray="2 4" />
-                  <XAxis type="number" dataKey="x" name="Cost" unit="k" domain={[32, 130]} ticks={[45, 60, 75, 90, 105, 120]}
+                  <XAxis type="number" dataKey="x" name="Cost" unit="k" domain={[36, 100]} ticks={[40, 50, 60, 70, 80, 90]}
                     tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }} stroke="#2a313c"
                     label={{ value: 'Total Cost ($k)', position: 'insideBottom', offset: -14, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }} />
-                  <YAxis type="number" dataKey="y" name="Salary" unit="k" domain={[78, 135]} ticks={[80, 90, 100, 110, 120, 130]}
+                  <YAxis type="number" dataKey="y" name="Salary" unit="k" domain={[78, 120]} ticks={[80, 85, 90, 95, 100, 105, 110]}
                     tick={{ fill: '#8f8876', fontSize: 11, fontFamily: 'IBM Plex Mono' }} stroke="#2a313c"
                     label={{ value: 'Expected Salary ($k)', angle: -90, position: 'insideLeft', offset: 10, fill: '#8f8876', fontSize: 12, fontFamily: 'IBM Plex Sans' }} />
                   <ZAxis type="number" dataKey="z" range={[60, 360]} />
@@ -964,7 +892,6 @@ export default function ProgramComparison() {
           <>
             <p className="pc-section-desc">Each axis scored 0–10. Select 2–5 programs for best readability.</p>
             <div className="pc-filter-row">
-              {tracks.map(t => <button key={t} className={`pc-filter-chip ${trackFilter === t ? 'active' : ''}`} onClick={() => setTrackFilter(t)}>{t}</button>)}
               <button className="pc-filter-chip" onClick={() => setSelected(programs.map(p => p.id))}>All</button>
               <button className="pc-filter-chip" onClick={() => setSelected([])}>Clear</button>
             </div>
@@ -1046,7 +973,7 @@ export default function ProgramComparison() {
                       <div className="pc-rank-num">{String(i + 1).padStart(2, '0')}</div>
                       <div className="pc-rank-name-group">
                         <div className="pc-rank-name">{p.name}</div>
-                        <div className="pc-rank-meta">{p.location} · {p.duration} · {p.cost} · {p.track}</div>
+                        <div className="pc-rank-meta">{p.location} · {p.duration} · {p.cost}</div>
                       </div>
                       <div className="pc-rank-bar-container">
                         <div className="pc-rank-bar" style={{ width: `${(p.weightedScore / maxWeightedScore) * 100}%`, background: p.color }} />
@@ -1258,7 +1185,7 @@ export default function ProgramComparison() {
                   <>
                     <div>
                       <div className="pc-map-hover-name" style={{ color: selectedProgram.color }}>{selectedProgram.name}</div>
-                      <div className="pc-map-hover-loc">{selectedProgram.location} · {selectedProgram.track} · {selectedProgram.duration} · ${selectedProgram.totalCost}k</div>
+                      <div className="pc-map-hover-loc">{selectedProgram.location} · {selectedProgram.duration} · ${selectedProgram.totalCost}k</div>
                     </div>
                     <div style={{ flex: 1, minWidth: 200 }}>
                       <div style={{ fontFamily: 'IBM Plex Mono', fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--text-faint)', marginBottom: 8 }}>Top Hiring Hubs</div>
@@ -1309,7 +1236,7 @@ export default function ProgramComparison() {
               <div>
                 <div className="pc-modal-title" style={{ color: detailsModal.color }}>{detailsModal.name}</div>
                 <div className="pc-modal-meta">
-                  {detailsModal.location} · {detailsModal.track} · {detailsModal.duration} · ${detailsModal.totalCost}k total · Est. ${detailsModal.expectedSalary}k salary
+                  {detailsModal.location} · {detailsModal.duration} · ${detailsModal.totalCost}k total · Est. ${detailsModal.expectedSalary}k salary
                 </div>
               </div>
               <button className="pc-modal-close" onClick={() => setDetailsModal(null)}>✕</button>
